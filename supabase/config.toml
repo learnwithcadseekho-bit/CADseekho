@@ -1,0 +1,22 @@
+project_id = "cadseekho"
+
+[db]
+port = 54322
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed/seed.sql", "./seed/blog_seed.sql"]
+
+[api]
+port = 54321
+
+[studio]
+port = 54323
+
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173"]
+
+[storage]
+enabled = true

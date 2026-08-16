@@ -1,0 +1,128 @@
+.dashboard__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-10);
+}
+
+.dashboard__title {
+  margin-top: var(--space-2);
+}
+
+.dashboard__layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--space-10);
+  align-items: start;
+}
+
+.dashboard__tabs {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
+.dashboard__tab {
+  text-align: left;
+  padding: var(--space-4);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--slate);
+  cursor: pointer;
+}
+
+.dashboard__tab:last-child {
+  border-bottom: none;
+}
+
+.dashboard__tab:hover {
+  color: var(--ink);
+}
+
+.dashboard__tab--active {
+  color: var(--accent);
+  background: var(--paper);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.dashboard__panel {
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: var(--space-8);
+  min-width: 0;
+}
+
+.dashboard-empty {
+  text-align: center;
+  padding: var(--space-8) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  color: var(--slate);
+}
+
+.dashboard-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.dashboard-list__item:last-child {
+  border-bottom: none;
+}
+
+.dashboard-list__title {
+  margin-top: var(--space-1);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.dashboard-list__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.dashboard-list__link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .dashboard__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard__tabs {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .dashboard__tab {
+    border-bottom: none;
+    border-right: 1px solid var(--line);
+    white-space: nowrap;
+  }
+
+  .dashboard__tab--active {
+    box-shadow: inset 0 -3px 0 var(--accent);
+  }
+}

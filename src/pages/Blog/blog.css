@@ -1,0 +1,120 @@
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-6);
+}
+
+.blog-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+.blog-card__image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+
+.blog-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: var(--space-5);
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.blog-card__title {
+  font-size: 1.125rem;
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.blog-card__excerpt {
+  font-size: 0.9375rem;
+  margin-bottom: var(--space-4);
+}
+
+.blog-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
+.blog-card__cta {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Article page */
+.article-hero {
+  border-bottom: 1px solid var(--line);
+}
+
+.article-hero__inner {
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-10);
+  max-width: 760px;
+}
+
+.article-hero__title {
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.article-hero__meta {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.article-image {
+  width: 100%;
+  max-width: 900px;
+  margin: var(--space-10) auto 0;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+.article-body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  font-size: 1.0625rem;
+}
+
+.article-body p {
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.article-cta {
+  max-width: 720px;
+  margin: 0 auto var(--space-16);
+  padding: var(--space-6);
+  background: var(--white);
+  border: 1px solid var(--line);
+  text-align: center;
+}
+
+.article-related {
+  border-top: 1px solid var(--line);
+  padding: var(--space-16) 0;
+}

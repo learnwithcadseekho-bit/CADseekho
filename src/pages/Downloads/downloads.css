@@ -1,0 +1,54 @@
+.download-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-6);
+}
+
+.download-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  overflow: hidden;
+}
+
+.download-card__image {
+  width: 100%;
+  aspect-ratio: 10 / 9;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+
+.download-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: var(--space-5);
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.download-card__title {
+  font-size: 1.0625rem;
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.download-card__desc {
+  font-size: 0.9375rem;
+  margin-bottom: var(--space-4);
+}
+
+.download-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.download-card__footer {
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
