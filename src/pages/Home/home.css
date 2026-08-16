@@ -1,3 +1,20 @@
+/* Logo */
+.logo-section {
+  border-bottom: 1px solid var(--line);
+  background: var(--white);
+}
+
+.logo-section__inner {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-8) var(--space-6);
+}
+
+.logo-section__image {
+  max-height: 56px;
+  width: auto;
+}
+
 /* Hero */
 .hero {
   position: relative;

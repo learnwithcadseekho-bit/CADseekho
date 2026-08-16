@@ -145,6 +145,27 @@ Outputs a static site to `dist/`, including a generated `sitemap.xml`.
 2. In Hostinger's DNS zone editor for the domain, add the records the platform gave you (typically an `A` record pointing at their IP, or a `CNAME` for the `www` subdomain).
 3. Wait for DNS propagation (usually minutes, can take up to 24-48 hours), then verify in the hosting platform's domain settings.
 
+### Alternative: hosting directly on Hostinger
+
+If you have an actual Hostinger hosting plan (not just the domain), you can upload
+the static build directly instead of using Vercel/Netlify:
+
+1. `npm run build` locally (reads your `.env` — the Supabase URL/anon key are public
+   values, safe to embed in the build).
+2. Upload everything **inside** `dist/` (not the folder itself) to `public_html` via
+   hPanel → **File Manager** (zip locally, upload, extract) or FTP (hPanel → **FTP
+   Accounts**). Clear out any existing placeholder content in `public_html` first.
+3. hPanel → **SSL** → enable the free Let's Encrypt certificate if not already on.
+4. A `.htaccess` file (already included in every build via `public/.htaccess`)
+   rewrites all routes to `index.html`, which client-side routing needs — verify it
+   made it into `public_html` (File Manager may hide dotfiles by default; toggle
+   "show hidden files" if unsure), then confirm by refreshing a course page directly
+   (e.g. `yourdomain.com/courses/solidworks-essentials`) rather than only navigating
+   via in-app links.
+5. There's no auto-deploy this way — repeat steps 1–2 after every code change. If
+   your plan includes hPanel → **Advanced → Git**, that can automate deploys on push
+   instead.
+
 ## 9. Troubleshooting
 
 For deeper diagnostic techniques (how to check if the dev server is serving stale

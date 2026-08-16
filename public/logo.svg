@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60">
+  <rect x="1" y="1" width="58" height="58" fill="none" stroke="#1B2A4A" stroke-width="1.5"/>
+  <path d="M1 1 L11 1 M1 1 L1 11" stroke="#E8622C" stroke-width="2.5" fill="none"/>
+  <path d="M59 59 L49 59 M59 59 L59 49" stroke="#E8622C" stroke-width="2.5" fill="none"/>
+  <circle cx="30" cy="30" r="14" fill="none" stroke="#1B2A4A" stroke-width="1.5"/>
+  <line x1="30" y1="16" x2="30" y2="44" stroke="#1B2A4A" stroke-width="1"/>
+  <line x1="16" y1="30" x2="44" y2="30" stroke="#1B2A4A" stroke-width="1"/>
+  <text x="74" y="38" font-family="'Space Grotesk', 'Segoe UI', sans-serif" font-size="26" font-weight="700" fill="#1B2A4A">CADseekho</text>
+</svg>

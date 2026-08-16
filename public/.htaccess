@@ -1,0 +1,12 @@
+# Serve index.html for any path that isn't a real file/directory, so
+# client-side routes (e.g. /courses/solidworks-essentials) work on direct
+# visit and on refresh — required for a single-page app on Apache/LiteSpeed
+# hosting (e.g. Hostinger shared/cloud hosting).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
