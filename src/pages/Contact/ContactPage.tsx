@@ -49,8 +49,6 @@ export default function ContactPage() {
         description="Get in touch with CADseekho — questions about a course or a free resource."
       />
       <SectionHeading
-        number="01"
-        eyebrow="GET IN TOUCH"
         title="Contact CADseekho"
         subtitle="Questions about a course or a resource? Send us a message and we'll get back to you."
         align="center"

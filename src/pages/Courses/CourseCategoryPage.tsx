@@ -71,8 +71,6 @@ export default function CourseCategoryPage() {
         description={category!.description ?? `Browse ${category!.name} courses from CADseekho.`}
       />
       <SectionHeading
-        number="01"
-        eyebrow="COURSE CATEGORY"
         title={category!.name}
         subtitle={category!.description ?? undefined}
         align="center"

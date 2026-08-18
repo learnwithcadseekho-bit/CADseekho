@@ -5,6 +5,7 @@ import { TextField } from "@/components/ui/TextField";
 import { SelectField } from "@/components/ui/SelectField";
 import { CheckboxGroup } from "@/components/ui/CheckboxGroup";
 import { FormMessage } from "@/components/ui/FormMessage";
+import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 import { signUp } from "@/services/authService";
 import {
   EXPERIENCE_OPTIONS,
@@ -125,6 +126,9 @@ export default function SignupPage() {
         <p className="auth-card__subtitle">
           Create an account to register for courses and access free downloads.
         </p>
+
+        <GoogleSignInButton />
+        <div className="auth-divider">or</div>
 
         <form onSubmit={handleSubmit} noValidate>
           {error && <FormMessage type="error">{error}</FormMessage>}

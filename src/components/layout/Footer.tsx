@@ -8,7 +8,7 @@ const COURSE_CATEGORY_LINKS = [
   { label: "Creo", to: "/courses/category/creo" },
 ];
 
-// Placeholders only — Section 25 explicitly says not to invent social URLs.
+// Placeholder hrefs — replace with the real profile URLs when they exist.
 const SOCIAL_LINKS = [
   { label: "Facebook", href: "#" },
   { label: "Instagram", href: "#" },
@@ -68,7 +68,7 @@ export function Footer() {
           <ul>
             {SOCIAL_LINKS.map((link) => (
               <li key={link.label}>
-                <a href={link.href} aria-disabled="true" title="Coming soon">
+                <a href={link.href} target="_blank" rel="noopener noreferrer">
                   {link.label}
                 </a>
               </li>

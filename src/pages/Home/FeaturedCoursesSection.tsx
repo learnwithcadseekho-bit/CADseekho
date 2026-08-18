@@ -21,7 +21,7 @@ export function FeaturedCoursesSection() {
 
   return (
     <section className="section container">
-      <SectionHeading number="02" eyebrow="FEATURED" title="Featured Courses" align="center" />
+      <SectionHeading title="Featured Courses" align="center" />
 
       {error && <p className="section__status">Featured courses are temporarily unavailable.</p>}
       {!error && courses === null && <p className="section__status">Loading courses…</p>}

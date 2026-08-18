@@ -25,7 +25,7 @@ export default function CoursesListingPage() {
         title="Browse Courses"
         description="Explore AutoCAD, SolidWorks, and other practical CAD and engineering training courses from CADseekho."
       />
-      <SectionHeading number="01" eyebrow="ALL COURSES" title="Browse Courses" align="center" as="h1" />
+      <SectionHeading title="Browse Courses" align="center" as="h1" />
 
       {categories && categories.length > 0 && (
         <div className="course-filter-chips">

@@ -39,6 +39,21 @@ export async function signIn(email: string, password: string) {
   return data;
 }
 
+// Requires the Google provider to be configured in Supabase Auth (Dashboard →
+// Authentication → Providers) with a Google Cloud OAuth client — see README.
+// The DB's handle_new_user() trigger still fires for Google sign-ins; Google
+// populates full_name in user metadata automatically, so profiles get a name
+// without any extra handling here.
+export async function signInWithGoogle() {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${window.location.origin}/dashboard`,
+    },
+  });
+  if (error) throw error;
+}
+
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;

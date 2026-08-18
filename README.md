@@ -104,6 +104,29 @@ There's no admin signup flow by design — every new signup gets `role = 'user'`
 
 From then on, use **Admin → Users → Make Admin** in the dashboard to promote anyone else.
 
+### Enabling "Continue with Google" Sign-In
+
+The Login/Signup pages already have a Google sign-in button wired up in code, but it
+won't work until you configure a Google OAuth client and connect it in Supabase —
+this can't be done from code, only from the Google Cloud Console and Supabase
+dashboard:
+
+1. **Google Cloud Console** → create (or pick) a project → **APIs & Services →
+   Credentials** → **Create Credentials → OAuth client ID** → Application type
+   **Web application**.
+2. Under **Authorized redirect URIs**, add:
+   `https://<your-project-ref>.supabase.co/auth/v1/callback`
+   (find `<your-project-ref>` in your Supabase project URL — it's the same value
+   as the subdomain in `VITE_SUPABASE_URL`).
+3. Copy the generated **Client ID** and **Client Secret**.
+4. **Supabase Dashboard** → **Authentication → Providers → Google** → toggle it on
+   → paste in the Client ID and Client Secret → **Save**.
+5. That's it — no code or redeploy needed. The button on `/login` and `/signup`
+   will start working immediately once the provider is saved.
+
+Until this is configured, clicking the button shows a friendly "Google sign-in
+isn't available right now" message rather than a raw error — it fails safely.
+
 ### Uploading Files
 
 The admin dashboard (`/admin/courses`, `/admin/downloads`, `/admin/blog`) has file upload fields built in — course/category/blog images go to public storage buckets and get stored as public URLs; download resource files go to `downloads-public` or `downloads-protected` depending on the "Requires login" toggle, and are stored as a file path (protected files are never given a permanent public URL — the app mints a short-lived signed URL on demand).

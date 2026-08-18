@@ -28,8 +28,6 @@ export function WhySection() {
   return (
     <section className="section container">
       <SectionHeading
-        number="03"
-        eyebrow="WHY CADSEEKHO"
         title="Why Learn With CADseekho?"
         align="center"
       />

@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { FormMessage } from "@/components/ui/FormMessage";
+import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 import { signIn } from "@/services/authService";
 import "@/styles/forms.css";
 
@@ -40,6 +41,9 @@ export default function LoginPage() {
         <span className="mono-label auth-card__eyebrow">SIGN IN</span>
         <h1 className="auth-card__title">Welcome back</h1>
         <p className="auth-card__subtitle">Log in to access your dashboard and downloads.</p>
+
+        <GoogleSignInButton />
+        <div className="auth-divider">or</div>
 
         <form onSubmit={handleSubmit} noValidate>
           {error && <FormMessage type="error">{error}</FormMessage>}

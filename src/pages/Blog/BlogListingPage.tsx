@@ -34,7 +34,7 @@ export default function BlogListingPage() {
         title="Engineering & CAD Blog"
         description="Practical articles on SolidWorks, AutoCAD, GD&T, DFM, and CAD workflows from CADseekho."
       />
-      <SectionHeading number="01" eyebrow="CADSEEKHO BLOG" title="Engineering & CAD Blog" align="center" as="h1" />
+      <SectionHeading title="Engineering & CAD Blog" align="center" as="h1" />
 
       {categories.length > 0 && (
         <div className="course-filter-chips">

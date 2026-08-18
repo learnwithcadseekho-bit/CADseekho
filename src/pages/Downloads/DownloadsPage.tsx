@@ -24,8 +24,6 @@ export default function DownloadsPage() {
         description="Free CAD practice drawings, SolidWorks and AutoCAD files, GD&T references, and engineering guides. Some downloads require a free account."
       />
       <SectionHeading
-        number="01"
-        eyebrow="FREE DOWNLOADS"
         title="Free Engineering Resources"
         subtitle="Practice drawings, CAD files, guides, and reference material. Some resources require a free account to download."
         align="center"

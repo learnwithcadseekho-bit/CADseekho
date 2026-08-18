@@ -13,8 +13,6 @@ export default function AboutPage() {
           description="CADseekho is an online engineering education platform focused on CAD, 3D modeling, engineering design, simulation, and PLM."
         />
         <SectionHeading
-          number="01"
-          eyebrow="ABOUT CADSEEKHO"
           title="Practical CAD training, built for engineers"
           as="h1"
         />
