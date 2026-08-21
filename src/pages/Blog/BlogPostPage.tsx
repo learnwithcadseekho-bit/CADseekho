@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Seo } from "@/components/Seo";
+import { RichContent } from "@/components/RichContent";
 import { BlogCard } from "@/components/ui/BlogCard";
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 import { getPostBySlug, getRelatedPosts } from "@/services/blogService";
@@ -95,9 +96,7 @@ export default function BlogPostPage() {
       )}
 
       <article className="article-body">
-        {(p.content ?? "").split(/\n{2,}/).map((paragraph, i) => (
-          <p key={i}>{paragraph}</p>
-        ))}
+        <RichContent content={p.content ?? ""} className="rich-content" />
       </article>
 
       <div className="article-cta">

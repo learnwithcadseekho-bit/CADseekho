@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { ConfirmDeleteButton } from "@/admin/components/ConfirmDeleteButton";
 import { FileUploadField } from "@/admin/components/FileUploadField";
+import { RichTextEditor } from "@/admin/components/RichTextEditor";
 import { useAuth } from "@/hooks/useAuth";
 import {
   createPost,
@@ -151,12 +152,11 @@ export default function AdminBlogPage() {
             onChange={(e) => setForm((f) => ({ ...f, excerpt: e.target.value }))}
           />
           <div className="field">
-            <label className="field__label">Content (paragraphs separated by a blank line)</label>
-            <textarea
-              className="field__input"
-              rows={10}
+            <label className="field__label">Content</label>
+            <RichTextEditor
               value={form.content ?? ""}
-              onChange={(e) => setForm((f) => ({ ...f, content: e.target.value }))}
+              onChange={(html) => setForm((f) => ({ ...f, content: html }))}
+              imageBucket="blog-images"
             />
           </div>
           <FileUploadField

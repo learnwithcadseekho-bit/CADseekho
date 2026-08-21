@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/hooks/useAuth";
+import { RichContent } from "@/components/RichContent";
 import { getCourseDetailBySlug } from "@/services/courseService";
 import { getRegistration, registerForCourse } from "@/services/courseRegistrationService";
 import { COURSE_FORMAT_LABEL, COURSE_LEVEL_LABEL, type CourseDetail } from "@/types/course";
+import { sanitizeHtml } from "@/utils/sanitizeHtml";
 import "@/styles/cards.css";
 import "./course-detail.css";
 
@@ -100,7 +102,7 @@ export default function CourseDetailPage() {
           {c.description && (
             <article className="course-detail__block">
               <h2>Course Overview</h2>
-              <p>{c.description}</p>
+              <RichContent content={c.description} className="rich-content" />
             </article>
           )}
 
@@ -139,7 +141,12 @@ export default function CourseDetailPage() {
                   <li key={m.id} className="syllabus-list__item">
                     <span className="mono-label">Module {m.order_number}</span>
                     <span className="syllabus-list__title">{m.title}</span>
-                    {m.description && <p className="syllabus-list__desc">{m.description}</p>}
+                    {m.description && (
+                      <div
+                        className="syllabus-list__desc"
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(m.description) }}
+                      />
+                    )}
                   </li>
                 ))}
               </ol>

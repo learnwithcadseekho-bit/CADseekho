@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabaseClient";
+import { cached } from "@/lib/cache";
 import type { Download, DownloadLog } from "@/types/download";
 
 const PUBLIC_BUCKET = "downloads-public";
@@ -6,14 +7,16 @@ const PROTECTED_BUCKET = "downloads-protected";
 const SIGNED_URL_TTL_SECONDS = 60;
 
 export async function getPublishedDownloads(): Promise<Download[]> {
-  const { data, error } = await supabase
-    .from("downloads")
-    .select("*")
-    .eq("is_published", true)
-    .order("created_at", { ascending: false });
+  return cached("downloads:published", async () => {
+    const { data, error } = await supabase
+      .from("downloads")
+      .select("*")
+      .eq("is_published", true)
+      .order("created_at", { ascending: false });
 
-  if (error) throw error;
-  return (data ?? []) as Download[];
+    if (error) throw error;
+    return (data ?? []) as Download[];
+  });
 }
 
 export function getPublicDownloadUrl(filePath: string): string {

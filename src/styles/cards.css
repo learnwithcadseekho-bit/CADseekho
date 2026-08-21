@@ -1,6 +1,50 @@
 /* Shared page/section/card-grid primitives, used across Home, Courses, and
    later Downloads/Blog listing pages. */
 
+/* Shared typography for admin-authored rich text (course descriptions,
+   syllabus, blog posts) rendered via <RichContent>. */
+.rich-content p {
+  margin: 0 0 0.9em;
+}
+
+.rich-content p:last-child {
+  margin-bottom: 0;
+}
+
+.rich-content h2,
+.rich-content h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 1em 0 0.5em;
+}
+
+.rich-content h2:first-child,
+.rich-content h3:first-child {
+  margin-top: 0;
+}
+
+.rich-content h2 {
+  font-size: 1.5rem;
+}
+
+.rich-content h3 {
+  font-size: 1.1875rem;
+}
+
+.rich-content ul {
+  margin: 0 0 0.9em;
+  padding-left: 1.25em;
+  list-style: disc;
+}
+
+.rich-content img {
+  max-width: 100%;
+  border-radius: var(--radius-sm);
+  margin: 1em 0;
+  display: block;
+}
+
 .container {
   max-width: var(--container-max);
   margin: 0 auto;

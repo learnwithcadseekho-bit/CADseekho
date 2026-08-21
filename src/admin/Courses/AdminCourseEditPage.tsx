@@ -5,6 +5,7 @@ import { SelectField } from "@/components/ui/SelectField";
 import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { FileUploadField } from "@/admin/components/FileUploadField";
+import { RichTextEditor } from "@/admin/components/RichTextEditor";
 import { CourseModulesManager } from "./CourseModulesManager";
 import { CourseSkillsManager } from "./CourseSkillsManager";
 import { listAllCategories } from "@/services/admin/adminCategoryService";
@@ -148,11 +149,9 @@ export default function AdminCourseEditPage() {
 
         <div className="field">
           <label className="field__label">Full Description</label>
-          <textarea
-            className="field__input"
-            rows={5}
+          <RichTextEditor
             value={form.description ?? ""}
-            onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+            onChange={(html) => setForm((f) => ({ ...f, description: html }))}
           />
         </div>
 

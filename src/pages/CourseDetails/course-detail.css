@@ -98,6 +98,21 @@
   font-size: 0.9375rem;
 }
 
+.syllabus-list__desc p {
+  margin-bottom: 0.5em;
+}
+
+.syllabus-list__desc p:last-child {
+  margin-bottom: 0;
+}
+
+.syllabus-list__desc ul {
+  margin: 0 0 0.5em;
+  padding-left: 1.25em;
+  list-style: disc;
+  color: var(--slate);
+}
+
 .skill-tags {
   display: flex;
   flex-wrap: wrap;
