@@ -11,25 +11,45 @@ export interface SignUpInput {
   interestedCourses: InterestedCourseSlug[];
 }
 
-// Metadata here lands in auth.users.raw_user_meta_data, which the
-// handle_new_user() DB trigger reads to populate the profiles row —
-// see supabase/migrations/20260816120100_functions_and_triggers.sql.
-export async function signUp(input: SignUpInput) {
-  const { data, error } = await supabase.auth.signUp({
-    email: input.email,
-    password: input.password,
-    options: {
-      data: {
-        full_name: input.fullName,
-        phone: input.phone,
-        user_type: input.userType,
-        experience: input.experience,
-        interested_courses: input.interestedCourses,
-      },
+interface SignupFunctionResponse {
+  error?: string;
+  user?: unknown;
+  session?: { access_token: string; refresh_token: string } | null;
+}
+
+// Routes through the signup-with-turnstile Edge Function, which verifies the
+// Cloudflare Turnstile token before proxying to Supabase's real /signup
+// endpoint — see supabase/functions/signup-with-turnstile/index.ts. Metadata
+// still lands in auth.users.raw_user_meta_data, read by the handle_new_user()
+// DB trigger to populate the profiles row (see
+// supabase/migrations/20260816120100_functions_and_triggers.sql).
+export async function signUp(input: SignUpInput, turnstileToken: string) {
+  const { data, error } = await supabase.functions.invoke<SignupFunctionResponse>("signup-with-turnstile", {
+    body: {
+      email: input.email,
+      password: input.password,
+      fullName: input.fullName,
+      phone: input.phone,
+      userType: input.userType,
+      experience: input.experience,
+      interestedCourses: input.interestedCourses,
+      turnstileToken,
     },
   });
 
   if (error) throw error;
+  if (!data || data.error) throw new Error(data?.error ?? "Signup failed.");
+
+  // The function only returns tokens (never a full SDK session object), so
+  // the client session must be established explicitly here.
+  if (data.session) {
+    const { error: sessionError } = await supabase.auth.setSession({
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
+    });
+    if (sessionError) throw sessionError;
+  }
+
   return data;
 }
 

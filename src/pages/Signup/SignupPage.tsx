@@ -6,6 +6,7 @@ import { SelectField } from "@/components/ui/SelectField";
 import { CheckboxGroup } from "@/components/ui/CheckboxGroup";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { GoogleSignInButton } from "@/components/GoogleSignInButton";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { signUp } from "@/services/authService";
 import {
   EXPERIENCE_OPTIONS,
@@ -46,6 +47,8 @@ export default function SignupPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [checkEmail, setCheckEmail] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -69,17 +72,25 @@ export default function SignupPage() {
     setError(null);
     if (!validate()) return;
 
+    if (!turnstileToken) {
+      setError("Please complete the verification check below.");
+      return;
+    }
+
     setSubmitting(true);
     try {
-      const result = await signUp({
-        fullName: form.fullName.trim(),
-        email: form.email.trim(),
-        phone: form.phone.trim(),
-        password: form.password,
-        userType: form.userType as UserType,
-        experience: form.experience as ExperienceLevel,
-        interestedCourses: form.interestedCourses,
-      });
+      const result = await signUp(
+        {
+          fullName: form.fullName.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          password: form.password,
+          userType: form.userType as UserType,
+          experience: form.experience as ExperienceLevel,
+          interestedCourses: form.interestedCourses,
+        },
+        turnstileToken
+      );
 
       if (result.session) {
         navigate("/dashboard", { replace: true });
@@ -87,8 +98,10 @@ export default function SignupPage() {
         // Email confirmation is required before a session is issued.
         setCheckEmail(true);
       }
-    } catch {
-      setError("We couldn't create your account. That email may already be registered.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "We couldn't create your account. Please try again.");
+      setTurnstileToken(null);
+      setTurnstileResetKey((k) => k + 1);
     } finally {
       setSubmitting(false);
     }
@@ -198,7 +211,16 @@ export default function SignupPage() {
             onChange={(value) => update("interestedCourses", value as InterestedCourseSlug[])}
           />
 
-          <Button type="submit" block disabled={submitting}>
+          <div className="field">
+            <TurnstileWidget
+              key={turnstileResetKey}
+              siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+              onVerify={setTurnstileToken}
+              onExpire={() => setTurnstileToken(null)}
+            />
+          </div>
+
+          <Button type="submit" block disabled={submitting || !turnstileToken}>
             {submitting ? "Creating account…" : "Create Account"}
           </Button>
         </form>
