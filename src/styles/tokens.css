@@ -4,12 +4,12 @@
  */
 :root {
   /* Color */
-  --paper: #FAFAF7;
+  --paper: #F5F3ED;
   --ink: #1B2A4A;
-  --line: #C7D0DC;
-  --line-strong: #9AA8BC;
+  --line: #AEB9C9;
+  --line-strong: #75849C;
   --accent: #E8622C;
-  --slate: #5B6B7F;
+  --slate: #46566B;
   --white: #FFFFFF;
 
   /* Accent on ink (for dark sections) needs higher-contrast pairing per Section 29 */
