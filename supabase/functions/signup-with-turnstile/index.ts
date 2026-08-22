@@ -60,6 +60,7 @@ Deno.serve(async (req) => {
   const verifyData = await verifyRes.json();
 
   if (!verifyData.success) {
+    console.error("Turnstile verification failed:", JSON.stringify(verifyData));
     return json({ error: "We couldn't verify you're human. Please try again." });
   }
 
