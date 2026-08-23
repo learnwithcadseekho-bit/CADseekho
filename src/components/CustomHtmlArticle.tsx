@@ -7,18 +7,36 @@ interface CustomHtmlArticleProps {
   downloadName: string;
 }
 
-// Renders an admin-uploaded, self-contained HTML/CSS file verbatim inside an
-// iframe, so its own design never collides with (or gets stripped by) the
-// site's sanitized rich-content pipeline. The uploaded file carries a small
+// Renders an admin-uploaded, self-contained HTML/CSS file verbatim, so its
+// own design never collides with (or gets stripped by) the site's sanitized
+// rich-content pipeline. Supabase Storage always serves text/html uploads as
+// text/plain (with nosniff) to prevent stored-XSS on its shared domain, so
+// pointing an iframe's `src` straight at the storage URL renders as plain
+// text instead of markup. Fetching the bytes via JS and assigning them to
+// `srcDoc` sidesteps that — srcDoc content is parsed as HTML unconditionally,
+// regardless of how it was fetched. The uploaded file carries a small
 // injected script (see admin/components/HtmlBlogUploadField) that posts its
-// height back via postMessage, since the file is served cross-origin from
-// Supabase Storage and same-origin scrollHeight reads aren't available.
+// height back via postMessage, since srcDoc iframes have an opaque origin
+// and same-origin scrollHeight reads aren't available.
 export function CustomHtmlArticle({ htmlUrl, downloadName }: CustomHtmlArticleProps) {
+  const [html, setHtml] = useState<string | null>(null);
   const [height, setHeight] = useState(1200);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { session, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(htmlUrl)
+      .then((r) => r.text())
+      .then((text) => {
+        if (!cancelled) setHtml(text);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [htmlUrl]);
 
   useEffect(() => {
     function handleMessage(e: MessageEvent) {
@@ -57,12 +75,14 @@ export function CustomHtmlArticle({ htmlUrl, downloadName }: CustomHtmlArticlePr
         </button>
       </div>
 
-      <iframe
-        ref={iframeRef}
-        src={htmlUrl}
-        title={downloadName}
-        style={{ display: "block", width: "100%", height, border: "none" }}
-      />
+      {html !== null && (
+        <iframe
+          ref={iframeRef}
+          srcDoc={html}
+          title={downloadName}
+          style={{ display: "block", width: "100%", height, border: "none" }}
+        />
+      )}
     </>
   );
 }
