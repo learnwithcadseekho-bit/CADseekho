@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { RichContent } from "@/components/RichContent";
+import { CustomHtmlArticle } from "@/components/CustomHtmlArticle";
 import { BlogCard } from "@/components/ui/BlogCard";
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 import { getPostBySlug, getRelatedPosts } from "@/services/blogService";
@@ -71,6 +72,20 @@ export default function BlogPostPage() {
 
   const p = post!;
   const relatedCategory = categories?.find((c) => c.name.toLowerCase() === p.category?.toLowerCase());
+
+  if (p.custom_html_url) {
+    return (
+      <>
+        <Seo
+          title={p.title}
+          description={p.excerpt ?? undefined}
+          image={p.featured_image ?? undefined}
+          type="article"
+        />
+        <CustomHtmlArticle htmlUrl={p.custom_html_url} downloadName={`${p.slug}.html`} />
+      </>
+    );
+  }
 
   return (
     <>

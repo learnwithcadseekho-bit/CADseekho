@@ -9,7 +9,6 @@ import CourseDetailPage from "@/pages/CourseDetails/CourseDetailPage";
 import DownloadsPage from "@/pages/Downloads/DownloadsPage";
 import BlogListingPage from "@/pages/Blog/BlogListingPage";
 import BlogPostPage from "@/pages/Blog/BlogPostPage";
-import MinimumHoleDiameterPost from "@/pages/Blog/MinimumHoleDiameterPost";
 import AboutPage from "@/pages/About/AboutPage";
 import ContactPage from "@/pages/Contact/ContactPage";
 import LoginPage from "@/pages/Login/LoginPage";
@@ -45,7 +44,6 @@ export function AppRoutes() {
         <Route path="/courses/:slug" element={<CourseDetailPage />} />
         <Route path="/downloads" element={<DownloadsPage />} />
         <Route path="/blog" element={<BlogListingPage />} />
-        <Route path="/blog/minimum-hole-diameter-design-guide" element={<MinimumHoleDiameterPost />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />

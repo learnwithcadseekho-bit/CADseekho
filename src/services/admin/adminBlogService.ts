@@ -15,7 +15,14 @@ export async function getPostById(id: string): Promise<BlogPost | null> {
 
 export type BlogPostInput = Pick<
   BlogPost,
-  "title" | "slug" | "excerpt" | "content" | "featured_image" | "category" | "is_published"
+  | "title"
+  | "slug"
+  | "excerpt"
+  | "content"
+  | "featured_image"
+  | "custom_html_url"
+  | "category"
+  | "is_published"
 > & { published_at: string | null };
 
 export async function createPost(input: BlogPostInput, authorId: string): Promise<BlogPost> {

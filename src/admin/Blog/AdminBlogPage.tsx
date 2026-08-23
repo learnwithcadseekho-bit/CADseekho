@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { ConfirmDeleteButton } from "@/admin/components/ConfirmDeleteButton";
 import { FileUploadField } from "@/admin/components/FileUploadField";
+import { HtmlBlogUploadField } from "@/admin/components/HtmlBlogUploadField";
 import { RichTextEditor } from "@/admin/components/RichTextEditor";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -35,6 +36,7 @@ const emptyForm: BlogPostInput = {
   excerpt: "",
   content: "",
   featured_image: "",
+  custom_html_url: null,
   category: "",
   is_published: false,
   published_at: null,
@@ -74,6 +76,7 @@ export default function AdminBlogPage() {
       excerpt: p.excerpt ?? "",
       content: p.content ?? "",
       featured_image: p.featured_image ?? "",
+      custom_html_url: p.custom_html_url,
       category: p.category ?? "",
       is_published: p.is_published,
       published_at: p.published_at,
@@ -166,6 +169,10 @@ export default function AdminBlogPage() {
             onChange={(url) => setForm((f) => ({ ...f, featured_image: url }))}
             returnMode="url"
             accept="image/*"
+          />
+          <HtmlBlogUploadField
+            value={form.custom_html_url}
+            onChange={(url) => setForm((f) => ({ ...f, custom_html_url: url }))}
           />
           <label className="admin-checkbox-row">
             <input

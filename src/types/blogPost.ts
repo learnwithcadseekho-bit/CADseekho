@@ -5,6 +5,7 @@ export interface BlogPost {
   excerpt: string | null;
   content: string | null;
   featured_image: string | null;
+  custom_html_url: string | null;
   category: string | null;
   author_id: string | null;
   is_published: boolean;
