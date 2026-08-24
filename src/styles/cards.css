@@ -123,7 +123,8 @@
 .course-card__image {
   width: 100%;
   aspect-ratio: 10 / 9;
-  object-fit: cover;
+  object-fit: contain;
+  background: var(--paper);
   display: block;
   flex-shrink: 0;
 }
