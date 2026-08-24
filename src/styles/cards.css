@@ -122,9 +122,8 @@
 .category-card__image,
 .course-card__image {
   width: 100%;
-  aspect-ratio: 10 / 9;
-  object-fit: contain;
-  background: var(--paper);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   display: block;
   flex-shrink: 0;
 }
