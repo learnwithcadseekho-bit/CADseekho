@@ -2,21 +2,25 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { MainLayout } from "@/layouts/MainLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
-import HomePage from "@/pages/Home/HomePage";
-import CoursesListingPage from "@/pages/Courses/CoursesListingPage";
-import CourseCategoryPage from "@/pages/Courses/CourseCategoryPage";
-import CourseDetailPage from "@/pages/CourseDetails/CourseDetailPage";
-import DownloadsPage from "@/pages/Downloads/DownloadsPage";
-import BlogListingPage from "@/pages/Blog/BlogListingPage";
-import BlogPostPage from "@/pages/Blog/BlogPostPage";
-import AboutPage from "@/pages/About/AboutPage";
-import ContactPage from "@/pages/Contact/ContactPage";
-import LoginPage from "@/pages/Login/LoginPage";
-import SignupPage from "@/pages/Signup/SignupPage";
-import ForgotPasswordPage from "@/pages/Login/ForgotPasswordPage";
-import ResetPasswordPage from "@/pages/Login/ResetPasswordPage";
-import DashboardPage from "@/pages/Dashboard/DashboardPage";
-import NotFoundPage from "@/pages/NotFound/NotFoundPage";
+
+// Every public page is code-split per route so a visit to any one page only
+// downloads and parses that page's JS, not the entire site (previously all
+// pages shipped in a single ~480KB chunk loaded before any page could paint).
+const HomePage = lazy(() => import("@/pages/Home/HomePage"));
+const CoursesListingPage = lazy(() => import("@/pages/Courses/CoursesListingPage"));
+const CourseCategoryPage = lazy(() => import("@/pages/Courses/CourseCategoryPage"));
+const CourseDetailPage = lazy(() => import("@/pages/CourseDetails/CourseDetailPage"));
+const DownloadsPage = lazy(() => import("@/pages/Downloads/DownloadsPage"));
+const BlogListingPage = lazy(() => import("@/pages/Blog/BlogListingPage"));
+const BlogPostPage = lazy(() => import("@/pages/Blog/BlogPostPage"));
+const AboutPage = lazy(() => import("@/pages/About/AboutPage"));
+const ContactPage = lazy(() => import("@/pages/Contact/ContactPage"));
+const LoginPage = lazy(() => import("@/pages/Login/LoginPage"));
+const SignupPage = lazy(() => import("@/pages/Signup/SignupPage"));
+const ForgotPasswordPage = lazy(() => import("@/pages/Login/ForgotPasswordPage"));
+const ResetPasswordPage = lazy(() => import("@/pages/Login/ResetPasswordPage"));
+const DashboardPage = lazy(() => import("@/pages/Dashboard/DashboardPage"));
+const NotFoundPage = lazy(() => import("@/pages/NotFound/NotFoundPage"));
 
 // Admin is a large CRUD surface only admins ever load — code-split it out of
 // the main bundle every visitor downloads (Section 28).
@@ -32,6 +36,10 @@ const AdminMessagesPage = lazy(() => import("@/admin/Messages/AdminMessagesPage"
 
 function AdminLoading() {
   return <div style={{ padding: "var(--space-16)", textAlign: "center", color: "var(--slate)" }}>Loading admin…</div>;
+}
+
+function PageLoading() {
+  return <div style={{ padding: "var(--space-16)", textAlign: "center", color: "var(--slate)" }}>Loading…</div>;
 }
 
 export function AppRoutes() {
@@ -58,10 +66,38 @@ export function AppRoutes() {
         <Route path="*" element={<NotFoundPage />} />
       </Route>
 
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route
+        path="/login"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <LoginPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <SignupPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <ForgotPasswordPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/reset-password"
+        element={
+          <Suspense fallback={<PageLoading />}>
+            <ResetPasswordPage />
+          </Suspense>
+        }
+      />
 
       <Route
         path="/admin"
