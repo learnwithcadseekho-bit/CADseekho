@@ -2,11 +2,14 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { MainLayout } from "@/layouts/MainLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+// The landing page ships with the app shell (not code-split) so the most common
+// entry point paints straight after the main bundle, with no second round-trip
+// for a route chunk.
+import HomePage from "@/pages/Home/HomePage";
 
-// Every public page is code-split per route so a visit to any one page only
-// downloads and parses that page's JS, not the entire site (previously all
+// Every other public page is code-split per route so a visit to any one page
+// only downloads and parses that page's JS, not the entire site (previously all
 // pages shipped in a single ~480KB chunk loaded before any page could paint).
-const HomePage = lazy(() => import("@/pages/Home/HomePage"));
 const CoursesListingPage = lazy(() => import("@/pages/Courses/CoursesListingPage"));
 const CourseCategoryPage = lazy(() => import("@/pages/Courses/CourseCategoryPage"));
 const CourseDetailPage = lazy(() => import("@/pages/CourseDetails/CourseDetailPage"));

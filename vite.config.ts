@@ -9,4 +9,17 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // Keep rarely-changing vendor code in its own long-cached chunks and
+        // let it download in parallel with the app shell instead of as one
+        // 400KB entry chunk.
+        manualChunks: {
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          "supabase-vendor": ["@supabase/supabase-js"],
+        },
+      },
+    },
+  },
 });

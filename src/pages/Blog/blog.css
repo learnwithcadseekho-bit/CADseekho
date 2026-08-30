@@ -1,6 +1,6 @@
 .blog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: var(--space-6);
 }
 
@@ -10,6 +10,12 @@
   background: var(--white);
   color: var(--ink);
   overflow: hidden;
+}
+
+/* Match the placeholder sketch to the real-image aspect ratio so card tops
+   line up across a row instead of going ragged. */
+.blog-card .placeholder-art {
+  aspect-ratio: 16 / 10;
 }
 
 .blog-card__image {
