@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { HeroSketch } from "./HeroSketch";
+import { HeroImageSlider } from "./HeroImageSlider";
 import "./home.css";
 
 export function HeroSection() {
@@ -24,7 +24,7 @@ export function HeroSection() {
           </div>
         </div>
         <div className="hero__visual">
-          <HeroSketch />
+          <HeroImageSlider />
         </div>
       </div>
     </section>

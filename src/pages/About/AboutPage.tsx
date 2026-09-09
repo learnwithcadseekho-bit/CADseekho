@@ -10,53 +10,68 @@ export default function AboutPage() {
       <section className="section container about-page">
         <Seo
           title="About CADseekho"
-          description="CADseekho is an online engineering education platform focused on CAD, 3D modeling, engineering design, simulation, and PLM."
+          description="CADseekho is an engineering education platform teaching CAD design and CAE simulation — SolidWorks, Creo, ANSYS, HyperMesh — with a solve-by-hand-first methodology, online and offline."
         />
         <SectionHeading
-          title="Practical CAD training, built for engineers"
+          title="Engineering education, not just software tutorials"
           as="h1"
         />
 
         <div className="about-block">
           <h2>What is CADseekho?</h2>
           <p>
-            CADseekho is an online engineering education platform focused on CAD, 3D modeling,
-            engineering design, simulation, manufacturing, and PLM. We build focused, practical
-            courses around the software and workflows engineers actually use on the job.
+            CADseekho is an engineering education platform built for students, engineers, and
+            working professionals who want to go beyond software tutorials and actually understand
+            the engineering behind their designs. Every course follows our core methodology: solve
+            by hand first, validate in software — so you build real engineering judgment, not just
+            click-familiarity.
           </p>
-        </div>
-
-        <div className="about-block">
-          <h2>Who is it for?</h2>
           <p>
-            CADseekho is built for engineering students, mechanical and civil engineers, designers,
-            working professionals, teachers, and anyone learning CAD — whether you're starting from
-            zero or sharpening skills for a specific workflow like sheet metal or weldments.
+            We train across the full CAD-to-CAE spectrum, covering both design and simulation,
+            available online and offline.
           </p>
         </div>
 
         <div className="about-block">
-          <h2>Our training philosophy</h2>
+          <h2>What we teach</h2>
+          <div className="about-teach-grid">
+            <div className="about-teach-col">
+              <h3>CAD Design</h3>
+              <ul>
+                <li>SolidWorks — part modeling, assemblies, surfacing</li>
+                <li>Creo — parametric modeling and design</li>
+              </ul>
+            </div>
+            <div className="about-teach-col">
+              <h3>CAE / Simulation</h3>
+              <ul>
+                <li>ANSYS — structural, thermal, and stress analysis</li>
+                <li>HyperMesh — pre-processing and mesh generation</li>
+                <li>SolidWorks Simulation — integrated FEA within SolidWorks</li>
+                <li>Creo Simulation — integrated FEA within Creo</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="about-block">
+          <h2>Learn your way</h2>
+          <ul className="about-learn-list">
+            <li>
+              <strong>Online</strong> — live instructor-led or self-paced
+            </li>
+            <li>
+              <strong>Offline</strong> — in-person, batch-based training
+            </li>
+          </ul>
+        </div>
+
+        <div className="about-block">
+          <h2>Our approach</h2>
           <p>
-            We focus on practical, scenario-based learning rather than just walking through software
-            menus. Courses are structured from fundamentals to advanced concepts, and built around
-            real engineering problems — the kind you'll actually run into in design, drafting, and
-            manufacturing work.
-          </p>
-        </div>
-
-        <div className="about-block">
-          <h2>CAD & engineering focus</h2>
-          <p>
-            Our course catalog spans AutoCAD, SolidWorks, simulation (ANSYS), and mechanism design
-            (Creo) — covering the tools used across mechanical, civil, and design disciplines.
-          </p>
-        </div>
-
-        <div className="about-block">
-          <h2>Company details</h2>
-          <p className="about-placeholder">
-            Additional company information will be added here as it becomes available.
+            We don't just teach software — we teach engineering. Every simulation course is
+            grounded in hand-calculation validation, so you leave able to defend your results in a
+            design review, not just reproduce a tutorial.
           </p>
         </div>
 

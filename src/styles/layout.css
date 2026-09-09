@@ -280,6 +280,13 @@
   max-width: 320px;
 }
 
+.site-footer__contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
 .site-footer__col > .mono-label {
   color: rgba(250, 250, 247, 0.55);
 }

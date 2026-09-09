@@ -55,6 +55,17 @@ export default function ContactPage() {
         as="h1"
       />
 
+      <div className="contact-details">
+        <a href="mailto:info@cadseekho.com" className="contact-details__item">
+          <span className="mono-label">Email</span>
+          info@cadseekho.com
+        </a>
+        <a href="tel:+919358502626" className="contact-details__item">
+          <span className="mono-label">Phone</span>
+          +91 93585 02626
+        </a>
+      </div>
+
       <div className="contact-card drafting-frame">
         {status === "success" && (
           <FormMessage type="success">

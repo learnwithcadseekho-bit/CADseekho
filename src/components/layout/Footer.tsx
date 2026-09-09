@@ -26,6 +26,14 @@ export function Footer() {
             Practical CAD and engineering training for students, engineers, designers, and working
             professionals.
           </p>
+          <ul className="site-footer__contact">
+            <li>
+              <a href="mailto:info@cadseekho.com">info@cadseekho.com</a>
+            </li>
+            <li>
+              <a href="tel:+919358502626">+91 93585 02626</a>
+            </li>
+          </ul>
         </div>
 
         <div className="site-footer__col">
