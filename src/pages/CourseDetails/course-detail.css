@@ -1,8 +1,18 @@
 .course-hero {
+  position: relative;
+  overflow: hidden;
   border-bottom: 1px solid var(--line);
 }
 
+.course-hero__grid-bg {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(to bottom, black, transparent 85%);
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+
 .course-hero__inner {
+  position: relative;
   padding-top: var(--space-16);
   padding-bottom: var(--space-16);
   max-width: 760px;

@@ -67,14 +67,12 @@ export default function CourseDetailPage() {
   }
 
   const c = course!;
-  const hasProjects = c.course_modules.some((m) => /project/i.test(m.title));
 
   const infoItems: { label: string; value: string }[] = [
     c.level && { label: "Level", value: COURSE_LEVEL_LABEL[c.level] },
     c.software && { label: "Software", value: c.software },
     c.category && { label: "Category", value: c.category.name },
     { label: "Format", value: COURSE_FORMAT_LABEL[c.format] },
-    { label: "Projects", value: hasProjects ? "Included" : "Not included" },
     c.prerequisites && { label: "Prerequisites", value: c.prerequisites },
   ].filter((item): item is { label: string; value: string } => Boolean(item));
 
@@ -85,7 +83,8 @@ export default function CourseDetailPage() {
         description={c.short_description ?? c.description ?? undefined}
         image={c.image ?? undefined}
       />
-      <section className="course-hero blueprint-grid">
+      <section className="course-hero">
+        <div className="course-hero__grid-bg blueprint-grid" aria-hidden="true" />
         <div className="container course-hero__inner">
           {c.category && <span className="mono-label">{c.category.name}</span>}
           <h1 className="course-hero__title">{c.title}</h1>
