@@ -167,6 +167,8 @@ export default function CourseDetailPage() {
         </div>
 
         <aside className="course-detail__sidebar drafting-frame">
+          {c.price != null && <CoursePrice course={c} />}
+
           <span className="mono-label">Course Information</span>
           <dl className="course-info">
             {infoItems.map((item) => (
@@ -180,6 +182,34 @@ export default function CourseDetailPage() {
         </aside>
       </section>
     </>
+  );
+}
+
+const CURRENCY_FORMAT = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0,
+});
+
+function CoursePrice({ course }: { course: CourseDetail }) {
+  const { price, original_price } = course;
+  if (price == null) return null;
+
+  const hasDiscount = original_price != null && original_price > price;
+  const discountPercent = hasDiscount ? Math.round((1 - price / original_price!) * 100) : null;
+
+  return (
+    <div className="course-price">
+      <div className="course-price__row">
+        <span className="course-price__current">{CURRENCY_FORMAT.format(price)}</span>
+        {hasDiscount && (
+          <span className="course-price__original">{CURRENCY_FORMAT.format(original_price!)}</span>
+        )}
+      </div>
+      {discountPercent !== null && discountPercent > 0 && (
+        <span className="course-price__badge">{discountPercent}% OFF</span>
+      )}
+    </div>
   );
 }
 

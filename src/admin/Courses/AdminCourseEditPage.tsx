@@ -29,7 +29,12 @@ const FORMAT_OPTIONS = [
   { value: "live", label: "Live, Instructor-Led" },
 ];
 
-const emptyForm: CourseInput = {
+type CourseFormState = Omit<CourseInput, "price" | "original_price"> & {
+  price: string;
+  original_price: string;
+};
+
+const emptyForm: CourseFormState = {
   category_id: "",
   title: "",
   slug: "",
@@ -40,6 +45,8 @@ const emptyForm: CourseInput = {
   prerequisites: "",
   image: "",
   format: "self_paced",
+  price: "",
+  original_price: "",
   is_featured: false,
   is_published: false,
 };
@@ -50,7 +57,7 @@ export default function AdminCourseEditPage() {
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState<Category[]>([]);
-  const [form, setForm] = useState<CourseInput>(emptyForm);
+  const [form, setForm] = useState<CourseFormState>(emptyForm);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -78,6 +85,8 @@ export default function AdminCourseEditPage() {
           prerequisites: c.prerequisites ?? "",
           image: c.image ?? "",
           format: c.format,
+          price: c.price != null ? String(c.price) : "",
+          original_price: c.original_price != null ? String(c.original_price) : "",
           is_featured: c.is_featured,
           is_published: c.is_published,
         });
@@ -91,11 +100,16 @@ export default function AdminCourseEditPage() {
     setSaving(true);
     setError(null);
     try {
+      const payload: CourseInput = {
+        ...form,
+        price: form.price.trim() === "" ? null : Number(form.price),
+        original_price: form.original_price.trim() === "" ? null : Number(form.original_price),
+      };
       if (isNew) {
-        const created = await createCourse(form);
+        const created = await createCourse(payload);
         navigate(`/admin/courses/${created.id}`, { replace: true });
       } else if (id) {
-        await updateCourse(id, form);
+        await updateCourse(id, payload);
       }
     } catch {
       setError("Couldn't save this course. The slug may already be in use.");
@@ -182,6 +196,27 @@ export default function AdminCourseEditPage() {
           value={form.prerequisites ?? ""}
           onChange={(e) => setForm((f) => ({ ...f, prerequisites: e.target.value }))}
         />
+
+        <div className="admin-form-row">
+          <TextField
+            label="Price (₹)"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="e.g. 1999"
+            value={form.price}
+            onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+          />
+          <TextField
+            label="Original Price (₹)"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="e.g. 3998 — shown struck through"
+            value={form.original_price}
+            onChange={(e) => setForm((f) => ({ ...f, original_price: e.target.value }))}
+          />
+        </div>
 
         <FileUploadField
           label="Course Image"

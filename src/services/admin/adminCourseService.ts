@@ -28,6 +28,8 @@ export type CourseInput = Pick<
   | "prerequisites"
   | "image"
   | "format"
+  | "price"
+  | "original_price"
   | "is_featured"
   | "is_published"
 >;

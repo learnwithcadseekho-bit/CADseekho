@@ -148,6 +148,46 @@
   gap: var(--space-4);
 }
 
+.course-price {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.course-price__row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.course-price__current {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.course-price__original {
+  font-size: 1.0625rem;
+  color: var(--slate);
+  text-decoration: line-through;
+}
+
+.course-price__badge {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.625rem;
+}
+
 .course-info {
   display: flex;
   flex-direction: column;

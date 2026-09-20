@@ -25,6 +25,8 @@ export interface Course {
   prerequisites: string | null;
   image: string | null;
   format: CourseFormat;
+  price: number | null;
+  original_price: number | null;
   is_featured: boolean;
   is_published: boolean;
   created_at: string;
