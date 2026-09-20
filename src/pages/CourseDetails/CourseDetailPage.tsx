@@ -123,7 +123,6 @@ export default function CourseDetailPage() {
               </span>
             )}
           </div>
-          <RegisterCTA course={c} />
         </div>
       </section>
 
@@ -236,6 +235,7 @@ export default function CourseDetailPage() {
 
         <aside className="course-detail__sidebar drafting-frame">
           {c.price != null && <CoursePrice course={c} seatsLeft={seatsLeft} />}
+          <RegisterCTA course={c} />
 
           <span className="mono-label">Course Information</span>
           <dl className="course-info">
@@ -246,7 +246,6 @@ export default function CourseDetailPage() {
               </div>
             ))}
           </dl>
-          <RegisterCTA course={c} />
         </aside>
       </section>
     </>
