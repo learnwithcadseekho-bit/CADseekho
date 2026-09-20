@@ -194,6 +194,29 @@ export default function CourseDetailPage() {
             </article>
           )}
 
+          {c.course_testimonials.length > 0 && (
+            <article className="course-detail__block">
+              <h2>What Students Say</h2>
+              <div className="testimonial-list">
+                {c.course_testimonials.map((t) => (
+                  <blockquote className="testimonial-card" key={t.id}>
+                    {t.student_photo ? (
+                      <img src={t.student_photo} alt={t.student_name} className="testimonial-card__photo" />
+                    ) : (
+                      <span className="testimonial-card__photo testimonial-card__photo--placeholder" aria-hidden="true">
+                        {t.student_name.charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                    <div>
+                      <p className="testimonial-card__text">“{t.testimonial}”</p>
+                      <cite className="testimonial-card__name">{t.student_name}</cite>
+                    </div>
+                  </blockquote>
+                ))}
+              </div>
+            </article>
+          )}
+
           {faqItems.length > 0 && (
             <article className="course-detail__block">
               <h2>Frequently Asked Questions</h2>

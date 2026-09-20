@@ -61,8 +61,18 @@ export interface CourseFaq {
   order_number: number;
 }
 
+export interface CourseTestimonial {
+  id: string;
+  course_id: string;
+  student_name: string;
+  student_photo: string | null;
+  testimonial: string;
+  order_number: number;
+}
+
 export interface CourseDetail extends CourseWithCategory {
   course_modules: CourseModule[];
   course_skills: CourseSkill[];
   course_faqs: CourseFaq[];
+  course_testimonials: CourseTestimonial[];
 }

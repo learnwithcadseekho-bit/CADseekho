@@ -9,6 +9,7 @@ import { RichTextEditor } from "@/admin/components/RichTextEditor";
 import { CourseModulesManager } from "./CourseModulesManager";
 import { CourseSkillsManager } from "./CourseSkillsManager";
 import { CourseFaqsManager } from "./CourseFaqsManager";
+import { CourseTestimonialsManager } from "./CourseTestimonialsManager";
 import { listAllCategories } from "@/services/admin/adminCategoryService";
 import {
   createCourse,
@@ -267,6 +268,7 @@ export default function AdminCourseEditPage() {
           <CourseModulesManager courseId={id} />
           <CourseSkillsManager courseId={id} />
           <CourseFaqsManager courseId={id} />
+          <CourseTestimonialsManager courseId={id} />
         </>
       )}
     </div>
