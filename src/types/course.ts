@@ -27,6 +27,8 @@ export interface Course {
   format: CourseFormat;
   price: number | null;
   original_price: number | null;
+  next_batch_date: string | null;
+  registration_count: number;
   is_featured: boolean;
   is_published: boolean;
   created_at: string;
@@ -51,7 +53,16 @@ export interface CourseSkill {
   skill_name: string;
 }
 
+export interface CourseFaq {
+  id: string;
+  course_id: string;
+  question: string;
+  answer: string;
+  order_number: number;
+}
+
 export interface CourseDetail extends CourseWithCategory {
   course_modules: CourseModule[];
   course_skills: CourseSkill[];
+  course_faqs: CourseFaq[];
 }

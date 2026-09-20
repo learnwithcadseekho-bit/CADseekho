@@ -68,11 +68,30 @@ export default function CourseDetailPage() {
 
   const c = course!;
 
+  const hasNextBatch = c.format === "live" && Boolean(c.next_batch_date);
+
+  const faqItems: { question: string; answer: string }[] = [
+    {
+      question: "Is this course live or self-paced?",
+      answer:
+        c.format === "live"
+          ? hasNextBatch
+            ? `This is a live, instructor-led course. The next batch starts ${formatBatchDate(c.next_batch_date!)}.`
+            : "This is a live, instructor-led course."
+          : "This is a self-paced, online course — you can start anytime and learn at your own pace.",
+    },
+    ...(c.prerequisites
+      ? [{ question: "Do I need any prior experience to join this course?", answer: c.prerequisites }]
+      : []),
+    ...c.course_faqs.map((f) => ({ question: f.question, answer: f.answer })),
+  ];
+
   const infoItems: { label: string; value: string }[] = [
     c.level && { label: "Level", value: COURSE_LEVEL_LABEL[c.level] },
     c.software && { label: "Software", value: c.software },
     c.category && { label: "Category", value: c.category.name },
     { label: "Format", value: COURSE_FORMAT_LABEL[c.format] },
+    hasNextBatch && { label: "Next Batch", value: formatBatchDate(c.next_batch_date!) },
     c.prerequisites && { label: "Prerequisites", value: c.prerequisites },
   ].filter((item): item is { label: string; value: string } => Boolean(item));
 
@@ -91,6 +110,16 @@ export default function CourseDetailPage() {
           {c.short_description && <p className="course-hero__desc">{c.short_description}</p>}
           <div className="course-hero__meta">
             {c.level && <span className="course-hero__badge">{COURSE_LEVEL_LABEL[c.level]}</span>}
+            {hasNextBatch && (
+              <span className="course-hero__badge course-hero__badge--accent">
+                Next batch starts {formatBatchDate(c.next_batch_date!)}
+              </span>
+            )}
+            {c.registration_count > 0 && (
+              <span className="course-hero__badge">
+                {c.registration_count} {c.registration_count === 1 ? "student" : "students"} already registered
+              </span>
+            )}
           </div>
           <RegisterCTA course={c} />
         </div>
@@ -164,6 +193,20 @@ export default function CourseDetailPage() {
               </div>
             </article>
           )}
+
+          {faqItems.length > 0 && (
+            <article className="course-detail__block">
+              <h2>Frequently Asked Questions</h2>
+              <div className="faq-list">
+                {faqItems.map((item) => (
+                  <details className="faq-item" key={item.question}>
+                    <summary className="faq-item__question">{item.question}</summary>
+                    <p className="faq-item__answer">{item.answer}</p>
+                  </details>
+                ))}
+              </div>
+            </article>
+          )}
         </div>
 
         <aside className="course-detail__sidebar drafting-frame">
@@ -190,6 +233,21 @@ const CURRENCY_FORMAT = new Intl.NumberFormat("en-IN", {
   currency: "INR",
   maximumFractionDigits: 0,
 });
+
+function formatBatchDate(isoDate: string): string {
+  // isoDate is a plain "YYYY-MM-DD" (date-only) column value — parsing it
+  // directly would read as UTC midnight and can roll back a day in
+  // timezones behind UTC, so anchor it to local midnight instead.
+  return new Date(`${isoDate}T00:00:00`).toLocaleDateString("en-IN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+function ctaLabel(course: CourseDetail): string {
+  return course.price != null ? `Enroll for ${CURRENCY_FORMAT.format(course.price)}` : "Register / Get Access";
+}
 
 function CoursePrice({ course }: { course: CourseDetail }) {
   const { price, original_price } = course;
@@ -241,7 +299,7 @@ function RegisterCTA({ course }: { course: CourseDetail }) {
   if (!session) {
     return (
       <Link to="/login" state={{ from: location }} className="btn btn--primary">
-        Register / Get Access
+        {ctaLabel(course)}
       </Link>
     );
   }
@@ -271,7 +329,7 @@ function RegisterCTA({ course }: { course: CourseDetail }) {
         onClick={handleRegister}
         disabled={status === "submitting"}
       >
-        {status === "submitting" ? "Registering…" : "Register / Get Access"}
+        {status === "submitting" ? "Registering…" : ctaLabel(course)}
       </button>
     </div>
   );

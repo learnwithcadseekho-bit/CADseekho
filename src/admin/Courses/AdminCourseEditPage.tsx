@@ -8,6 +8,7 @@ import { FileUploadField } from "@/admin/components/FileUploadField";
 import { RichTextEditor } from "@/admin/components/RichTextEditor";
 import { CourseModulesManager } from "./CourseModulesManager";
 import { CourseSkillsManager } from "./CourseSkillsManager";
+import { CourseFaqsManager } from "./CourseFaqsManager";
 import { listAllCategories } from "@/services/admin/adminCategoryService";
 import {
   createCourse,
@@ -47,6 +48,7 @@ const emptyForm: CourseFormState = {
   format: "self_paced",
   price: "",
   original_price: "",
+  next_batch_date: null,
   is_featured: false,
   is_published: false,
 };
@@ -87,6 +89,7 @@ export default function AdminCourseEditPage() {
           format: c.format,
           price: c.price != null ? String(c.price) : "",
           original_price: c.original_price != null ? String(c.original_price) : "",
+          next_batch_date: c.next_batch_date,
           is_featured: c.is_featured,
           is_published: c.is_published,
         });
@@ -184,12 +187,20 @@ export default function AdminCourseEditPage() {
           />
         </div>
 
-        <SelectField
-          label="Format"
-          options={FORMAT_OPTIONS}
-          value={form.format}
-          onChange={(e) => setForm((f) => ({ ...f, format: e.target.value as CourseFormat }))}
-        />
+        <div className="admin-form-row">
+          <SelectField
+            label="Format"
+            options={FORMAT_OPTIONS}
+            value={form.format}
+            onChange={(e) => setForm((f) => ({ ...f, format: e.target.value as CourseFormat }))}
+          />
+          <TextField
+            label="Next Batch Starts"
+            type="date"
+            value={form.next_batch_date ?? ""}
+            onChange={(e) => setForm((f) => ({ ...f, next_batch_date: e.target.value || null }))}
+          />
+        </div>
 
         <TextField
           label="Prerequisites"
@@ -255,6 +266,7 @@ export default function AdminCourseEditPage() {
         <>
           <CourseModulesManager courseId={id} />
           <CourseSkillsManager courseId={id} />
+          <CourseFaqsManager courseId={id} />
         </>
       )}
     </div>

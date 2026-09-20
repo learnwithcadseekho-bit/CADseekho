@@ -47,7 +47,7 @@ export async function getCourseDetailBySlug(slug: string): Promise<CourseDetail 
   return cached(`courses:detail:${slug}`, async () => {
     const { data, error } = await supabase
       .from("courses")
-      .select("*, category:categories(name, slug), course_modules(*), course_skills(*)")
+      .select("*, category:categories(name, slug), course_modules(*), course_skills(*), course_faqs(*)")
       .eq("slug", slug)
       .eq("is_published", true)
       .maybeSingle();
@@ -57,6 +57,7 @@ export async function getCourseDetailBySlug(slug: string): Promise<CourseDetail 
 
     const detail = data as unknown as CourseDetail;
     detail.course_modules = [...detail.course_modules].sort((a, b) => a.order_number - b.order_number);
+    detail.course_faqs = [...detail.course_faqs].sort((a, b) => a.order_number - b.order_number);
     return detail;
   });
 }

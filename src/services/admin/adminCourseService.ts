@@ -30,6 +30,7 @@ export type CourseInput = Pick<
   | "format"
   | "price"
   | "original_price"
+  | "next_batch_date"
   | "is_featured"
   | "is_published"
 >;
