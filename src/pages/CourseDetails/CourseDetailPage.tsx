@@ -69,6 +69,8 @@ export default function CourseDetailPage() {
   const c = course!;
 
   const hasNextBatch = c.format === "live" && Boolean(c.next_batch_date);
+  const enrolledCount = Math.max(c.registration_count, c.manual_enrolled_count ?? 0);
+  const seatsLeft = c.seat_capacity != null ? Math.max(c.seat_capacity - enrolledCount, 0) : null;
 
   const faqItems: { question: string; answer: string }[] = [
     {
@@ -115,9 +117,9 @@ export default function CourseDetailPage() {
                 Next batch starts {formatBatchDate(c.next_batch_date!)}
               </span>
             )}
-            {c.registration_count > 0 && (
+            {enrolledCount > 0 && (
               <span className="course-hero__badge">
-                {c.registration_count} {c.registration_count === 1 ? "student" : "students"} already registered
+                {enrolledCount} {enrolledCount === 1 ? "student" : "students"} already enrolled
               </span>
             )}
           </div>
@@ -233,7 +235,7 @@ export default function CourseDetailPage() {
         </div>
 
         <aside className="course-detail__sidebar drafting-frame">
-          {c.price != null && <CoursePrice course={c} />}
+          {c.price != null && <CoursePrice course={c} seatsLeft={seatsLeft} />}
 
           <span className="mono-label">Course Information</span>
           <dl className="course-info">
@@ -272,7 +274,9 @@ function ctaLabel(course: CourseDetail): string {
   return course.price != null ? `Enroll for ${CURRENCY_FORMAT.format(course.price)}` : "Register / Get Access";
 }
 
-function CoursePrice({ course }: { course: CourseDetail }) {
+const LOW_SEATS_THRESHOLD = 10;
+
+function CoursePrice({ course, seatsLeft }: { course: CourseDetail; seatsLeft: number | null }) {
   const { price, original_price } = course;
   if (price == null) return null;
 
@@ -287,9 +291,18 @@ function CoursePrice({ course }: { course: CourseDetail }) {
           <span className="course-price__original">{CURRENCY_FORMAT.format(original_price!)}</span>
         )}
       </div>
-      {discountPercent !== null && discountPercent > 0 && (
-        <span className="course-price__badge">{discountPercent}% OFF</span>
-      )}
+      <div className="course-price__badges">
+        {discountPercent !== null && discountPercent > 0 && (
+          <span className="course-price__badge">{discountPercent}% OFF</span>
+        )}
+        {seatsLeft !== null && (
+          <span
+            className={`course-price__seats${seatsLeft <= LOW_SEATS_THRESHOLD ? " course-price__seats--low" : ""}`}
+          >
+            {seatsLeft > 0 ? `${seatsLeft} seats left` : "Seats full"}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

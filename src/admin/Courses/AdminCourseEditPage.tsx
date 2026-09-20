@@ -31,9 +31,14 @@ const FORMAT_OPTIONS = [
   { value: "live", label: "Live, Instructor-Led" },
 ];
 
-type CourseFormState = Omit<CourseInput, "price" | "original_price"> & {
+type CourseFormState = Omit<
+  CourseInput,
+  "price" | "original_price" | "manual_enrolled_count" | "seat_capacity"
+> & {
   price: string;
   original_price: string;
+  manual_enrolled_count: string;
+  seat_capacity: string;
 };
 
 const emptyForm: CourseFormState = {
@@ -50,6 +55,8 @@ const emptyForm: CourseFormState = {
   price: "",
   original_price: "",
   next_batch_date: null,
+  manual_enrolled_count: "",
+  seat_capacity: "",
   is_featured: false,
   is_published: false,
 };
@@ -91,6 +98,8 @@ export default function AdminCourseEditPage() {
           price: c.price != null ? String(c.price) : "",
           original_price: c.original_price != null ? String(c.original_price) : "",
           next_batch_date: c.next_batch_date,
+          manual_enrolled_count: c.manual_enrolled_count != null ? String(c.manual_enrolled_count) : "",
+          seat_capacity: c.seat_capacity != null ? String(c.seat_capacity) : "",
           is_featured: c.is_featured,
           is_published: c.is_published,
         });
@@ -108,6 +117,9 @@ export default function AdminCourseEditPage() {
         ...form,
         price: form.price.trim() === "" ? null : Number(form.price),
         original_price: form.original_price.trim() === "" ? null : Number(form.original_price),
+        manual_enrolled_count:
+          form.manual_enrolled_count.trim() === "" ? null : Number(form.manual_enrolled_count),
+        seat_capacity: form.seat_capacity.trim() === "" ? null : Number(form.seat_capacity),
       };
       if (isNew) {
         const created = await createCourse(payload);
@@ -200,6 +212,27 @@ export default function AdminCourseEditPage() {
             type="date"
             value={form.next_batch_date ?? ""}
             onChange={(e) => setForm((f) => ({ ...f, next_batch_date: e.target.value || null }))}
+          />
+        </div>
+
+        <div className="admin-form-row">
+          <TextField
+            label="Confirmed Enrollments (override)"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="e.g. 22 — for enrollments confirmed outside the site (a college batch, etc.)"
+            value={form.manual_enrolled_count}
+            onChange={(e) => setForm((f) => ({ ...f, manual_enrolled_count: e.target.value }))}
+          />
+          <TextField
+            label="Seat Capacity"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="e.g. 30 — enables a real 'X seats left' badge"
+            value={form.seat_capacity}
+            onChange={(e) => setForm((f) => ({ ...f, seat_capacity: e.target.value }))}
           />
         </div>
 

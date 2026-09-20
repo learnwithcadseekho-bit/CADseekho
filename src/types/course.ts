@@ -29,6 +29,8 @@ export interface Course {
   original_price: number | null;
   next_batch_date: string | null;
   registration_count: number;
+  manual_enrolled_count: number | null;
+  seat_capacity: number | null;
   is_featured: boolean;
   is_published: boolean;
   created_at: string;

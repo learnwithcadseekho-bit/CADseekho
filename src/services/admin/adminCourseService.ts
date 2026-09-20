@@ -31,6 +31,8 @@ export type CourseInput = Pick<
   | "price"
   | "original_price"
   | "next_batch_date"
+  | "manual_enrolled_count"
+  | "seat_capacity"
   | "is_featured"
   | "is_published"
 >;
