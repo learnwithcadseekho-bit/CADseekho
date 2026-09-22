@@ -10,7 +10,9 @@ import "@/styles/forms.css";
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const from = (location.state as { from?: { pathname?: string } })?.from?.pathname ?? "/dashboard";
+  // Keep the query string too — e.g. a course page's ?enroll=1 resumes checkout after sign-in.
+  const fromLocation = (location.state as { from?: { pathname?: string; search?: string } })?.from;
+  const from = fromLocation?.pathname ? fromLocation.pathname + (fromLocation.search ?? "") : "/dashboard";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

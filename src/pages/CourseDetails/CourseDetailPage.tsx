@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/hooks/useAuth";
 import { RichContent } from "@/components/RichContent";
 import { getCourseDetailBySlug } from "@/services/courseService";
 import { getRegistration, registerForCourse } from "@/services/courseRegistrationService";
+import { startCourseCheckout } from "@/services/paymentService";
 import { COURSE_FORMAT_LABEL, COURSE_LEVEL_LABEL, type CourseDetail } from "@/types/course";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
 import "@/styles/cards.css";
@@ -307,29 +308,68 @@ function CoursePrice({ course, seatsLeft }: { course: CourseDetail; seatsLeft: n
 }
 
 function RegisterCTA({ course }: { course: CourseDetail }) {
-  const { session, user } = useAuth();
+  const { session, user, profile } = useAuth();
   const location = useLocation();
-  const [status, setStatus] = useState<"checking" | "idle" | "registered" | "submitting" | "error">(
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [status, setStatus] = useState<"checking" | "idle" | "registered" | "enrolled" | "submitting">(
     session ? "checking" : "idle"
   );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const isPaid = course.price != null;
+  // ?enroll=1 (e.g. the homepage promo card) opens checkout on arrival —
+  // including after a detour through /login, which preserves the query.
+  const autoEnroll = searchParams.get("enroll") === "1";
 
   useEffect(() => {
     if (!user) return;
     getRegistration(course.id, user.id)
-      .then((reg) => setStatus(reg ? "registered" : "idle"))
+      .then((reg) => setStatus(!reg ? "idle" : reg.status === "enrolled" ? "enrolled" : "registered"))
       .catch(() => setStatus("idle"));
   }, [user, course.id]);
 
   async function handleRegister() {
     if (!user) return;
     setStatus("submitting");
+    setErrorMessage(null);
     try {
       await registerForCourse(course.id, user.id);
       setStatus("registered");
     } catch {
-      setStatus("error");
+      setErrorMessage("Something went wrong. Please try again.");
+      setStatus("idle");
     }
   }
+
+  async function handleCheckout() {
+    if (!user) return;
+    const previous = status;
+    setStatus("submitting");
+    setErrorMessage(null);
+    try {
+      const result = await startCourseCheckout(course.id, {
+        name: profile?.full_name,
+        email: profile?.email ?? user.email,
+        contact: profile?.phone ?? undefined,
+      });
+      setStatus(result === "enrolled" ? "enrolled" : previous);
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setStatus(previous);
+    }
+  }
+
+  useEffect(() => {
+    if (!autoEnroll || !isPaid || (status !== "idle" && status !== "registered")) return;
+    setSearchParams(
+      (params) => {
+        params.delete("enroll");
+        return params;
+      },
+      { replace: true }
+    );
+    handleCheckout();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fire once, when the registration check settles
+  }, [autoEnroll, isPaid, status]);
 
   if (!session) {
     return (
@@ -347,24 +387,24 @@ function RegisterCTA({ course }: { course: CourseDetail }) {
     );
   }
 
-  if (status === "registered") {
+  if (status === "enrolled" || (status === "registered" && !isPaid)) {
     return (
       <button type="button" className="btn btn--outline" disabled>
-        ✓ Registered
+        {status === "enrolled" ? "✓ Enrolled" : "✓ Registered"}
       </button>
     );
   }
 
   return (
     <div className="course-register">
-      {status === "error" && <p className="field__error">Something went wrong. Please try again.</p>}
+      {errorMessage && <p className="field__error">{errorMessage}</p>}
       <button
         type="button"
         className="btn btn--primary"
-        onClick={handleRegister}
+        onClick={isPaid ? handleCheckout : handleRegister}
         disabled={status === "submitting"}
       >
-        {status === "submitting" ? "Registering…" : ctaLabel(course)}
+        {status === "submitting" ? (isPaid ? "Opening checkout…" : "Registering…") : ctaLabel(course)}
       </button>
     </div>
   );

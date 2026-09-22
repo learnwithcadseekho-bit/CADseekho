@@ -1,5 +1,6 @@
 // Sends registration notification emails (to the admin and to the student)
-// when a row is inserted into course_registrations. Triggered by a Supabase
+// when a row is inserted into course_registrations, or when an existing
+// registration becomes 'enrolled' (paid via Razorpay, or confirmed by an admin). Triggered by a Supabase
 // Database Webhook on course_registrations (INSERT) — the webhook is
 // dashboard-configured, not a migration, since it needs this function's
 // deployed URL. See the setup steps in CONTENT-GUIDE.md or ask Claude.
@@ -24,6 +25,7 @@ interface RegistrationWebhookPayload {
     id: string;
     user_id: string;
     course_id: string;
+    status?: string;
   };
 }
 
@@ -58,7 +60,7 @@ Deno.serve(async (req) => {
     return new Response("Invalid payload", { status: 400 });
   }
 
-  if (payload.table !== "course_registrations" || payload.type !== "INSERT") {
+  if (payload.table !== "course_registrations" || (payload.type !== "INSERT" && payload.type !== "UPDATE")) {
     return new Response("Ignored", { status: 200, headers: corsHeaders });
   }
 
@@ -93,6 +95,35 @@ Deno.serve(async (req) => {
   }
 
   const studentName = profile.full_name || "A student";
+
+  if (payload.record.status === "enrolled") {
+    await Promise.all([
+      sendEmail(
+        resendApiKey,
+        adminEmail,
+        `Enrolled: ${course.title}`,
+        `<p><strong>${studentName}</strong> is now enrolled in <strong>${course.title}</strong>.</p>
+         <ul>
+           <li>Email: ${profile.email}</li>
+           <li>Phone: ${profile.phone ?? "—"}</li>
+         </ul>
+         <p>Add them to the matching Graphy batch.</p>`
+      ),
+      sendEmail(
+        resendApiKey,
+        profile.email,
+        `You're enrolled in ${course.title}`,
+        `<p>Hi ${studentName},</p>
+         <p>Your enrollment in <strong>${course.title}</strong> on CADseekho is confirmed. We'll send your class access details shortly.</p>
+         <p>— Team CADseekho</p>`
+      ),
+    ]);
+    return new Response("OK", { status: 200, headers: corsHeaders });
+  }
+
+  if (payload.type !== "INSERT") {
+    return new Response("Ignored", { status: 200, headers: corsHeaders });
+  }
 
   await Promise.all([
     sendEmail(

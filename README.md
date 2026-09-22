@@ -2,7 +2,7 @@
 
 An online engineering CAD/CAE education platform — course catalog, free downloads, blog, user accounts, and an admin dashboard, built as a static React app on top of Supabase.
 
-This is **not** an LMS. There are no live classes, video lectures, quizzes, or payments (yet) — see [Future Expansion](#future-expansion).
+This is **not** an LMS. There are no live classes, video lectures, or quizzes (yet); priced courses take payment through Razorpay Checkout — see [Future Expansion](#future-expansion).
 
 ---
 

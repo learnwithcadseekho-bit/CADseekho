@@ -29,3 +29,8 @@ otp_expiry = 3600
 
 [storage]
 enabled = true
+
+# Razorpay calls this directly and can't send a Supabase JWT — the function
+# authenticates the request by verifying X-Razorpay-Signature instead.
+[functions.razorpay-webhook]
+verify_jwt = false
