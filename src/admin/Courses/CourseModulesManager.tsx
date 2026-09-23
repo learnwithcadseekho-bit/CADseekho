@@ -3,6 +3,7 @@ import { TextField } from "@/components/ui/TextField";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDeleteButton } from "@/admin/components/ConfirmDeleteButton";
 import { RichTextEditor } from "@/admin/components/RichTextEditor";
+import { FileUploadField } from "@/admin/components/FileUploadField";
 import {
   createModule,
   deleteModule,
@@ -15,6 +16,53 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
+interface ModuleMedia {
+  image: string | null;
+  model3d: string | null;
+  media_alt: string | null;
+}
+
+const NO_MEDIA: ModuleMedia = { image: null, model3d: null, media_alt: null };
+
+// Optional per-chapter picture and/or .glb model shown beside the syllabus
+// entry. The image doubles as the 3D viewer's poster while the model loads.
+function ModuleMediaFields({ value, onChange }: { value: ModuleMedia; onChange: (value: ModuleMedia) => void }) {
+  return (
+    <>
+      <FileUploadField
+        label="Chapter Image (optional — stress/deformation plot, mesh, CAD part)"
+        bucket="course-images"
+        accept="image/*"
+        value={value.image}
+        onChange={(image) => onChange({ ...value, image })}
+      />
+      {value.image && (
+        <button type="button" className="admin-link" onClick={() => onChange({ ...value, image: null })}>
+          Remove image
+        </button>
+      )}
+      <FileUploadField
+        label="3D Model (optional, .glb — Draco/meshopt compress anything over ~3 MB first)"
+        bucket="course-models"
+        accept=".glb,model/gltf-binary"
+        value={value.model3d}
+        onChange={(model3d) => onChange({ ...value, model3d })}
+      />
+      {value.model3d && (
+        <button type="button" className="admin-link" onClick={() => onChange({ ...value, model3d: null })}>
+          Remove 3D model
+        </button>
+      )}
+      <TextField
+        label="Media Alt Text (what the image/model shows)"
+        placeholder="e.g. Stress contour plot of a cantilever beam under point load"
+        value={value.media_alt ?? ""}
+        onChange={(e) => onChange({ ...value, media_alt: e.target.value || null })}
+      />
+    </>
+  );
+}
+
 export function CourseModulesManager({ courseId }: { courseId: string }) {
   const [modules, setModules] = useState<CourseModule[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,9 +70,11 @@ export function CourseModulesManager({ courseId }: { courseId: string }) {
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editOrder, setEditOrder] = useState(1);
+  const [editMedia, setEditMedia] = useState<ModuleMedia>(NO_MEDIA);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
+  const [newMedia, setNewMedia] = useState<ModuleMedia>(NO_MEDIA);
   const [saving, setSaving] = useState(false);
 
   function load() {
@@ -41,13 +91,19 @@ export function CourseModulesManager({ courseId }: { courseId: string }) {
     setEditTitle(m.title);
     setEditDescription(m.description ?? "");
     setEditOrder(m.order_number);
+    setEditMedia({ image: m.image, model3d: m.model3d, media_alt: m.media_alt });
   }
 
   async function saveEdit() {
     if (!editingId) return;
     setSaving(true);
     try {
-      await updateModule(editingId, { title: editTitle, description: editDescription, order_number: editOrder });
+      await updateModule(editingId, {
+        title: editTitle,
+        description: editDescription,
+        order_number: editOrder,
+        ...editMedia,
+      });
       setEditingId(null);
       load();
     } finally {
@@ -65,9 +121,11 @@ export function CourseModulesManager({ courseId }: { courseId: string }) {
         title: newTitle.trim(),
         description: newDescription || null,
         order_number: nextOrder,
+        ...newMedia,
       });
       setNewTitle("");
       setNewDescription("");
+      setNewMedia(NO_MEDIA);
       setShowAddForm(false);
       load();
     } finally {
@@ -139,6 +197,7 @@ export function CourseModulesManager({ courseId }: { courseId: string }) {
             <label className="field__label">Description</label>
             <RichTextEditor value={editDescription} onChange={setEditDescription} />
           </div>
+          <ModuleMediaFields value={editMedia} onChange={setEditMedia} />
           <div className="admin-form-actions" style={{ marginTop: "var(--space-4)" }}>
             <Button type="button" onClick={saveEdit} disabled={saving}>
               {saving ? "Saving…" : "Save Module"}
@@ -158,6 +217,7 @@ export function CourseModulesManager({ courseId }: { courseId: string }) {
             <label className="field__label">Description (optional)</label>
             <RichTextEditor value={newDescription} onChange={setNewDescription} />
           </div>
+          <ModuleMediaFields value={newMedia} onChange={setNewMedia} />
           <div className="admin-form-actions" style={{ marginTop: "var(--space-4)" }}>
             <Button type="button" onClick={handleAdd} disabled={saving || !newTitle.trim()}>
               {saving ? "Adding…" : "Add Module"}

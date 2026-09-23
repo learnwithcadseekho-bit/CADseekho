@@ -1,0 +1,60 @@
+/* Chapter picture / 3D model beside a syllabus entry, framed like a
+   technical drawing sheet with a "FIG. n" title strip. */
+.chapter-media {
+  margin: 0;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+}
+
+.chapter-media__sheet {
+  aspect-ratio: 4 / 3;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.chapter-media__sheet img,
+.chapter-media__sheet model-viewer {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.chapter-media__sheet img {
+  object-fit: contain;
+}
+
+.chapter-media__sheet model-viewer {
+  --poster-color: transparent;
+}
+
+.chapter-media__fallback {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--slate);
+}
+
+.chapter-media__caption {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--line);
+}
+
+.chapter-media__hint {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Only offer rotate/zoom once the live viewer is up — not while the poster
+   is standing in for it, or after the model failed to load. */
+.chapter-media:not(:has(model-viewer)) .chapter-media__hint {
+  display: none;
+}

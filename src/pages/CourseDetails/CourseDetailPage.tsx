@@ -3,6 +3,7 @@ import { Link, useLocation, useParams, useSearchParams } from "react-router-dom"
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/hooks/useAuth";
 import { RichContent } from "@/components/RichContent";
+import { ChapterMedia } from "@/components/ChapterMedia";
 import { getCourseDetailBySlug } from "@/services/courseService";
 import { getRegistration, registerForCourse } from "@/services/courseRegistrationService";
 import { startCourseCheckout } from "@/services/paymentService";
@@ -167,18 +168,32 @@ export default function CourseDetailPage() {
             <article className="course-detail__block">
               <h2>Course Syllabus</h2>
               <ol className="syllabus-list">
-                {c.course_modules.map((m) => (
-                  <li key={m.id} className="syllabus-list__item">
-                    <span className="mono-label">Module {m.order_number}</span>
-                    <span className="syllabus-list__title">{m.title}</span>
-                    {m.description && (
-                      <div
-                        className="syllabus-list__desc"
-                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(m.description) }}
+                {c.course_modules.map((m) => {
+                  const hasMedia = Boolean(m.image || m.model3d);
+                  return (
+                    <li
+                      key={m.id}
+                      className={`syllabus-list__item${hasMedia ? " syllabus-list__item--media" : ""}`}
+                    >
+                      <div className="syllabus-list__body">
+                        <span className="mono-label">Module {m.order_number}</span>
+                        <span className="syllabus-list__title">{m.title}</span>
+                        {m.description && (
+                          <div
+                            className="syllabus-list__desc"
+                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(m.description) }}
+                          />
+                        )}
+                      </div>
+                      <ChapterMedia
+                        image={m.image}
+                        model3d={m.model3d}
+                        alt={m.media_alt || m.title}
+                        figure={m.order_number}
                       />
-                    )}
-                  </li>
-                ))}
+                    </li>
+                  );
+                })}
               </ol>
             </article>
           )}

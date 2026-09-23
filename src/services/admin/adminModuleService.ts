@@ -16,6 +16,9 @@ export async function createModule(input: {
   title: string;
   description: string | null;
   order_number: number;
+  image: string | null;
+  model3d: string | null;
+  media_alt: string | null;
 }): Promise<CourseModule> {
   const { data, error } = await supabase.from("course_modules").insert(input).select("*").single();
   if (error) throw error;
@@ -24,7 +27,7 @@ export async function createModule(input: {
 
 export async function updateModule(
   id: string,
-  input: Partial<Pick<CourseModule, "title" | "description" | "order_number">>
+  input: Partial<Pick<CourseModule, "title" | "description" | "order_number" | "image" | "model3d" | "media_alt">>
 ): Promise<CourseModule> {
   const { data, error } = await supabase
     .from("course_modules")

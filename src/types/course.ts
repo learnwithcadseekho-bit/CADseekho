@@ -47,6 +47,12 @@ export interface CourseModule {
   title: string;
   description: string | null;
   order_number: number;
+  /** Static picture for the chapter; also the 3D viewer's poster. */
+  image: string | null;
+  /** .glb file for an interactive, rotatable 3D model. */
+  model3d: string | null;
+  /** What the image/model shows — alt text for both. */
+  media_alt: string | null;
 }
 
 export interface CourseSkill {
