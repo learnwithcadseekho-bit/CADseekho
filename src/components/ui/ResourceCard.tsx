@@ -30,6 +30,11 @@ export function AccessBadge({ access }: { access: ResourceAccess }) {
 export function ResourceCard({ resource }: { resource: ResourceCardData }) {
   return (
     <article className="resource-card drafting-frame drafting-frame--interactive">
+      {resource.thumbnail_url && (
+        <div className="resource-card__thumb">
+          <img src={resource.thumbnail_url} alt="" loading="lazy" decoding="async" />
+        </div>
+      )}
       <div className="resource-card__top">
         <span className="mono-label">{RESOURCE_TYPE_LABELS[resource.type]}</span>
         <AccessBadge access={resource.access} />

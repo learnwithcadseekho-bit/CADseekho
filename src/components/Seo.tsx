@@ -32,7 +32,8 @@ export function Seo({ title, description, image, type = "website" }: SeoProps) {
     setMeta("property", "og:type", type);
     setMeta("property", "og:site_name", "CADseekho");
     setMeta("property", "og:url", window.location.href);
-    if (image) setMeta("property", "og:image", image);
+    // og:image must be absolute; site-relative paths (e.g. /resources/...) get the origin.
+    if (image) setMeta("property", "og:image", new URL(image, window.location.origin).href);
 
     let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (!canonical) {
