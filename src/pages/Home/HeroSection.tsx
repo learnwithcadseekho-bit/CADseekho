@@ -19,7 +19,7 @@ export function HeroSection() {
               Explore Courses
             </Link>
             <Link to="/downloads" className="btn btn--outline">
-              Free Downloads
+              Downloads
             </Link>
           </div>
         </div>

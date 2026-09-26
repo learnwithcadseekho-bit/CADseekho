@@ -25,7 +25,7 @@ export function DownloadsTab() {
       <div className="dashboard-empty">
         <p>You haven't downloaded any resources yet.</p>
         <Link to="/downloads" className="btn btn--primary">
-          Browse Free Downloads
+          Browse Downloads
         </Link>
       </div>
     );

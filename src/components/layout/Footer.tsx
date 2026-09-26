@@ -51,7 +51,10 @@ export function Footer() {
           <span className="mono-label">Resources</span>
           <ul>
             <li>
-              <Link to="/downloads">Free Downloads</Link>
+              <Link to="/resources">Calculators &amp; Tutorials</Link>
+            </li>
+            <li>
+              <Link to="/downloads">Downloads</Link>
             </li>
             <li>
               <Link to="/blog">Blog</Link>

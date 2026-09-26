@@ -20,11 +20,11 @@ export default function DownloadsPage() {
   return (
     <section className="section container">
       <Seo
-        title="Free Engineering Resources"
-        description="Free CAD practice drawings, SolidWorks and AutoCAD files, GD&T references, and engineering guides. Some downloads require a free account."
+        title="Engineering Resources"
+        description="CAD practice drawings, SolidWorks and AutoCAD files, GD&T references, and engineering guides. Some downloads require a free account."
       />
       <SectionHeading
-        title="Free Engineering Resources"
+        title="Engineering Resources"
         subtitle="Practice drawings, CAD files, guides, and reference material. Some resources require a free account to download."
         align="center"
         as="h1"

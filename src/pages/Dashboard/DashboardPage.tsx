@@ -12,7 +12,7 @@ import "./dashboard.css";
 const TABS = [
   { key: "profile", label: "My Profile" },
   { key: "courses", label: "My Courses" },
-  { key: "downloads", label: "Free Downloads" },
+  { key: "downloads", label: "Downloads" },
   { key: "settings", label: "Account Settings" },
 ] as const;
 

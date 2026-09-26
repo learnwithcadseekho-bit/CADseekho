@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" width="800" height="220">
+  <!-- Generic stand-in for locked charts. Not drawn from any real data. -->
+  <rect width="800" height="220" fill="#FFFFFF"/>
+  <g stroke="#E3E7EE">
+    <line x1="70" y1="40" x2="770" y2="40"/>
+    <line x1="70" y1="85" x2="770" y2="85"/>
+    <line x1="70" y1="130" x2="770" y2="130"/>
+  </g>
+  <g stroke="#75849C">
+    <line x1="70" y1="175" x2="770" y2="175"/>
+    <line x1="70" y1="20" x2="70" y2="175"/>
+  </g>
+  <path d="M70 120 C 250 118, 450 110, 600 92 S 740 70, 770 62" fill="none" stroke="#1B2A4A" stroke-width="3"/>
+  <path d="M70 120 C 260 110, 430 85, 560 60 S 700 28, 770 22" fill="none" stroke="#B8461A" stroke-width="3" stroke-dasharray="10 8"/>
+  <line x1="300" y1="108" x2="300" y2="175" stroke="#E8622C" stroke-dasharray="4 5"/>
+  <circle cx="300" cy="108" r="8" fill="#E8622C"/>
+</svg>

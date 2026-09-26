@@ -14,6 +14,10 @@ const CoursesListingPage = lazy(() => import("@/pages/Courses/CoursesListingPage
 const CourseCategoryPage = lazy(() => import("@/pages/Courses/CourseCategoryPage"));
 const CourseDetailPage = lazy(() => import("@/pages/CourseDetails/CourseDetailPage"));
 const DownloadsPage = lazy(() => import("@/pages/Downloads/DownloadsPage"));
+const ResourcesHubPage = lazy(() => import("@/pages/Resources/ResourcesHubPage"));
+const ResourceSoftwarePage = lazy(() => import("@/pages/Resources/ResourceSoftwarePage"));
+const ResourceTaxonomyPage = lazy(() => import("@/pages/Resources/ResourceTaxonomyPage"));
+const ResourceDetailPage = lazy(() => import("@/pages/Resources/ResourceDetailPage"));
 const BlogListingPage = lazy(() => import("@/pages/Blog/BlogListingPage"));
 const BlogPostPage = lazy(() => import("@/pages/Blog/BlogPostPage"));
 const AboutPage = lazy(() => import("@/pages/About/AboutPage"));
@@ -33,6 +37,11 @@ const AdminCategoriesPage = lazy(() => import("@/admin/Categories/AdminCategorie
 const AdminCoursesPage = lazy(() => import("@/admin/Courses/AdminCoursesPage"));
 const AdminCourseEditPage = lazy(() => import("@/admin/Courses/AdminCourseEditPage"));
 const AdminDownloadsPage = lazy(() => import("@/admin/Downloads/AdminDownloadsPage"));
+const AdminResourcesPage = lazy(() => import("@/admin/Resources/AdminResourcesPage"));
+const AdminResourceEditPage = lazy(() => import("@/admin/Resources/AdminResourceEditPage"));
+const AdminResourceTaxonomyPage = lazy(() => import("@/admin/Resources/AdminResourceTaxonomyPage"));
+const AdminLearningPathsPage = lazy(() => import("@/admin/Resources/AdminLearningPathsPage"));
+const AdminEntitlementsPage = lazy(() => import("@/admin/Resources/AdminEntitlementsPage"));
 const AdminBlogPage = lazy(() => import("@/admin/Blog/AdminBlogPage"));
 const AdminUsersPage = lazy(() => import("@/admin/Users/AdminUsersPage"));
 const AdminMessagesPage = lazy(() => import("@/admin/Messages/AdminMessagesPage"));
@@ -54,6 +63,11 @@ export function AppRoutes() {
         <Route path="/courses/category/:categorySlug" element={<CourseCategoryPage />} />
         <Route path="/courses/:slug" element={<CourseDetailPage />} />
         <Route path="/downloads" element={<DownloadsPage />} />
+        <Route path="/resources" element={<ResourcesHubPage />} />
+        <Route path="/resources/software/:software" element={<ResourceSoftwarePage />} />
+        <Route path="/resources/topic/:value" element={<ResourceTaxonomyPage kind="topic" />} />
+        <Route path="/resources/type/:value" element={<ResourceTaxonomyPage kind="type" />} />
+        <Route path="/resources/:slug" element={<ResourceDetailPage />} />
         <Route path="/blog" element={<BlogListingPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -117,6 +131,11 @@ export function AppRoutes() {
         <Route path="courses" element={<AdminCoursesPage />} />
         <Route path="courses/:id" element={<AdminCourseEditPage />} />
         <Route path="downloads" element={<AdminDownloadsPage />} />
+        <Route path="resources" element={<AdminResourcesPage />} />
+        <Route path="resources/taxonomy" element={<AdminResourceTaxonomyPage />} />
+        <Route path="resources/paths" element={<AdminLearningPathsPage />} />
+        <Route path="resources/access" element={<AdminEntitlementsPage />} />
+        <Route path="resources/:id" element={<AdminResourceEditPage />} />
         <Route path="blog" element={<AdminBlogPage />} />
         <Route path="users" element={<AdminUsersPage />} />
         <Route path="messages" element={<AdminMessagesPage />} />
