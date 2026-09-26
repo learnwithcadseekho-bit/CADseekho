@@ -200,6 +200,7 @@
   background: var(--accent);
   color: var(--white);
   font-family: var(--font-display);
+  font-stretch: var(--font-display-stretch);
   font-weight: 700;
 }
 
@@ -281,6 +282,7 @@
 
 .course-price__current {
   font-family: var(--font-display);
+  font-stretch: var(--font-display-stretch);
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--ink);

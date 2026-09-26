@@ -26,6 +26,7 @@
 
 .auth-page__brand {
   font-family: var(--font-display);
+  font-stretch: var(--font-display-stretch);
   font-weight: 600;
   font-size: 1.25rem;
   color: var(--ink);
@@ -193,7 +194,7 @@ form {
 }
 
 .btn--primary:hover:not(:disabled) {
-  opacity: 0.92;
+  background: var(--accent-hover);
 }
 
 .btn--outline {

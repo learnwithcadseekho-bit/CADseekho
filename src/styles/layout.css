@@ -20,6 +20,7 @@
 
 .site-header__logo {
   font-family: var(--font-display);
+  font-stretch: var(--font-display-stretch);
   font-weight: 700;
   font-size: 1.25rem;
   color: var(--ink);
@@ -268,6 +269,7 @@
 
 .site-footer__brand {
   font-family: var(--font-display);
+  font-stretch: var(--font-display-stretch);
   font-weight: 700;
   font-size: 1.25rem;
   color: var(--paper);

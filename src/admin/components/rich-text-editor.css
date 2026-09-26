@@ -75,6 +75,7 @@
 .rte-content h2,
 .rte-content h3 {
   font-family: var(--font-display);
+  font-stretch: var(--font-display-stretch);
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 0.5em;

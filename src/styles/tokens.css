@@ -8,16 +8,26 @@
   --ink: #1B2A4A;
   --line: #AEB9C9;
   --line-strong: #75849C;
-  --accent: #E8622C;
+  /* Burnt orange, deepened so it passes WCAG AA as text on --paper (4.8:1)
+     and under white button labels (5.3:1). The original #E8622C only
+     reached ~3:1 in both. */
+  --accent: #B8461A;
+  --accent-hover: #9C3A14;
+  /* The bright brand orange — decorative only (sketch marks, dimension
+     ticks, glows, large display accents), never for body-size text. */
+  --accent-bright: #E8622C;
   --slate: #46566B;
   --white: #FFFFFF;
 
   /* Accent on ink (for dark sections) needs higher-contrast pairing per Section 29 */
   --accent-on-ink: #FF7A45;
 
-  /* Typography */
-  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
-  --font-body: "Inter", "Segoe UI", sans-serif;
+  /* Typography — a title-block feel rather than the default startup pairing:
+     semi-condensed Archivo for headings (engineering drawing lettering),
+     IBM Plex Sans for reading, IBM Plex Mono for labels and numbers. */
+  --font-display: "Archivo", "Arial Narrow", "Segoe UI", sans-serif;
+  --font-display-stretch: 87.5%;
+  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", "Consolas", monospace;
 
   /* Spacing scale */
