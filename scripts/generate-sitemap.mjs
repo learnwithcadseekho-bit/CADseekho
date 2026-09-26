@@ -9,7 +9,7 @@ const SITE_URL = (process.env.VITE_SITE_URL || "https://cadseekho.com").replace(
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
 
-const STATIC_PATHS = ["/", "/courses", "/downloads", "/blog", "/about", "/contact", "/login", "/signup"];
+const STATIC_PATHS = ["/", "/courses", "/downloads", "/tools/beam-calculator", "/blog", "/about", "/contact", "/login", "/signup"];
 
 function urlEntry(path) {
   return `  <url><loc>${SITE_URL}${path}</loc></url>`;

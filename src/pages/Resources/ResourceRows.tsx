@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ResourceCard } from "@/components/ui/ResourceCard";
+import { AccessBadge, ResourceCard } from "@/components/ui/ResourceCard";
 import { getLearningPaths, getMostUsedResources } from "@/services/resourceService";
 import {
   RESOURCE_TYPES,
@@ -10,6 +10,53 @@ import {
   type Software,
   type Topic,
 } from "@/types/resource";
+
+// Standalone tools served from public/tools/ — not resource rows in the database.
+const FREE_TOOLS = [
+  {
+    to: "/tools/beam-calculator",
+    label: "Calculator",
+    title: "Beam Calculator",
+    summary: "Reactions, SFD, BMD, deflection and stress for any supports, loads and cross-section.",
+    tags: ["2D", "3D"],
+  },
+];
+
+export function FreeToolsRow() {
+  return (
+    <section className="resource-row" aria-labelledby="free-tools-title">
+      <h2 id="free-tools-title" className="resource-row__title">
+        Free tools
+      </h2>
+      <div className="resource-grid">
+        {FREE_TOOLS.map((tool) => (
+          <article key={tool.to} className="resource-card drafting-frame drafting-frame--interactive">
+            <div className="resource-card__top">
+              <span className="mono-label">{tool.label}</span>
+              <AccessBadge access="free" />
+            </div>
+            <h3 className="resource-card__title">
+              <Link to={tool.to} className="resource-card__link">
+                {tool.title}
+              </Link>
+            </h3>
+            <p className="resource-card__summary">{tool.summary}</p>
+            <div className="resource-card__footer">
+              <ul className="resource-card__software" aria-label="Modes">
+                {tool.tags.map((tag) => (
+                  <li key={tag} className="software-tag">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+              <span className="mono-label">No sign-in</span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export function LearningPathTiles({
   softwareId,

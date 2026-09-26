@@ -18,6 +18,7 @@ const ResourcesHubPage = lazy(() => import("@/pages/Resources/ResourcesHubPage")
 const ResourceSoftwarePage = lazy(() => import("@/pages/Resources/ResourceSoftwarePage"));
 const ResourceTaxonomyPage = lazy(() => import("@/pages/Resources/ResourceTaxonomyPage"));
 const ResourceDetailPage = lazy(() => import("@/pages/Resources/ResourceDetailPage"));
+const BeamCalculatorPage = lazy(() => import("@/pages/tools/BeamCalculatorPage"));
 const BlogListingPage = lazy(() => import("@/pages/Blog/BlogListingPage"));
 const BlogPostPage = lazy(() => import("@/pages/Blog/BlogPostPage"));
 const AboutPage = lazy(() => import("@/pages/About/AboutPage"));
@@ -68,6 +69,7 @@ export function AppRoutes() {
         <Route path="/resources/topic/:value" element={<ResourceTaxonomyPage kind="topic" />} />
         <Route path="/resources/type/:value" element={<ResourceTaxonomyPage kind="type" />} />
         <Route path="/resources/:slug" element={<ResourceDetailPage />} />
+        <Route path="/tools/beam-calculator" element={<BeamCalculatorPage />} />
         <Route path="/blog" element={<BlogListingPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/about" element={<AboutPage />} />

@@ -1,6 +1,6 @@
 import { Seo } from "@/components/Seo";
 import { ResourceBrowser } from "./ResourceBrowser";
-import { LearningPathTiles, MostUsedRow, TaxonomyIndex } from "./ResourceRows";
+import { FreeToolsRow, LearningPathTiles, MostUsedRow, TaxonomyIndex } from "./ResourceRows";
 import { useResourceTaxonomy } from "@/hooks/useResourceTaxonomy";
 import "@/styles/cards.css";
 import "@/styles/resources.css";
@@ -33,6 +33,7 @@ export default function ResourcesHubPage() {
             topics={topics}
             idleContent={
               <>
+                <FreeToolsRow />
                 <LearningPathTiles softwareId={null} />
                 <MostUsedRow softwareSlug={null} />
               </>

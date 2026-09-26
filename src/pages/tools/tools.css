@@ -1,0 +1,16 @@
+/* Embedded static tools (public/tools/*.html). The tool pages carry their own
+   16px side padding, so trim the container gutter to keep the tool's content
+   aligned with the hero text above it. */
+.tool-section {
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-16);
+  padding-left: max(0px, calc(var(--space-6) - 16px));
+  padding-right: max(0px, calc(var(--space-6) - 16px));
+}
+
+.tool-frame {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--paper);
+}

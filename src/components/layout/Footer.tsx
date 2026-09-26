@@ -54,6 +54,9 @@ export function Footer() {
               <Link to="/resources">Calculators &amp; Tutorials</Link>
             </li>
             <li>
+              <Link to="/tools/beam-calculator">Beam Calculator</Link>
+            </li>
+            <li>
               <Link to="/downloads">Downloads</Link>
             </li>
             <li>

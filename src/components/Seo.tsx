@@ -5,6 +5,8 @@ interface SeoProps {
   description?: string;
   image?: string;
   type?: "website" | "article";
+  /** Absolute canonical URL; defaults to the current origin + path. */
+  canonical?: string;
 }
 
 function setMeta(attr: "name" | "property", key: string, content: string) {
@@ -21,7 +23,7 @@ function setMeta(attr: "name" | "property", key: string, content: string) {
 // Graph metadata. No SSR here, so this runs client-side via useEffect —
 // sufficient for crawlers that execute JS (Google, Bing), which covers the
 // realistic SEO surface for a static-hosted Vite SPA.
-export function Seo({ title, description, image, type = "website" }: SeoProps) {
+export function Seo({ title, description, image, type = "website", canonical: canonicalUrl }: SeoProps) {
   useEffect(() => {
     const fullTitle = `${title} | CADseekho`;
     document.title = fullTitle;
@@ -41,8 +43,8 @@ export function Seo({ title, description, image, type = "website" }: SeoProps) {
       canonical.setAttribute("rel", "canonical");
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute("href", window.location.origin + window.location.pathname);
-  }, [title, description, image, type]);
+    canonical.setAttribute("href", canonicalUrl ?? window.location.origin + window.location.pathname);
+  }, [title, description, image, type, canonicalUrl]);
 
   return null;
 }
