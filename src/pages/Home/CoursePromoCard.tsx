@@ -86,10 +86,13 @@ export function CoursePromoCard() {
           </div>
         )}
 
+        {/* Copy is written for the featured course above (Level 1 = Workbench
+            fundamentals). Validating results against hand calculations belongs
+            to the next, advanced course — don't promise it here. Update this
+            text if FEATURED_COURSE_SLUG changes. */}
         <p className="course-promo__copy">
-          Every simulation is <strong>validated against hand calculations</strong> before you
-          trust the software — the same solve-by-hand-first method used across CADseekho’s
-          curriculum.
+          Learn the <strong>complete ANSYS Workbench workflow</strong> — geometry, meshing, loads
+          and supports, solving and reviewing results — hands-on, on real engineering parts.
         </p>
 
         {course.price != null && (
