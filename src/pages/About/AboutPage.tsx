@@ -10,7 +10,7 @@ export default function AboutPage() {
       <section className="section container about-page">
         <Seo
           title="About CADseekho"
-          description="CADseekho is an engineering education platform teaching CAD design and CAE simulation — SolidWorks, Creo, ANSYS, HyperMesh — with a solve-by-hand-first methodology, online and offline."
+          description="CADseekho is an engineering education platform teaching CAD design and CAE simulation — SolidWorks, Creo, ANSYS, HyperMesh — with a solve-by-hand-first methodology, online and offline, plus corporate and college training."
         />
         <SectionHeading
           title="Engineering education, not just software tutorials"
@@ -64,6 +64,23 @@ export default function AboutPage() {
               <strong>Offline</strong> — in-person, batch-based training
             </li>
           </ul>
+        </div>
+
+        <div className="about-block">
+          <h2>Training for companies and colleges</h2>
+          <ul className="about-learn-list">
+            <li>
+              <strong>Corporate training</strong> — programs for engineering teams that sharpen
+              their CAD and simulation skills and the engineering judgment behind them
+            </li>
+            <li>
+              <strong>College training</strong> — industry-oriented programs that bridge the gap
+              between what students learn in college and what industry expects on day one
+            </li>
+          </ul>
+          <p>
+            Want training for your team or campus? <Link to="/contact">Get in touch</Link>.
+          </p>
         </div>
 
         <div className="about-block">

@@ -54,3 +54,7 @@
 .about-learn-list li {
   margin-bottom: var(--space-2);
 }
+
+.about-learn-list + p {
+  margin-top: var(--space-3);
+}
