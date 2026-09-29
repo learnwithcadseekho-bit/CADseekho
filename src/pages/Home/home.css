@@ -264,6 +264,36 @@
   color: var(--white);
 }
 
+.course-promo__included {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-4);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+  max-width: 460px;
+}
+
+.course-promo__included li {
+  position: relative;
+  padding-left: 1.4rem;
+  color: var(--white);
+  font-size: 0.875rem;
+}
+
+/* Check mark drawn in CSS so it inherits the promo's orange. */
+.course-promo__included li::before {
+  content: "";
+  position: absolute;
+  left: 0.2rem;
+  top: 0.3em;
+  width: 0.35rem;
+  height: 0.65rem;
+  border: solid var(--promo-orange-light);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
 .course-promo__price-row {
   display: flex;
   align-items: baseline;
@@ -308,6 +338,21 @@
 
 .course-promo__cta:hover {
   opacity: 0.92;
+}
+
+.course-promo__secondary {
+  margin-left: auto;
+  padding: 0.7rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--radius-sm);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.course-promo__secondary:hover {
+  border-color: var(--promo-orange-light);
+  color: var(--promo-orange-light);
 }
 
 .course-promo__caption {
@@ -387,6 +432,14 @@
     right: calc(var(--space-6) * -1 + 4px);
     padding: 0.25rem var(--space-6);
     font-size: 0.625rem;
+  }
+
+  .course-promo__included {
+    grid-template-columns: 1fr;
+  }
+
+  .course-promo__secondary {
+    margin-left: 0;
   }
 
   .course-promo__badge {

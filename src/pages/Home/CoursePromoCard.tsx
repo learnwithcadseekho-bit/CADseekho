@@ -13,6 +13,10 @@ const MAX_TAGS = 5;
 // Weekly class days aren't a schema column — no per-course field for this
 // exists yet, so it's scoped to this one featured card like the slug above.
 const WEEKLY_SCHEDULE_DAYS = "Fri, Sat & Sun";
+// What a buyer gets alongside the classes. Paid members unlock the
+// Resources hub's partial/paid items (any enrolled course), so only list
+// kinds of material that actually live there.
+const INCLUDED = ["Live online classes", "Practice part files", "PDF notes", "Members-only resources"];
 
 const CURRENCY_FORMAT = new Intl.NumberFormat("en-IN", {
   style: "currency",
@@ -95,6 +99,12 @@ export function CoursePromoCard() {
           and supports, solving and reviewing results — hands-on, on real engineering parts.
         </p>
 
+        <ul className="course-promo__included" aria-label="What's included">
+          {INCLUDED.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+
         {course.price != null && (
           <div className="course-promo__price-row">
             <span className="course-promo__price">{CURRENCY_FORMAT.format(course.price)}</span>
@@ -114,6 +124,9 @@ export function CoursePromoCard() {
           <span className="course-promo__caption">
             {course.format === "live" ? "Live, instructor-led" : "Self-paced"} · online
           </span>
+          <Link to={`/courses/${course.slug}`} className="course-promo__secondary">
+            View Course
+          </Link>
         </div>
       </div>
     </div>
