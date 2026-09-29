@@ -94,9 +94,16 @@
   color: var(--ink);
 }
 
+.dashboard-list__schedule {
+  margin-top: var(--space-1);
+  font-size: 0.875rem;
+  color: var(--slate);
+}
+
 .dashboard-list__meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-4);
 }
 

@@ -31,6 +31,8 @@ export interface Course {
   registration_count: number;
   manual_enrolled_count: number | null;
   seat_capacity: number | null;
+  /** Shown to enrolled students, e.g. "Mon, Wed, Fri · 8–9 PM IST". */
+  live_class_schedule: string | null;
   is_featured: boolean;
   is_published: boolean;
   created_at: string;

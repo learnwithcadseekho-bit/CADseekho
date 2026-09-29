@@ -7,7 +7,13 @@ export interface CourseRegistration {
 
 export interface RegistrationWithCourse extends CourseRegistration {
   created_at: string;
-  course: { title: string; slug: string; category: { name: string } | null } | null;
+  course: {
+    title: string;
+    slug: string;
+    format: "live" | "self_paced";
+    live_class_schedule: string | null;
+    category: { name: string } | null;
+  } | null;
 }
 
 export async function getRegistration(courseId: string, userId: string): Promise<CourseRegistration | null> {
@@ -36,7 +42,7 @@ export async function registerForCourse(courseId: string, userId: string): Promi
 export async function getMyRegistrations(userId: string): Promise<RegistrationWithCourse[]> {
   const { data, error } = await supabase
     .from("course_registrations")
-    .select("id, status, created_at, course:courses(title, slug, category:categories(name))")
+    .select("id, status, created_at, course:courses(title, slug, format, live_class_schedule, category:categories(name))")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 

@@ -28,6 +28,7 @@ const SignupPage = lazy(() => import("@/pages/Signup/SignupPage"));
 const ForgotPasswordPage = lazy(() => import("@/pages/Login/ForgotPasswordPage"));
 const ResetPasswordPage = lazy(() => import("@/pages/Login/ResetPasswordPage"));
 const DashboardPage = lazy(() => import("@/pages/Dashboard/DashboardPage"));
+const LiveClassPage = lazy(() => import("@/pages/Classroom/LiveClassPage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFound/NotFoundPage"));
 
 // Admin is a large CRUD surface only admins ever load — code-split it out of
@@ -79,6 +80,14 @@ export function AppRoutes() {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/classroom/:slug"
+          element={
+            <ProtectedRoute>
+              <LiveClassPage />
             </ProtectedRoute>
           }
         />
