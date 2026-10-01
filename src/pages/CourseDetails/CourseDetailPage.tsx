@@ -15,7 +15,6 @@ import { getPublishedPosts } from "@/services/blogService";
 import { setSsrStatus } from "@/lib/httpStatus";
 import { courseSchema, faqSchema } from "@/lib/schema";
 import { COURSE_SEO, fitTitle } from "@/content/seoOverrides";
-import { AREA_PATHS } from "@/content/localAreas";
 import "@/styles/cards.css";
 import "./course-detail.css";
 
@@ -268,7 +267,7 @@ export default function CourseDetailPage() {
               </div>
             </article>
           )}
-          <RelatedLinks course={c} isAnsys={isAnsys} isSimulation={isSimulation} />
+          <RelatedLinks course={c} isSimulation={isSimulation} />
         </div>
 
         <aside className="course-detail__sidebar drafting-frame">
@@ -295,16 +294,8 @@ function plainText(html: string | null): string {
 }
 
 // Internal links: related articles, the free hand-calc tools for simulation
-// courses, and the Delhi NCR page for ANSYS.
-function RelatedLinks({
-  course,
-  isAnsys,
-  isSimulation,
-}: {
-  course: CourseDetail;
-  isAnsys: boolean;
-  isSimulation: boolean;
-}) {
+// courses.
+function RelatedLinks({ course, isSimulation }: { course: CourseDetail; isSimulation: boolean }) {
   const { data: posts } = useCachedData("posts:published", getPublishedPosts);
   const names = [course.category?.name, course.software].filter(Boolean).map((n) => n!.toLowerCase());
   const engineering = ["engineering", "design fundamentals", "dfm"];
@@ -337,12 +328,6 @@ function RelatedLinks({
               — the classic stress-concentration hand calculation
             </li>
           </>
-        )}
-        {isAnsys && (
-          <li>
-            <Link to={AREA_PATHS["delhi-ncr"]}>ANSYS training in Delhi NCR</Link> — batches, fees and FAQs for
-            learners in Delhi, Noida, Gurugram and Ghaziabad
-          </li>
         )}
       </ul>
     </article>

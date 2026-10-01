@@ -5,9 +5,9 @@
 
 export const COURSE_SEO: Record<string, { title?: string; description?: string }> = {
   "ansys-workbench-level-1": {
-    title: "ANSYS Workbench Course for Beginners – Delhi NCR | CADseekho",
+    title: "ANSYS Workbench Course for Beginners (Online) | CADseekho",
     description:
-      "Beginner ANSYS Workbench course, live online for Delhi NCR & India: meshing, static structural, thermal, buckling — validated with hand calculations.",
+      "Beginner ANSYS Workbench course, live online: meshing, static structural, thermal and buckling — with every result validated by hand calculation.",
   },
   "solidworks-simulation-for-beginners": {
     title: "SOLIDWORKS Simulation Course (FEA) – Live Online | CADseekho",

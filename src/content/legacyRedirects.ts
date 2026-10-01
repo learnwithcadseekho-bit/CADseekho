@@ -7,6 +7,12 @@ export const LEGACY_REDIRECTS: { from: string; to: string }[] = [
   { from: "/blog/Stress Concentration", to: "/blog/stress-concentration-factor" },
   { from: "/courses/Solidworks Simulation for Begginner", to: "/courses/solidworks-simulation-for-beginners" },
   { from: "/downloads", to: "/resources" },
+  // Delhi NCR pages, removed: classes are online only.
+  { from: "/ansys-training-delhi-ncr", to: "/courses/ansys-workbench-level-1" },
+  { from: "/ansys-training-delhi", to: "/courses/ansys-workbench-level-1" },
+  { from: "/ansys-training-noida", to: "/courses/ansys-workbench-level-1" },
+  { from: "/ansys-training-gurgaon", to: "/courses/ansys-workbench-level-1" },
+  { from: "/ansys-training-ghaziabad", to: "/courses/ansys-workbench-level-1" },
 ];
 
 /** New path for a legacy path (decoded or percent-encoded), if any. */

@@ -20,6 +20,7 @@ ErrorDocument 404 /404.html
   RewriteRule ^blog/Stress\sConcentration/?$ https://cadseekho.com/blog/stress-concentration-factor [R=301,L,NC]
   RewriteRule ^courses/Solidworks\sSimulation\sfor\sBegginner/?$ https://cadseekho.com/courses/solidworks-simulation-for-beginners [R=301,L,NC]
   RewriteRule ^downloads/?$ https://cadseekho.com/resources [R=301,L]
+  RewriteRule ^ansys-training-(delhi-ncr|delhi|noida|gurgaon|ghaziabad)/?$ https://cadseekho.com/courses/ansys-workbench-level-1 [R=301,L]
   RewriteCond %{THE_REQUEST} \s/index\.html[\s?]
   RewriteRule ^index\.html$ https://cadseekho.com/ [R=301,L]
 

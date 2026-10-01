@@ -10,7 +10,7 @@ export default function AboutPage() {
       <section className="section container about-page">
         <Seo
           title="About CADseekho – ANSYS, FEA & CAD Training"
-          description="CADseekho teaches CAD design and CAE simulation — ANSYS, SolidWorks, Creo, HyperMesh — with a solve-by-hand-first method, online and in Delhi NCR."
+          description="CADseekho teaches CAD design and CAE simulation — ANSYS, SolidWorks, Creo, HyperMesh — with a solve-by-hand-first method, live online and self-paced."
           canonical="/about"
           breadcrumbs={[{ name: "About", path: "/about" }]}
         />
@@ -30,7 +30,7 @@ export default function AboutPage() {
           </p>
           <p>
             We train across the full CAD-to-CAE spectrum, covering both design and simulation,
-            available online and offline.
+            through live online classes and self-paced courses.
           </p>
         </div>
 
@@ -61,9 +61,6 @@ export default function AboutPage() {
           <ul className="about-learn-list">
             <li>
               <strong>Online</strong> — live instructor-led or self-paced
-            </li>
-            <li>
-              <strong>Offline</strong> — in-person, batch-based training
             </li>
           </ul>
         </div>

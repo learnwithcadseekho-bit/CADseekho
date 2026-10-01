@@ -31,7 +31,6 @@ const ForgotPasswordPage = trackedLazy("src/pages/Login/ForgotPasswordPage.tsx",
 const ResetPasswordPage = trackedLazy("src/pages/Login/ResetPasswordPage.tsx", () => import("@/pages/Login/ResetPasswordPage"));
 const DashboardPage = trackedLazy("src/pages/Dashboard/DashboardPage.tsx", () => import("@/pages/Dashboard/DashboardPage"));
 const LiveClassPage = trackedLazy("src/pages/Classroom/LiveClassPage.tsx", () => import("@/pages/Classroom/LiveClassPage"));
-const LocalLandingPage = trackedLazy("src/pages/Local/LocalLandingPage.tsx", () => import("@/pages/Local/LocalLandingPage"));
 const NotFoundPage = trackedLazy("src/pages/NotFound/NotFoundPage.tsx", () => import("@/pages/NotFound/NotFoundPage"));
 
 // Admin is a large CRUD surface only admins ever load — code-split it out of
@@ -76,11 +75,6 @@ export function AppRoutes() {
         <Route path="/tools/beam-calculator" element={<BeamCalculatorPage />} />
         <Route path="/blog" element={<BlogListingPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
-        <Route path="/ansys-training-delhi-ncr" element={<LocalLandingPage area="delhi-ncr" />} />
-        <Route path="/ansys-training-delhi" element={<LocalLandingPage area="delhi" />} />
-        <Route path="/ansys-training-noida" element={<LocalLandingPage area="noida" />} />
-        <Route path="/ansys-training-gurgaon" element={<LocalLandingPage area="gurgaon" />} />
-        <Route path="/ansys-training-ghaziabad" element={<LocalLandingPage area="ghaziabad" />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route

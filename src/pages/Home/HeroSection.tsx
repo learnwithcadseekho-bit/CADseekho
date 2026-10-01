@@ -8,8 +8,8 @@ export function HeroSection() {
       <div className="hero__grid-bg blueprint-grid" aria-hidden="true" />
       <div className="hero__inner">
         <div className="hero__copy">
-          <span className="mono-label section-eyebrow">CADSEEKHO — ENGINEERING TRAINING · DELHI NCR &amp; ONLINE</span>
-          <h1 className="hero__headline">ANSYS &amp; FEA Training in Delhi NCR</h1>
+          <span className="mono-label section-eyebrow">CADSEEKHO — ENGINEERING TRAINING · LIVE ONLINE</span>
+          <h1 className="hero__headline">Online ANSYS &amp; FEA Training</h1>
           <p className="hero__subhead">
             Solve it by hand first, then validate it in ANSYS Workbench. Practical simulation and CAD
             training — SolidWorks, Creo and AutoCAD too — for students, engineers and working

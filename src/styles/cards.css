@@ -122,6 +122,8 @@
 
 .category-card__image,
 .course-card__image {
+  /* width/height attributes are only for layout hints; aspect-ratio sets the height. */
+  height: auto;
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;

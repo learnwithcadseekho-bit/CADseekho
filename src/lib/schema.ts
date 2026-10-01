@@ -1,7 +1,7 @@
 // JSON-LD builders (schema.org). Only real data goes in: fields with no value
 // are omitted rather than guessed. Validate changes at
 // https://search.google.com/test/rich-results.
-import { absoluteUrl, BUSINESS, SERVICE_AREAS, SITE_URL, socialLinks } from "@/config/site";
+import { absoluteUrl, BUSINESS, SERVICE_AREA, SITE_URL, socialLinks } from "@/config/site";
 import type { BlogPost } from "@/types/blogPost";
 import type { CourseWithCategory } from "@/types/course";
 
@@ -24,7 +24,7 @@ export function organizationSchema(): JsonLd {
     email: BUSINESS.email,
     telephone: BUSINESS.phone,
     ...(sameAs.length > 0 && { sameAs }),
-    areaServed: SERVICE_AREAS.map((name) => ({ "@type": "City", name })),
+    areaServed: { "@type": SERVICE_AREA.type, name: SERVICE_AREA.name },
     ...(address && {
       address: {
         "@type": "PostalAddress",
@@ -50,8 +50,8 @@ function plainText(html: string | null | undefined): string {
 
 export function courseSchema(course: CourseWithCategory, description: string): JsonLd {
   const url = absoluteUrl(`/courses/${course.slug}`);
-  // TODO(seo): add a { courseMode: "Onsite", location } instance here once a
-  // classroom address is set in config/site.ts and the course runs in person.
+  // Online only. If in-person batches ever start, add a
+  // { courseMode: "Onsite", location } instance alongside this one.
   const instance: JsonLd = {
     "@type": "CourseInstance",
     courseMode: "Online",

@@ -6,7 +6,6 @@ import { getCategoryBySlug } from "@/services/categoryService";
 import { getCoursesByCategorySlug } from "@/services/courseService";
 import { useCachedData } from "@/hooks/useCachedData";
 import { setSsrStatus } from "@/lib/httpStatus";
-import { AREA_PATHS } from "@/content/localAreas";
 import "@/styles/cards.css";
 
 type LoadState = "loading" | "not-found" | "error" | "ready";
@@ -63,10 +62,10 @@ export default function CourseCategoryPage() {
   return (
     <section className="section container">
       <Seo
-        title={category!.slug === "ansys" ? "ANSYS Courses – Workbench FEA, Delhi NCR | CADseekho" : `${category!.name} Courses – Live & Self-Paced | CADseekho`}
+        title={category!.slug === "ansys" ? "ANSYS Courses – Online Workbench FEA Training | CADseekho" : `${category!.name} Courses – Live & Self-Paced | CADseekho`}
         description={
           category!.description ??
-          `${category!.name} courses from CADseekho: practical, project-based training for students and working engineers, online and in Delhi NCR.`
+          `${category!.name} courses from CADseekho: practical, project-based training for students and working engineers, live online and self-paced.`
         }
         canonical={`/courses/category/${category!.slug}`}
         breadcrumbs={[
@@ -95,13 +94,6 @@ export default function CourseCategoryPage() {
             <CourseCard key={course.id} course={course} index={i} />
           ))}
         </div>
-      )}
-      {category!.slug === "ansys" && (
-        <p className="section__status">
-          <Link to={AREA_PATHS["delhi-ncr"]} style={{ color: "var(--accent)", fontWeight: 600 }}>
-            ANSYS training in Delhi NCR — batches, fees and FAQs →
-          </Link>
-        </p>
       )}
     </section>
   );

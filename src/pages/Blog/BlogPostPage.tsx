@@ -12,7 +12,6 @@ import { articleMetaDescription, fetchCustomHtml, isImageUrl } from "@/utils/cus
 import { setSsrStatus } from "@/lib/httpStatus";
 import { articleSchema } from "@/lib/schema";
 import { POST_SEO, fitTitle } from "@/content/seoOverrides";
-import { AREA_PATHS } from "@/content/localAreas";
 import type { BlogPost } from "@/types/blogPost";
 import "@/styles/cards.css";
 import "./blog.css";
@@ -21,7 +20,7 @@ function plainText(html: string | null): string {
   return (html ?? "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
 }
 
-// Engineering/design articles get the simulation course + Delhi NCR links.
+// Engineering/design articles get the simulation course link.
 const ENGINEERING_CATEGORIES = ["engineering", "design fundamentals", "dfm", "gd&t", "fea", "ansys"];
 
 export default function BlogPostPage() {
@@ -131,11 +130,6 @@ export default function BlogPostPage() {
           </Link>
         </>
       )}
-      <p style={{ marginTop: "var(--space-4)" }}>
-        <Link to={AREA_PATHS["delhi-ncr"]} style={{ color: "var(--accent)", fontWeight: 600 }}>
-          ANSYS &amp; CAD training in Delhi NCR →
-        </Link>
-      </p>
     </div>
   );
 

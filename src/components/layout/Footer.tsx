@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { BUSINESS, socialLinks } from "@/config/site";
-import { AREA_LINK_LABELS, AREA_PATHS, type AreaKey } from "@/content/localAreas";
 import "@/styles/layout.css";
 
 const COURSE_CATEGORY_LINKS = [
@@ -9,11 +8,6 @@ const COURSE_CATEGORY_LINKS = [
   { label: "Creo", to: "/courses/category/creo" },
   { label: "AutoCAD", to: "/courses/category/autocad" },
 ];
-
-const LOCAL_KEYS: AreaKey[] = ["delhi-ncr", "delhi", "noida", "gurgaon", "ghaziabad"];
-
-// Footer cities line — the NCR service area, in one fixed order.
-const SERVING = ["Delhi", "Noida", "Gurugram", "Ghaziabad", "Faridabad", "Meerut"];
 
 export function Footer() {
   const social = socialLinks();
@@ -25,8 +19,8 @@ export function Footer() {
         <div className="site-footer__col">
           <span className="site-footer__brand">{BUSINESS.name}</span>
           <p className="site-footer__blurb">
-            ANSYS, FEA and CAD training for students, engineers and working professionals — live online and
-            classroom batches in Delhi NCR.
+            ANSYS, FEA and CAD training for students, engineers and working professionals — live online
+            classes, open to learners anywhere in India.
           </p>
           {/* NAP: keep this exact format everywhere (Google Business Profile included). */}
           <address className="site-footer__contact">
@@ -52,17 +46,6 @@ export function Footer() {
             <li>
               <Link to="/courses">All courses</Link>
             </li>
-          </ul>
-        </div>
-
-        <div className="site-footer__col">
-          <span className="mono-label">Delhi NCR</span>
-          <ul>
-            {LOCAL_KEYS.map((key) => (
-              <li key={key}>
-                <Link to={AREA_PATHS[key]}>{AREA_LINK_LABELS[key]}</Link>
-              </li>
-            ))}
           </ul>
         </div>
 
@@ -102,7 +85,7 @@ export function Footer() {
       </div>
 
       <div className="site-footer__bottom">
-        <span>Serving {SERVING.join(" · ")}</span>
+        <span>Live online classes · India</span>
         <span>© {BUSINESS.name}. All rights reserved.</span>
       </div>
     </footer>

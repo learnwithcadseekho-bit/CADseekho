@@ -17,9 +17,10 @@ export const BUSINESS = {
   // TODO(seo): WhatsApp number (digits only, with country code, e.g. "919358502626").
   // While null, enquiry CTAs fall back to the phone number and contact form.
   whatsapp: null as string | null,
-  // TODO(seo): classroom/training address. While null the site makes no
-  // physical-location claims and JSON-LD stays EducationalOrganization only
-  // (no LocalBusiness, no map embed).
+  // Classes are online only, so there is no public address. If a physical
+  // centre ever opens, set it here: JSON-LD then adds LocalBusiness and the
+  // contact page shows it with a map. Until then the site makes no
+  // physical-location claims.
   address: null as null | {
     street: string;
     locality: string; // e.g. "Noida"
@@ -40,8 +41,8 @@ export const BUSINESS = {
   },
 };
 
-/** Cities served, in the order they're listed in the footer NAP line. */
-export const SERVICE_AREAS = ["Delhi", "Noida", "Greater Noida", "Gurugram", "Ghaziabad", "Faridabad", "Meerut"];
+/** Live online classes, open to learners anywhere in India. */
+export const SERVICE_AREA = { type: "Country", name: "India" } as const;
 
 export function socialLinks(): { label: string; href: string }[] {
   const labels: Record<keyof typeof BUSINESS.social, string> = {

@@ -3,6 +3,11 @@
 /blog/Stress%20Concentration                       /blog/stress-concentration-factor            301!
 /courses/Solidworks%20Simulation%20for%20Begginner /courses/solidworks-simulation-for-beginners 301!
 /downloads                                         /resources                                   301!
+/ansys-training-delhi-ncr                          /courses/ansys-workbench-level-1             301!
+/ansys-training-delhi                              /courses/ansys-workbench-level-1             301!
+/ansys-training-noida                              /courses/ansys-workbench-level-1             301!
+/ansys-training-gurgaon                            /courses/ansys-workbench-level-1             301!
+/ansys-training-ghaziabad                          /courses/ansys-workbench-level-1             301!
 
 # Client-only routes → app shell. Everything else is a prerendered file or a
 # real 404 (Netlify serves 404.html automatically).

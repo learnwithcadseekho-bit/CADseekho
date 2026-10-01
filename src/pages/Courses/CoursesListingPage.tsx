@@ -5,7 +5,6 @@ import { CourseCard } from "@/components/ui/CourseCard";
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 import { getPublishedCourses } from "@/services/courseService";
 import { useCachedData } from "@/hooks/useCachedData";
-import { AREA_PATHS } from "@/content/localAreas";
 import "@/styles/cards.css";
 
 export default function CoursesListingPage() {
@@ -17,14 +16,14 @@ export default function CoursesListingPage() {
   return (
     <section className="section container">
       <Seo
-        title="ANSYS, SolidWorks & Creo Courses, Delhi NCR | CADseekho"
-        description="ANSYS Workbench FEA, SolidWorks, Creo and AutoCAD courses: live online and classroom batches in Delhi NCR, plus self-paced options. Compare fees."
+        title="ANSYS, SolidWorks & Creo Courses – Online | CADseekho"
+        description="ANSYS Workbench FEA, SolidWorks, Creo and AutoCAD courses: live online instructor-led batches plus self-paced options. Compare fees and levels."
         canonical="/courses"
         breadcrumbs={[{ name: "Courses", path: "/courses" }]}
       />
       <SectionHeading
         title="ANSYS, SolidWorks, Creo & AutoCAD Courses"
-        subtitle="Simulation and CAD training for students and working engineers — live online and classroom batches in Delhi NCR, plus self-paced courses."
+        subtitle="Simulation and CAD training for students and working engineers — live online classes and self-paced courses."
         align="center"
         as="h1"
       />
@@ -54,13 +53,6 @@ export default function CoursesListingPage() {
           ))}
         </div>
       )}
-
-      <p className="section__status">
-        Learning from Delhi, Noida, Gurugram or Ghaziabad?{" "}
-        <Link to={AREA_PATHS["delhi-ncr"]} style={{ color: "var(--accent)", fontWeight: 600 }}>
-          See ANSYS training in Delhi NCR →
-        </Link>
-      </p>
     </section>
   );
 }

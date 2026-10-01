@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { absoluteUrl } from "@/config/site";
 import { faqSchema, ORGANIZATION_ID } from "@/lib/schema";
-import { AREA_PATHS } from "@/content/localAreas";
 import "@/styles/cards.css";
 import "@/styles/resources.css";
 import "./tools.css";
@@ -140,7 +139,6 @@ export default function BeamCalculatorPage() {
           <Link to="/courses/ansys-workbench-level-1">ANSYS Workbench course</Link>: estimate the answer with
           the right formula, build the model in simulation software, and compare. For holes and notches, use
           the <Link to="/resources/plate-with-hole-stress-concentration-calculator">plate-with-a-hole Kt calculator</Link>.
-          Learning in the NCR? See <Link to={AREA_PATHS["delhi-ncr"]}>ANSYS training in Delhi NCR</Link>.
         </p>
 
         <h2>Frequently asked questions</h2>

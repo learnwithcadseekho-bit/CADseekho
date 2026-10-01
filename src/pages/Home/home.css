@@ -481,24 +481,19 @@
   }
 }
 
-/* Delhi NCR section (links into the local landing pages). */
-.local-home__body {
+/* "Hand-calc-first" method section. */
+.method-home__body {
   max-width: 760px;
   margin: 0 auto;
   text-align: center;
 }
 
-.local-home__body p {
+.method-home__body p {
   line-height: 1.75;
   margin-bottom: var(--space-4);
 }
 
-.local-home__hub {
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.local-home__cities {
+.method-home__links {
   list-style: none;
   padding: 0;
   display: flex;
@@ -508,7 +503,7 @@
   margin-top: var(--space-6);
 }
 
-.local-home__cities a {
+.method-home__links a {
   display: inline-block;
   padding: var(--space-2) var(--space-4);
   border: 1px solid var(--line-strong);
@@ -517,7 +512,7 @@
   font-size: 0.9375rem;
 }
 
-.local-home__cities a:hover {
+.method-home__links a:hover {
   border-color: var(--accent);
   color: var(--accent);
 }

@@ -19,6 +19,8 @@
 }
 
 .blog-card__image {
+  /* width/height attributes are only for layout hints; aspect-ratio sets the height. */
+  height: auto;
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
@@ -88,6 +90,8 @@
 }
 
 .article-image {
+  /* width/height attributes are only for layout hints; aspect-ratio sets the height. */
+  height: auto;
   width: 100%;
   max-width: 900px;
   margin: var(--space-10) auto 0;

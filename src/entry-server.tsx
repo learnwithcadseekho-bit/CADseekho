@@ -108,7 +108,6 @@ export const CANONICAL_SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export async function getPrerenderRoutes(): Promise<{ routes: PrerenderRoute[]; badSlugs: string[] }> {
   const { supabase } = await import("@/lib/supabaseClient");
-  const { AREA_PATHS } = await import("@/content/localAreas");
   const { RESOURCE_TYPES } = await import("@/types/resource");
 
   const routes: PrerenderRoute[] = [
@@ -119,7 +118,6 @@ export async function getPrerenderRoutes(): Promise<{ routes: PrerenderRoute[]; 
     { path: "/tools/beam-calculator", source: "src/pages/tools/BeamCalculatorPage.tsx" },
     { path: "/about", source: "src/pages/About/AboutPage.tsx" },
     { path: "/contact", source: "src/pages/Contact/ContactPage.tsx" },
-    ...Object.values(AREA_PATHS).map((path) => ({ path, source: "src/content/localAreas.ts" })),
   ];
 
   const check = <T,>(label: string, res: { data: T[] | null; error: unknown }): T[] => {

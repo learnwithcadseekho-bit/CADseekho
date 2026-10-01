@@ -5,7 +5,7 @@ import { TextField } from "@/components/ui/TextField";
 import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { submitContactMessage } from "@/services/contactService";
-import { BUSINESS, SERVICE_AREAS, whatsappLink } from "@/config/site";
+import { BUSINESS, whatsappLink } from "@/config/site";
 import "@/styles/cards.css";
 import "./contact.css";
 
@@ -46,8 +46,8 @@ export default function ContactPage() {
   return (
     <section className="section container contact-page">
       <Seo
-        title="Contact CADseekho – ANSYS & CAD Training, Delhi NCR"
-        description="Contact CADseekho about ANSYS, FEA and CAD courses: live online and classroom batches for Delhi NCR. Call, email or send us a message."
+        title="Contact CADseekho – Online ANSYS & CAD Training"
+        description="Contact CADseekho about live online ANSYS, FEA and CAD courses. Call, email or send us a message and we'll reply with the next batch."
         breadcrumbs={[{ name: "Contact", path: "/contact" }]}
       />
       <SectionHeading
@@ -74,15 +74,14 @@ export default function ContactPage() {
         )}
         {BUSINESS.address && (
           <span className="contact-details__item">
-            <span className="mono-label">Classroom</span>
+            <span className="mono-label">Address</span>
             {BUSINESS.address.street}, {BUSINESS.address.locality}, {BUSINESS.address.region}{" "}
             {BUSINESS.address.postalCode}
           </span>
         )}
       </div>
       <p className="contact-areas">
-        Live online batches for learners anywhere, and classroom batches in Delhi NCR. Serving{" "}
-        {SERVICE_AREAS.join(", ")}.
+        All classes are live online — join from anywhere in India.
       </p>
       {BUSINESS.address?.mapEmbedUrl && (
         <iframe

@@ -5,8 +5,7 @@ import { FEATURED_ANSYS_SLUG, WEEKLY_SCHEDULE_DAYS } from "@/content/batches";
 import { HeroImageSlider } from "./HeroImageSlider";
 import "./home.css";
 
-// The featured course lives in content/batches.ts (shared with the Delhi NCR
-// pages) — swapping the slug is enough, the card always reflects live
+// The featured course lives in content/batches.ts — swapping the slug is enough, the card always reflects live
 // price/curriculum data.
 const FEATURED_COURSE_SLUG = FEATURED_ANSYS_SLUG;
 const LOW_SEATS_THRESHOLD = 10;

@@ -8,7 +8,9 @@ const RENDER_PATH = "/storage/v1/render/image/public/";
 export function resizedImage(url: string, width: number, quality = 70): string {
   if (!url.includes(OBJECT_PATH) || /\.(svg|gif)(\?|$)/i.test(url)) return url;
   const sep = url.includes("?") ? "&" : "?";
-  return `${url.replace(OBJECT_PATH, RENDER_PATH)}${sep}width=${width}&quality=${quality}`;
+  // resize=contain keeps the aspect ratio. Without it Supabase keeps the
+  // original height and crops the width (a 1254×1254 image became 400×1254).
+  return `${url.replace(OBJECT_PATH, RENDER_PATH)}${sep}width=${width}&resize=contain&quality=${quality}`;
 }
 
 /** src/srcSet for an image shown at up to `maxWidth` CSS px (1x and 2x). */
