@@ -81,7 +81,8 @@ export function Seo({
     <Helmet>
       <title>{fullTitle}</title>
       {desc && <meta name="description" content={desc} />}
-      <link rel="canonical" href={url} />
+      {/* noindex pages (404, login…) get no canonical: there's no indexable URL to point at. */}
+      {!noindex && <link rel="canonical" href={url} />}
       {noindex && <meta name="robots" content="noindex, follow" />}
 
       <meta property="og:site_name" content={BUSINESS.name} />
