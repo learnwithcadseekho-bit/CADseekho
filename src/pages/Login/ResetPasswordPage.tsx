@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { updatePassword } from "@/services/authService";
+import { Seo } from "@/components/Seo";
 import "@/styles/forms.css";
 
 export default function ResetPasswordPage() {
@@ -39,6 +40,7 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="auth-page">
+      <Seo title="Reset Password" noindex />
       <Link to="/" className="auth-page__brand">
         CADseekho
       </Link>

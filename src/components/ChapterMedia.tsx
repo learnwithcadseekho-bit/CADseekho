@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { responsiveImage } from "@/utils/imageUrl";
 import "@/styles/drafting.css";
 import "./chapter-media.css";
 
@@ -37,7 +38,7 @@ export function ChapterMedia({ image, model3d, alt, figure }: ChapterMediaProps)
   return (
     <figure className="chapter-media drafting-frame">
       <div className="chapter-media__sheet">
-        {model3d ? <ModelViewer src={model3d} poster={image} alt={alt} /> : <img src={image!} alt={alt} loading="lazy" decoding="async" />}
+        {model3d ? <ModelViewer src={model3d} poster={image} alt={alt} /> : <img {...responsiveImage(image!, 640)} sizes="(max-width: 900px) 92vw, 640px" alt={alt} loading="lazy" decoding="async" />}
       </div>
       <figcaption className="chapter-media__caption mono-label">
         Fig. {figure}
@@ -78,7 +79,7 @@ function ModelViewer({ src, poster, alt }: { src: string; poster: string | null;
 
   if (state !== "ready") {
     return poster ? (
-      <img src={poster} alt={alt} loading="lazy" decoding="async" />
+      <img {...responsiveImage(poster, 640)} sizes="(max-width: 900px) 92vw, 640px" alt={alt} loading="lazy" decoding="async" />
     ) : (
       <p className="chapter-media__fallback">{state === "failed" ? `3D model unavailable — ${alt}` : alt}</p>
     );

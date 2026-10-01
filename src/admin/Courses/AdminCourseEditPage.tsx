@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { slugify } from "@/utils/slugify";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { TextField } from "@/components/ui/TextField";
 import { SelectField } from "@/components/ui/SelectField";
@@ -10,6 +11,7 @@ import { CourseModulesManager } from "./CourseModulesManager";
 import { CourseSkillsManager } from "./CourseSkillsManager";
 import { CourseFaqsManager } from "./CourseFaqsManager";
 import { CourseTestimonialsManager } from "./CourseTestimonialsManager";
+import { CourseLiveClassManager } from "./CourseLiveClassManager";
 import { listAllCategories } from "@/services/admin/adminCategoryService";
 import {
   createCourse,
@@ -57,6 +59,7 @@ const emptyForm: CourseFormState = {
   next_batch_date: null,
   manual_enrolled_count: "",
   seat_capacity: "",
+  live_class_schedule: "",
   is_featured: false,
   is_published: false,
 };
@@ -100,6 +103,7 @@ export default function AdminCourseEditPage() {
           next_batch_date: c.next_batch_date,
           manual_enrolled_count: c.manual_enrolled_count != null ? String(c.manual_enrolled_count) : "",
           seat_capacity: c.seat_capacity != null ? String(c.seat_capacity) : "",
+          live_class_schedule: c.live_class_schedule ?? "",
           is_featured: c.is_featured,
           is_published: c.is_published,
         });
@@ -115,11 +119,13 @@ export default function AdminCourseEditPage() {
     try {
       const payload: CourseInput = {
         ...form,
+        slug: slugify(form.slug || form.title),
         price: form.price.trim() === "" ? null : Number(form.price),
         original_price: form.original_price.trim() === "" ? null : Number(form.original_price),
         manual_enrolled_count:
           form.manual_enrolled_count.trim() === "" ? null : Number(form.manual_enrolled_count),
         seat_capacity: form.seat_capacity.trim() === "" ? null : Number(form.seat_capacity),
+        live_class_schedule: form.live_class_schedule?.trim() || null,
       };
       if (isNew) {
         const created = await createCourse(payload);
@@ -160,6 +166,8 @@ export default function AdminCourseEditPage() {
             required
             value={form.slug}
             onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
+            // Normalised on blur (and on save) so URLs are always lowercase-hyphenated.
+            onBlur={() => setForm((f) => ({ ...f, slug: slugify(f.slug || f.title) }))}
           />
         </div>
 
@@ -236,6 +244,15 @@ export default function AdminCourseEditPage() {
           />
         </div>
 
+        {form.format === "live" && (
+          <TextField
+            label="Live Class Timing"
+            placeholder="e.g. Mon, Wed, Fri · 8–9 PM IST — shown to enrolled students"
+            value={form.live_class_schedule ?? ""}
+            onChange={(e) => setForm((f) => ({ ...f, live_class_schedule: e.target.value }))}
+          />
+        )}
+
         <TextField
           label="Prerequisites"
           value={form.prerequisites ?? ""}
@@ -298,6 +315,7 @@ export default function AdminCourseEditPage() {
 
       {!isNew && id && (
         <>
+          <CourseLiveClassManager courseId={id} isLive={form.format === "live"} />
           <CourseModulesManager courseId={id} />
           <CourseSkillsManager courseId={id} />
           <CourseFaqsManager courseId={id} />

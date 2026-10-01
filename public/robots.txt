@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+# Private app areas. Login/signup stay crawlable so crawlers can see their noindex.
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /classroom
+Disallow: /app.html
 
 Sitemap: https://cadseekho.com/sitemap.xml

@@ -2,11 +2,17 @@ import { supabase } from "@/lib/supabaseClient";
 import { cached } from "@/lib/cache";
 import type { CourseDetail, CourseWithCategory } from "@/types/course";
 
+// Listings only need what a course card / fee summary shows. Keeping the
+// full description and syllabus out keeps these small — they're also
+// embedded in prerendered pages for hydration.
+const LISTING_COLUMNS =
+  "id, category_id, title, slug, short_description, level, software, image, format, price, original_price, next_batch_date, is_featured, is_published, created_at, updated_at";
+
 export async function getFeaturedCourses(): Promise<CourseWithCategory[]> {
   return cached("courses:featured", async () => {
     const { data, error } = await supabase
       .from("courses")
-      .select("*, category:categories(name, slug)")
+      .select(`${LISTING_COLUMNS}, category:categories(name, slug)`)
       .eq("is_featured", true)
       .eq("is_published", true)
       .order("created_at", { ascending: false });
@@ -20,7 +26,7 @@ export async function getPublishedCourses(): Promise<CourseWithCategory[]> {
   return cached("courses:published", async () => {
     const { data, error } = await supabase
       .from("courses")
-      .select("*, category:categories(name, slug)")
+      .select(`${LISTING_COLUMNS}, category:categories(name, slug)`)
       .eq("is_published", true)
       .order("title");
 
@@ -33,7 +39,7 @@ export async function getCoursesByCategorySlug(categorySlug: string): Promise<Co
   return cached(`courses:category:${categorySlug}`, async () => {
     const { data, error } = await supabase
       .from("courses")
-      .select("*, category:categories!inner(name, slug)")
+      .select(`${LISTING_COLUMNS}, category:categories!inner(name, slug)`)
       .eq("is_published", true)
       .eq("category.slug", categorySlug)
       .order("title");

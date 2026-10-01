@@ -1,20 +1,13 @@
-import { useEffect, useState } from "react";
 import { getSoftwareList, getTopicList } from "@/services/resourceService";
-import type { Software, Topic } from "@/types/resource";
+import { useCachedData } from "@/hooks/useCachedData";
 
 export function useResourceTaxonomy() {
-  const [software, setSoftware] = useState<Software[] | null>(null);
-  const [topics, setTopics] = useState<Topic[] | null>(null);
-  const [error, setError] = useState(false);
+  const software = useCachedData("resources:software", getSoftwareList);
+  const topics = useCachedData("resources:topics", getTopicList);
 
-  useEffect(() => {
-    Promise.all([getSoftwareList(), getTopicList()])
-      .then(([s, t]) => {
-        setSoftware(s);
-        setTopics(t);
-      })
-      .catch(() => setError(true));
-  }, []);
-
-  return { software, topics, error };
+  return {
+    software: software.data ?? null,
+    topics: topics.data ?? null,
+    error: Boolean(software.error || topics.error),
+  };
 }

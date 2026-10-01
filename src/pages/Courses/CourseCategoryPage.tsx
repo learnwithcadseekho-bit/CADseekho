@@ -1,50 +1,46 @@
-import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CourseCard } from "@/components/ui/CourseCard";
 import { getCategoryBySlug } from "@/services/categoryService";
 import { getCoursesByCategorySlug } from "@/services/courseService";
-import type { Category } from "@/types/category";
-import type { CourseWithCategory } from "@/types/course";
+import { useCachedData } from "@/hooks/useCachedData";
+import { setSsrStatus } from "@/lib/httpStatus";
+import { AREA_PATHS } from "@/content/localAreas";
 import "@/styles/cards.css";
 
 type LoadState = "loading" | "not-found" | "error" | "ready";
 
 export default function CourseCategoryPage() {
   const { categorySlug } = useParams<{ categorySlug: string }>();
-  const [category, setCategory] = useState<Category | null>(null);
-  const [courses, setCourses] = useState<CourseWithCategory[]>([]);
-  const [state, setState] = useState<LoadState>("loading");
-
-  useEffect(() => {
-    if (!categorySlug) return;
-    setState("loading");
-
-    Promise.all([getCategoryBySlug(categorySlug), getCoursesByCategorySlug(categorySlug)])
-      .then(([cat, courseList]) => {
-        if (!cat) {
-          setState("not-found");
-          return;
-        }
-        setCategory(cat);
-        setCourses(courseList);
-        setState("ready");
-      })
-      .catch(() => setState("error"));
-  }, [categorySlug]);
+  const cat = useCachedData(categorySlug ? `category:${categorySlug}` : null, () => getCategoryBySlug(categorySlug!));
+  const list = useCachedData(categorySlug ? `courses:category:${categorySlug}` : null, () =>
+    getCoursesByCategorySlug(categorySlug!)
+  );
+  const category = cat.data ?? null;
+  const courses = list.data ?? [];
+  const state: LoadState =
+    cat.error || list.error
+      ? "error"
+      : cat.data === undefined || list.data === undefined
+        ? "loading"
+        : cat.data === null
+          ? "not-found"
+          : "ready";
 
   if (state === "loading") {
     return (
-      <section className="section container">
+      <section className="section container" aria-busy="true">
         <p className="section__status">Loading…</p>
       </section>
     );
   }
 
   if (state === "not-found") {
+    setSsrStatus(404);
     return (
       <section className="section container" style={{ textAlign: "center" }}>
+        <Seo title="Category not found" noindex />
         <span className="mono-label">ERROR — 404</span>
         <h1 style={{ marginTop: "var(--space-2)" }}>Category not found</h1>
         <p style={{ marginTop: "var(--space-4)" }}>
@@ -67,11 +63,19 @@ export default function CourseCategoryPage() {
   return (
     <section className="section container">
       <Seo
-        title={`${category!.name} Courses`}
-        description={category!.description ?? `Browse ${category!.name} courses from CADseekho.`}
+        title={category!.slug === "ansys" ? "ANSYS Courses – Workbench FEA, Delhi NCR | CADseekho" : `${category!.name} Courses – Live & Self-Paced | CADseekho`}
+        description={
+          category!.description ??
+          `${category!.name} courses from CADseekho: practical, project-based training for students and working engineers, online and in Delhi NCR.`
+        }
+        canonical={`/courses/category/${category!.slug}`}
+        breadcrumbs={[
+          { name: "Courses", path: "/courses" },
+          { name: category!.name, path: `/courses/category/${category!.slug}` },
+        ]}
       />
       <SectionHeading
-        title={category!.name}
+        title={`${category!.name} Courses`}
         subtitle={category!.description ?? undefined}
         align="center"
         as="h1"
@@ -91,6 +95,13 @@ export default function CourseCategoryPage() {
             <CourseCard key={course.id} course={course} index={i} />
           ))}
         </div>
+      )}
+      {category!.slug === "ansys" && (
+        <p className="section__status">
+          <Link to={AREA_PATHS["delhi-ncr"]} style={{ color: "var(--accent)", fontWeight: 600 }}>
+            ANSYS training in Delhi NCR — batches, fees and FAQs →
+          </Link>
+        </p>
       )}
     </section>
   );

@@ -480,3 +480,44 @@
     max-width: none;
   }
 }
+
+/* Delhi NCR section (links into the local landing pages). */
+.local-home__body {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.local-home__body p {
+  line-height: 1.75;
+  margin-bottom: var(--space-4);
+}
+
+.local-home__hub {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.local-home__cities {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.local-home__cities a {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-size: 0.9375rem;
+}
+
+.local-home__cities a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}

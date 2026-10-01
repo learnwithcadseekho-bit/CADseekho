@@ -385,3 +385,8 @@
     position: static;
   }
 }
+
+.course-detail__links a {
+  color: var(--accent);
+  font-weight: 600;
+}

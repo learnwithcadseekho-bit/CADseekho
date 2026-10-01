@@ -23,6 +23,7 @@ import {
   type Software,
 } from "@/types/resource";
 import NotFoundPage from "@/pages/NotFound/NotFoundPage";
+import { useCachedData } from "@/hooks/useCachedData";
 import "@/styles/cards.css";
 import "@/styles/resources.css";
 
@@ -33,28 +34,13 @@ const CALCULATE_EVENT_INTERVAL_MS = 30_000;
 export default function ResourceDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { user, loading: authLoading } = useAuth();
-  const [resource, setResource] = useState<ResourceDetail | null>(null);
-  const [softwareList, setSoftwareList] = useState<Software[]>([]);
-  const [state, setState] = useState<LoadState>("loading");
+  const { data, error } = useCachedData(slug ? `resource:${slug}` : null, () => getResourceBySlug(slug!));
+  const resource = data ?? null;
+  const state: LoadState = error ? "error" : data === undefined ? "loading" : data === null ? "not-found" : "ready";
+  const softwareList: Software[] = useCachedData("resources:software", getSoftwareList).data ?? [];
   // undefined = still checking; null = locked for this viewer.
   const [premium, setPremium] = useState<Record<string, unknown> | null | undefined>(undefined);
   const lastCalculateLog = useRef(0);
-
-  useEffect(() => {
-    if (!slug) return;
-    setState("loading");
-    getResourceBySlug(slug)
-      .then((r) => {
-        if (!r) {
-          setState("not-found");
-          return;
-        }
-        setResource(r);
-        setState("ready");
-      })
-      .catch(() => setState("error"));
-    getSoftwareList().then(setSoftwareList).catch(() => {});
-  }, [slug]);
 
   const resourceId = resource?.id;
   const access = resource?.access;
@@ -86,7 +72,13 @@ export default function ResourceDetailPage() {
     logResourceEvent(resourceId, "calculate", user?.id ?? null);
   }, [resourceId, user?.id]);
 
-  if (state === "loading") return <p className="section__status">Loading…</p>;
+  if (state === "loading") {
+    return (
+      <p className="section__status" aria-busy="true">
+        Loading…
+      </p>
+    );
+  }
   if (state === "not-found") return <NotFoundPage />;
   if (state === "error") {
     return <p className="section__status">Something went wrong loading this resource. Please try again later.</p>;
@@ -114,6 +106,13 @@ export default function ResourceDetailPage() {
         description={r.summary || undefined}
         image={r.thumbnail_url ?? undefined}
         type="article"
+        canonical={`/resources/${r.slug}`}
+        noindex={r.status === "draft"}
+        breadcrumbs={[
+          { name: "Resources", path: "/resources" },
+          { name: RESOURCE_TYPE_LABELS[r.type], path: `/resources/type/${r.type}` },
+          { name: r.title, path: `/resources/${r.slug}` },
+        ]}
       />
 
       {r.status === "draft" && (

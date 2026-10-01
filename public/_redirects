@@ -1,1 +1,16 @@
-/*  /index.html  200
+# Netlify. Keep in sync with src/content/legacyRedirects.ts (the build checks).
+/blog/Deep%20Holes                                 /blog/deep-hole-drilling-design-guide        301!
+/blog/Stress%20Concentration                       /blog/stress-concentration-factor            301!
+/courses/Solidworks%20Simulation%20for%20Begginner /courses/solidworks-simulation-for-beginners 301!
+/downloads                                         /resources                                   301!
+
+# Client-only routes → app shell. Everything else is a prerendered file or a
+# real 404 (Netlify serves 404.html automatically).
+/login            /app.html  200
+/signup           /app.html  200
+/forgot-password  /app.html  200
+/reset-password   /app.html  200
+/dashboard        /app.html  200
+/admin            /app.html  200
+/admin/*          /app.html  200
+/classroom/*      /app.html  200

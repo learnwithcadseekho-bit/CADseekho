@@ -25,3 +25,19 @@
 .contact-details__item:hover {
   color: var(--accent);
 }
+
+.contact-areas {
+  text-align: center;
+  color: var(--slate);
+  max-width: 640px;
+  margin: 0 auto var(--space-8);
+}
+
+.contact-map {
+  display: block;
+  width: 100%;
+  max-width: 720px;
+  height: 340px;
+  margin: 0 auto var(--space-8);
+  border: 1px solid var(--line);
+}

@@ -13,7 +13,13 @@ export default function ResourceTaxonomyPage({ kind }: { kind: "topic" | "type" 
   const { software, topics, error } = useResourceTaxonomy();
 
   if (error) return <p className="section__status">Resources are temporarily unavailable. Please try again later.</p>;
-  if (!software || !topics) return <p className="section__status">Loading…</p>;
+  if (!software || !topics) {
+    return (
+      <p className="section__status" aria-busy="true">
+        Loading…
+      </p>
+    );
+  }
 
   let title: string;
   let description: string;
@@ -31,7 +37,15 @@ export default function ResourceTaxonomyPage({ kind }: { kind: "topic" | "type" 
 
   return (
     <>
-      <Seo title={`${title} — Engineering Resources`} description={description} />
+      <Seo
+        title={`${title} — Engineering Resources`}
+        description={description}
+        canonical={`/resources/${kind}/${value}`}
+        breadcrumbs={[
+          { name: "Resources", path: "/resources" },
+          { name: title, path: `/resources/${kind}/${value}` },
+        ]}
+      />
       <header className="resources-hero container">
         <nav className="resources-breadcrumb mono-label" aria-label="Breadcrumb">
           <Link to="/resources">Resources</Link>

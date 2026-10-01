@@ -1,3 +1,26 @@
 {
-  "rewrites": [{ "source": "/((?!tools/[^/]+[.]html$).*)", "destination": "/index.html" }]
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/blog/Deep%20Holes", "destination": "/blog/deep-hole-drilling-design-guide", "statusCode": 301 },
+    { "source": "/blog/Stress%20Concentration", "destination": "/blog/stress-concentration-factor", "statusCode": 301 },
+    {
+      "source": "/courses/Solidworks%20Simulation%20for%20Begginner",
+      "destination": "/courses/solidworks-simulation-for-beginners",
+      "statusCode": 301
+    },
+    { "source": "/downloads", "destination": "/resources", "statusCode": 301 },
+    { "source": "/index.html", "destination": "/", "statusCode": 301 }
+  ],
+  "rewrites": [
+    { "source": "/(login|signup|forgot-password|reset-password|dashboard)", "destination": "/app.html" },
+    { "source": "/(admin|classroom)", "destination": "/app.html" },
+    { "source": "/(admin|classroom)/:path*", "destination": "/app.html" }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    }
+  ]
 }

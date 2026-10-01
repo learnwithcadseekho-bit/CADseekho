@@ -1,15 +1,8 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AccessBadge, ResourceCard } from "@/components/ui/ResourceCard";
 import { getLearningPaths, getMostUsedResources } from "@/services/resourceService";
-import {
-  RESOURCE_TYPES,
-  RESOURCE_TYPE_PLURALS,
-  type LearningPathWithItems,
-  type ResourceCard as ResourceCardData,
-  type Software,
-  type Topic,
-} from "@/types/resource";
+import { useCachedData } from "@/hooks/useCachedData";
+import { RESOURCE_TYPES, RESOURCE_TYPE_PLURALS, type Software, type Topic } from "@/types/resource";
 
 // Standalone tools served from public/tools/ — not resource rows in the database.
 const FREE_TOOLS = [
@@ -65,11 +58,8 @@ export function LearningPathTiles({
   softwareId: string | null;
   title?: string;
 }) {
-  const [paths, setPaths] = useState<LearningPathWithItems[]>([]);
-
-  useEffect(() => {
-    getLearningPaths(softwareId).then(setPaths).catch(() => setPaths([]));
-  }, [softwareId]);
+  const { data } = useCachedData(`resources:paths:${softwareId ?? "all"}`, () => getLearningPaths(softwareId));
+  const paths = data ?? [];
 
   if (paths.length === 0) return null;
 
@@ -99,11 +89,10 @@ export function LearningPathTiles({
 }
 
 export function MostUsedRow({ softwareSlug }: { softwareSlug: string | null }) {
-  const [items, setItems] = useState<ResourceCardData[]>([]);
-
-  useEffect(() => {
-    getMostUsedResources(softwareSlug).then(setItems).catch(() => setItems([]));
-  }, [softwareSlug]);
+  const { data } = useCachedData(`resources:most-used:${softwareSlug ?? "all"}`, () =>
+    getMostUsedResources(softwareSlug)
+  );
+  const items = data ?? [];
 
   if (items.length === 0) return null;
 

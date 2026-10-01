@@ -11,8 +11,10 @@ export default function ResourcesHubPage() {
   return (
     <>
       <Seo
-        title="Engineering Resources — Calculators, Cheat Sheets & Tutorials"
-        description="Search free and premium CAD/CAE resources: stress calculators, cheat sheets, solved problems and tutorials for SolidWorks, ANSYS, Creo, CATIA, NX and HyperMesh."
+        title="Engineering Calculators, Cheat Sheets & Tutorials"
+        description="Free and premium CAD/CAE resources: stress calculators, cheat sheets, solved problems and tutorials for SolidWorks, ANSYS, Creo, CATIA, NX and HyperMesh."
+        canonical="/resources"
+        breadcrumbs={[{ name: "Resources", path: "/resources" }]}
       />
       <header className="resources-hero container">
         <span className="mono-label">Resources</span>
@@ -24,7 +26,11 @@ export default function ResourcesHubPage() {
       </header>
 
       {error && <p className="section__status">Resources are temporarily unavailable. Please try again later.</p>}
-      {!error && (!software || !topics) && <p className="section__status">Loading resources…</p>}
+      {!error && (!software || !topics) && (
+        <p className="section__status" aria-busy="true">
+          Loading resources…
+        </p>
+      )}
 
       {software && topics && (
         <>

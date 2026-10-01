@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { slugify } from "@/utils/slugify";
 import { TextField } from "@/components/ui/TextField";
 import { SelectField } from "@/components/ui/SelectField";
 import { Button } from "@/components/ui/Button";
@@ -92,6 +93,7 @@ export default function AdminBlogPage() {
     try {
       const payload: BlogPostInput = {
         ...form,
+        slug: slugify(form.slug || form.title),
         published_at: form.is_published ? form.published_at ?? new Date().toISOString() : form.published_at,
       };
       if (editingId) {
@@ -140,6 +142,8 @@ export default function AdminBlogPage() {
               required
               value={form.slug}
               onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
+              // Normalised on blur (and on save) so URLs are always lowercase-hyphenated.
+              onBlur={() => setForm((f) => ({ ...f, slug: slugify(f.slug || f.title) }))}
             />
           </div>
           <SelectField

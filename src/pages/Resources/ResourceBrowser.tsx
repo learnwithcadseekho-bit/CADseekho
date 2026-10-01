@@ -58,7 +58,12 @@ export function ResourceBrowser({
 
   const urlQuery = params.get("q") ?? "";
   const [query, setQuery] = useState(urlQuery);
-  const [filtersOpen, setFiltersOpen] = useState(() => window.matchMedia("(min-width: 900px)").matches);
+  // Closed on the first render (server and browser must agree for
+  // hydration), then opened on wide screens.
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  useEffect(() => {
+    if (window.matchMedia("(min-width: 900px)").matches) setFiltersOpen(true);
+  }, []);
 
   const [items, setItems] = useState<ResourceCardData[]>([]);
   const [total, setTotal] = useState(0);

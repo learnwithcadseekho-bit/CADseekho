@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { responsiveImage } from "@/utils/imageUrl";
 import { PlaceholderArt } from "./PlaceholderArt";
 import { COURSE_LEVEL_LABEL, type CourseWithCategory } from "@/types/course";
 import "@/styles/drafting.css";
@@ -11,8 +12,11 @@ export function CourseCard({ course, index }: { course: CourseWithCategory; inde
     >
       {course.image ? (
         <img
-          src={course.image}
-          alt={course.title}
+          {...responsiveImage(course.image, 400)}
+          sizes="(max-width: 640px) 92vw, 400px"
+          width={400}
+          height={400}
+          alt={`${course.title} course`}
           className="course-card__image"
           loading="lazy"
           decoding="async"

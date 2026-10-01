@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 import { ProfileTab } from "./ProfileTab";
 import { MyCoursesTab } from "./MyCoursesTab";
-import { DownloadsTab } from "./DownloadsTab";
 import { AccountSettingsTab } from "./AccountSettingsTab";
 import "@/styles/cards.css";
 import "./dashboard.css";
@@ -12,7 +11,6 @@ import "./dashboard.css";
 const TABS = [
   { key: "profile", label: "My Profile" },
   { key: "courses", label: "My Courses" },
-  { key: "downloads", label: "Downloads" },
   { key: "settings", label: "Account Settings" },
 ] as const;
 
@@ -57,7 +55,6 @@ export default function DashboardPage() {
         <div className="dashboard__panel">
           {activeTab === "profile" && <ProfileTab />}
           {activeTab === "courses" && <MyCoursesTab />}
-          {activeTab === "downloads" && <DownloadsTab />}
           {activeTab === "settings" && <AccountSettingsTab />}
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { responsiveImage } from "@/utils/imageUrl";
 import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";
-import { Seo } from "@/components/Seo";
+import { Seo, truncate } from "@/components/Seo";
 import { useAuth } from "@/hooks/useAuth";
 import { RichContent } from "@/components/RichContent";
 import { ChapterMedia } from "@/components/ChapterMedia";
@@ -9,6 +10,12 @@ import { getRegistration, registerForCourse } from "@/services/courseRegistratio
 import { startCourseCheckout } from "@/services/paymentService";
 import { COURSE_FORMAT_LABEL, COURSE_LEVEL_LABEL, type CourseDetail } from "@/types/course";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
+import { useCachedData } from "@/hooks/useCachedData";
+import { getPublishedPosts } from "@/services/blogService";
+import { setSsrStatus } from "@/lib/httpStatus";
+import { courseSchema, faqSchema } from "@/lib/schema";
+import { COURSE_SEO, fitTitle } from "@/content/seoOverrides";
+import { AREA_PATHS } from "@/content/localAreas";
 import "@/styles/cards.css";
 import "./course-detail.css";
 
@@ -20,35 +27,23 @@ type LoadState = "loading" | "not-found" | "error" | "ready";
 
 export default function CourseDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const [course, setCourse] = useState<CourseDetail | null>(null);
-  const [state, setState] = useState<LoadState>("loading");
-
-  useEffect(() => {
-    if (!slug) return;
-    setState("loading");
-    getCourseDetailBySlug(slug)
-      .then((c) => {
-        if (!c) {
-          setState("not-found");
-          return;
-        }
-        setCourse(c);
-        setState("ready");
-      })
-      .catch(() => setState("error"));
-  }, [slug]);
+  const { data, error } = useCachedData(slug ? `course:${slug}` : null, () => getCourseDetailBySlug(slug!));
+  const course = data ?? null;
+  const state: LoadState = error ? "error" : data === undefined ? "loading" : data === null ? "not-found" : "ready";
 
   if (state === "loading") {
     return (
-      <section className="section container">
+      <section className="section container" aria-busy="true">
         <p className="section__status">Loading…</p>
       </section>
     );
   }
 
   if (state === "not-found") {
+    setSsrStatus(404);
     return (
       <section className="section container" style={{ textAlign: "center" }}>
+        <Seo title="Course not found" noindex />
         <span className="mono-label">ERROR — 404</span>
         <h1 style={{ marginTop: "var(--space-2)" }}>Course not found</h1>
         <p style={{ marginTop: "var(--space-4)" }}>
@@ -90,6 +85,15 @@ export default function CourseDetailPage() {
     ...c.course_faqs.map((f) => ({ question: f.question, answer: f.answer })),
   ];
 
+  const override = COURSE_SEO[c.slug];
+  const seoTitle = override?.title ?? fitTitle(c.title);
+  const seoDescription = truncate(
+    override?.description || c.short_description || plainText(c.description) || `${c.title} — a CADseekho course.`,
+    155
+  );
+  const isAnsys = c.category?.slug === "ansys" || /ansys/i.test(c.software ?? "");
+  const isSimulation = isAnsys || /simulation|fea/i.test(`${c.title} ${c.slug}`);
+
   const infoItems: { label: string; value: string }[] = [
     c.level && { label: "Level", value: COURSE_LEVEL_LABEL[c.level] },
     c.software && { label: "Software", value: c.software },
@@ -102,9 +106,18 @@ export default function CourseDetailPage() {
   return (
     <>
       <Seo
-        title={c.title}
-        description={c.short_description ?? c.description ?? undefined}
+        title={seoTitle}
+        description={seoDescription}
         image={c.image ?? undefined}
+        canonical={`/courses/${c.slug}`}
+        breadcrumbs={[
+          { name: "Courses", path: "/courses" },
+          ...(c.category ? [{ name: c.category.name, path: `/courses/category/${c.category.slug}` }] : []),
+          { name: c.title, path: `/courses/${c.slug}` },
+        ]}
+        jsonLd={[courseSchema(c, seoDescription), faqSchema(faqItems)].filter(
+          (x): x is Record<string, unknown> => x !== null
+        )}
       />
       <section className="course-hero">
         <div className="course-hero__grid-bg blueprint-grid" aria-hidden="true" />
@@ -218,7 +231,15 @@ export default function CourseDetailPage() {
                 {c.course_testimonials.map((t) => (
                   <blockquote className="testimonial-card" key={t.id}>
                     {t.student_photo ? (
-                      <img src={t.student_photo} alt={t.student_name} className="testimonial-card__photo" />
+                      <img
+                        {...responsiveImage(t.student_photo, 48)}
+                        width={48}
+                        height={48}
+                        alt={t.student_name}
+                        className="testimonial-card__photo"
+                        loading="lazy"
+                        decoding="async"
+                      />
                     ) : (
                       <span className="testimonial-card__photo testimonial-card__photo--placeholder" aria-hidden="true">
                         {t.student_name.charAt(0).toUpperCase()}
@@ -247,6 +268,7 @@ export default function CourseDetailPage() {
               </div>
             </article>
           )}
+          <RelatedLinks course={c} isAnsys={isAnsys} isSimulation={isSimulation} />
         </div>
 
         <aside className="course-detail__sidebar drafting-frame">
@@ -265,6 +287,65 @@ export default function CourseDetailPage() {
         </aside>
       </section>
     </>
+  );
+}
+
+function plainText(html: string | null): string {
+  return (html ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+// Internal links: related articles, the free hand-calc tools for simulation
+// courses, and the Delhi NCR page for ANSYS.
+function RelatedLinks({
+  course,
+  isAnsys,
+  isSimulation,
+}: {
+  course: CourseDetail;
+  isAnsys: boolean;
+  isSimulation: boolean;
+}) {
+  const { data: posts } = useCachedData("posts:published", getPublishedPosts);
+  const names = [course.category?.name, course.software].filter(Boolean).map((n) => n!.toLowerCase());
+  const engineering = ["engineering", "design fundamentals", "dfm"];
+  const related = (posts ?? [])
+    .filter((p) => {
+      const cat = p.category?.toLowerCase() ?? "";
+      return names.includes(cat) || (isSimulation && engineering.includes(cat));
+    })
+    .slice(0, 4);
+
+  if (related.length === 0 && !isSimulation) return null;
+
+  return (
+    <article className="course-detail__block">
+      <h2>Keep Learning</h2>
+      <ul className="course-detail__list course-detail__links">
+        {related.map((p) => (
+          <li key={p.id}>
+            <Link to={`/blog/${p.slug}`}>{p.title}</Link>
+          </li>
+        ))}
+        {isSimulation && (
+          <>
+            <li>
+              <Link to="/tools/beam-calculator">Free beam calculator</Link> — reactions, bending moment and
+              deflection to check a simulation by hand
+            </li>
+            <li>
+              <Link to="/resources/plate-with-hole-stress-concentration-calculator">Plate-with-a-hole Kt calculator</Link>{" "}
+              — the classic stress-concentration hand calculation
+            </li>
+          </>
+        )}
+        {isAnsys && (
+          <li>
+            <Link to={AREA_PATHS["delhi-ncr"]}>ANSYS training in Delhi NCR</Link> — batches, fees and FAQs for
+            learners in Delhi, Noida, Gurugram and Ghaziabad
+          </li>
+        )}
+      </ul>
+    </article>
   );
 }
 

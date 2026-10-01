@@ -1,4 +1,5 @@
-import { lazy, type ComponentType, type LazyExoticComponent } from "react";
+import type { ComponentType } from "react";
+import { trackedLazy } from "@/lib/trackedLazy";
 
 /** Props every interactive resource component receives from the resource page. */
 export interface ResourceComponentProps {
@@ -13,19 +14,20 @@ export interface ResourceComponentProps {
 
 interface RegistryEntry {
   label: string;
-  component: LazyExoticComponent<ComponentType<ResourceComponentProps>>;
+  component: ComponentType<ResourceComponentProps>;
 }
 
 // component_key (stored on resources) → lazily loaded component. Each entry
 // is its own chunk, so a calculator's code only downloads on its own page.
 // Add new interactive resources here; the admin form lists these keys.
+// trackedLazy ids are module paths, so the prerender can link their CSS.
 export const RESOURCE_COMPONENTS: Record<string, RegistryEntry> = {
   "kt-plate-center-hole": {
     label: "Kt — plate with a central hole",
-    component: lazy(() => import("./KtPlateCenterHole")),
+    component: trackedLazy("src/calculators/KtPlateCenterHole.tsx", () => import("./KtPlateCenterHole")),
   },
   "kt-hole-near-edge": {
     label: "Kt — hole near the edge of a plate",
-    component: lazy(() => import("./KtHoleNearEdge")),
+    component: trackedLazy("src/calculators/KtHoleNearEdge.tsx", () => import("./KtHoleNearEdge")),
   },
 };

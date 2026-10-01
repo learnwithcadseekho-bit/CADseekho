@@ -1,52 +1,51 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useCachedData } from "@/hooks/useCachedData";
+import { fetchCustomHtml, isImageUrl, toShadowMarkup } from "@/utils/customArticle";
 
 interface CustomHtmlArticleProps {
   htmlUrl: string;
   downloadName: string;
+  /** Used as alt text when the upload is an image rather than an HTML file. */
+  title: string;
 }
 
-// Renders an admin-uploaded, self-contained HTML/CSS file verbatim, so its
-// own design never collides with (or gets stripped by) the site's sanitized
-// rich-content pipeline. Supabase Storage always serves text/html uploads as
-// text/plain (with nosniff) to prevent stored-XSS on its shared domain, so
-// pointing an iframe's `src` straight at the storage URL renders as plain
-// text instead of markup. Fetching the bytes via JS and assigning them to
-// `srcDoc` sidesteps that — srcDoc content is parsed as HTML unconditionally,
-// regardless of how it was fetched. The uploaded file carries a small
-// injected script (see admin/components/HtmlBlogUploadField) that posts its
-// height back via postMessage, since srcDoc iframes have an opaque origin
-// and same-origin scrollHeight reads aren't available.
-export function CustomHtmlArticle({ htmlUrl, downloadName }: CustomHtmlArticleProps) {
-  const [html, setHtml] = useState<string | null>(null);
-  const [height, setHeight] = useState(1200);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+// useLayoutEffect warns during server rendering; it never runs there anyway.
+const useIsomorphicLayoutEffect = import.meta.env.SSR ? () => {} : useLayoutEffect;
+
+// Renders an admin-uploaded, self-contained HTML/CSS file verbatim inside a
+// shadow root, so its own design never collides with (or gets stripped by)
+// the site's sanitized rich-content pipeline. Supabase Storage serves these
+// uploads as text/plain, so the file is fetched and its markup injected.
+//
+// The build-time prerender writes the article as a declarative shadow root
+// (<template shadowrootmode="open">), so the article text ships in the page's
+// HTML and is indexable. In the browser the parser has already attached that
+// shadow root by the time React hydrates; on client-side navigation the
+// layout effect attaches it instead.
+export function CustomHtmlArticle({ htmlUrl, downloadName, title }: CustomHtmlArticleProps) {
+  const image = isImageUrl(htmlUrl);
+  const { data: html, error } = useCachedData(image ? null : `html:${htmlUrl}`, () => fetchCustomHtml(htmlUrl));
+  const markup = useMemo(() => (html ? toShadowMarkup(html) : null), [html]);
+  const hostRef = useRef<HTMLDivElement>(null);
+  const hydratedFromServer = useRef(false);
   const { session, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    let cancelled = false;
-    fetch(htmlUrl)
-      .then((r) => r.text())
-      .then((text) => {
-        if (!cancelled) setHtml(text);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [htmlUrl]);
-
-  useEffect(() => {
-    function handleMessage(e: MessageEvent) {
-      if (e.source === iframeRef.current?.contentWindow && e.data?.source === "cadseekho-blog-iframe") {
-        setHeight(e.data.height);
-      }
+  useIsomorphicLayoutEffect(() => {
+    const host = hostRef.current;
+    if (!host || !markup) return;
+    if (host.shadowRoot && host.shadowRoot.childNodes.length > 0 && !hydratedFromServer.current) {
+      // Server-rendered shadow root is already showing this article.
+      hydratedFromServer.current = true;
+      return;
     }
-    window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
-  }, []);
+    hydratedFromServer.current = true;
+    const root = host.shadowRoot ?? host.attachShadow({ mode: "open" });
+    root.innerHTML = markup;
+  }, [markup]);
 
   async function handleDownload() {
     if (loading) return;
@@ -67,6 +66,15 @@ export function CustomHtmlArticle({ htmlUrl, downloadName }: CustomHtmlArticlePr
     URL.revokeObjectURL(objectUrl);
   }
 
+  if (image) {
+    return (
+      <div className="container" style={{ padding: "var(--space-8) 0", textAlign: "center" }}>
+        <h1 style={{ marginBottom: "var(--space-6)" }}>{title}</h1>
+        <img src={htmlUrl} alt={title} style={{ maxWidth: "100%", height: "auto" }} decoding="async" />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="container" style={{ display: "flex", justifyContent: "flex-end", padding: "var(--space-4) 0" }}>
@@ -75,12 +83,19 @@ export function CustomHtmlArticle({ htmlUrl, downloadName }: CustomHtmlArticlePr
         </button>
       </div>
 
-      {html !== null && (
-        <iframe
-          ref={iframeRef}
-          srcDoc={html}
-          title={downloadName}
-          style={{ display: "block", width: "100%", height, border: "none" }}
+      {error ? (
+        <p className="section__status">This article couldn&apos;t be loaded. Please try again later.</p>
+      ) : (
+        // Always rendered (even before the HTML arrives) so the element React
+        // hydrates matches the server's. Light DOM stays empty: the article
+        // lives in the shadow root.
+        <div
+          ref={hostRef}
+          className="custom-article"
+          dangerouslySetInnerHTML={{
+            __html: import.meta.env.SSR && markup ? `<template shadowrootmode="open">${markup}</template>` : "",
+          }}
+          suppressHydrationWarning
         />
       )}
     </>

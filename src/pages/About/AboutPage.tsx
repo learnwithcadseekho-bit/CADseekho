@@ -9,8 +9,10 @@ export default function AboutPage() {
     <>
       <section className="section container about-page">
         <Seo
-          title="About CADseekho"
-          description="CADseekho is an engineering education platform teaching CAD design and CAE simulation — SolidWorks, Creo, ANSYS, HyperMesh — with a solve-by-hand-first methodology, online and offline, plus corporate and college training."
+          title="About CADseekho – ANSYS, FEA & CAD Training"
+          description="CADseekho teaches CAD design and CAE simulation — ANSYS, SolidWorks, Creo, HyperMesh — with a solve-by-hand-first method, online and in Delhi NCR."
+          canonical="/about"
+          breadcrumbs={[{ name: "About", path: "/about" }]}
         />
         <SectionHeading
           title="Engineering education, not just software tutorials"

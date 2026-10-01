@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { trackedLazy } from "@/lib/trackedLazy";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { MainLayout } from "@/layouts/MainLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 // The landing page ships with the app shell (not code-split) so the most common
@@ -10,25 +11,28 @@ import HomePage from "@/pages/Home/HomePage";
 // Every other public page is code-split per route so a visit to any one page
 // only downloads and parses that page's JS, not the entire site (previously all
 // pages shipped in a single ~480KB chunk loaded before any page could paint).
-const CoursesListingPage = lazy(() => import("@/pages/Courses/CoursesListingPage"));
-const CourseCategoryPage = lazy(() => import("@/pages/Courses/CourseCategoryPage"));
-const CourseDetailPage = lazy(() => import("@/pages/CourseDetails/CourseDetailPage"));
-const DownloadsPage = lazy(() => import("@/pages/Downloads/DownloadsPage"));
-const ResourcesHubPage = lazy(() => import("@/pages/Resources/ResourcesHubPage"));
-const ResourceSoftwarePage = lazy(() => import("@/pages/Resources/ResourceSoftwarePage"));
-const ResourceTaxonomyPage = lazy(() => import("@/pages/Resources/ResourceTaxonomyPage"));
-const ResourceDetailPage = lazy(() => import("@/pages/Resources/ResourceDetailPage"));
-const BeamCalculatorPage = lazy(() => import("@/pages/tools/BeamCalculatorPage"));
-const BlogListingPage = lazy(() => import("@/pages/Blog/BlogListingPage"));
-const BlogPostPage = lazy(() => import("@/pages/Blog/BlogPostPage"));
-const AboutPage = lazy(() => import("@/pages/About/AboutPage"));
-const ContactPage = lazy(() => import("@/pages/Contact/ContactPage"));
-const LoginPage = lazy(() => import("@/pages/Login/LoginPage"));
-const SignupPage = lazy(() => import("@/pages/Signup/SignupPage"));
-const ForgotPasswordPage = lazy(() => import("@/pages/Login/ForgotPasswordPage"));
-const ResetPasswordPage = lazy(() => import("@/pages/Login/ResetPasswordPage"));
-const DashboardPage = lazy(() => import("@/pages/Dashboard/DashboardPage"));
-const NotFoundPage = lazy(() => import("@/pages/NotFound/NotFoundPage"));
+// trackedLazy (not React.lazy) so the build-time prerender knows which route
+// chunk's CSS to link in each page's HTML — the id is the module's path.
+const CoursesListingPage = trackedLazy("src/pages/Courses/CoursesListingPage.tsx", () => import("@/pages/Courses/CoursesListingPage"));
+const CourseCategoryPage = trackedLazy("src/pages/Courses/CourseCategoryPage.tsx", () => import("@/pages/Courses/CourseCategoryPage"));
+const CourseDetailPage = trackedLazy("src/pages/CourseDetails/CourseDetailPage.tsx", () => import("@/pages/CourseDetails/CourseDetailPage"));
+const ResourcesHubPage = trackedLazy("src/pages/Resources/ResourcesHubPage.tsx", () => import("@/pages/Resources/ResourcesHubPage"));
+const ResourceSoftwarePage = trackedLazy("src/pages/Resources/ResourceSoftwarePage.tsx", () => import("@/pages/Resources/ResourceSoftwarePage"));
+const ResourceTaxonomyPage = trackedLazy("src/pages/Resources/ResourceTaxonomyPage.tsx", () => import("@/pages/Resources/ResourceTaxonomyPage"));
+const ResourceDetailPage = trackedLazy("src/pages/Resources/ResourceDetailPage.tsx", () => import("@/pages/Resources/ResourceDetailPage"));
+const BeamCalculatorPage = trackedLazy("src/pages/tools/BeamCalculatorPage.tsx", () => import("@/pages/tools/BeamCalculatorPage"));
+const BlogListingPage = trackedLazy("src/pages/Blog/BlogListingPage.tsx", () => import("@/pages/Blog/BlogListingPage"));
+const BlogPostPage = trackedLazy("src/pages/Blog/BlogPostPage.tsx", () => import("@/pages/Blog/BlogPostPage"));
+const AboutPage = trackedLazy("src/pages/About/AboutPage.tsx", () => import("@/pages/About/AboutPage"));
+const ContactPage = trackedLazy("src/pages/Contact/ContactPage.tsx", () => import("@/pages/Contact/ContactPage"));
+const LoginPage = trackedLazy("src/pages/Login/LoginPage.tsx", () => import("@/pages/Login/LoginPage"));
+const SignupPage = trackedLazy("src/pages/Signup/SignupPage.tsx", () => import("@/pages/Signup/SignupPage"));
+const ForgotPasswordPage = trackedLazy("src/pages/Login/ForgotPasswordPage.tsx", () => import("@/pages/Login/ForgotPasswordPage"));
+const ResetPasswordPage = trackedLazy("src/pages/Login/ResetPasswordPage.tsx", () => import("@/pages/Login/ResetPasswordPage"));
+const DashboardPage = trackedLazy("src/pages/Dashboard/DashboardPage.tsx", () => import("@/pages/Dashboard/DashboardPage"));
+const LiveClassPage = trackedLazy("src/pages/Classroom/LiveClassPage.tsx", () => import("@/pages/Classroom/LiveClassPage"));
+const LocalLandingPage = trackedLazy("src/pages/Local/LocalLandingPage.tsx", () => import("@/pages/Local/LocalLandingPage"));
+const NotFoundPage = trackedLazy("src/pages/NotFound/NotFoundPage.tsx", () => import("@/pages/NotFound/NotFoundPage"));
 
 // Admin is a large CRUD surface only admins ever load — code-split it out of
 // the main bundle every visitor downloads (Section 28).
@@ -63,7 +67,7 @@ export function AppRoutes() {
         <Route path="/courses" element={<CoursesListingPage />} />
         <Route path="/courses/category/:categorySlug" element={<CourseCategoryPage />} />
         <Route path="/courses/:slug" element={<CourseDetailPage />} />
-        <Route path="/downloads" element={<DownloadsPage />} />
+        <Route path="/downloads" element={<Navigate to="/resources" replace />} />
         <Route path="/resources" element={<ResourcesHubPage />} />
         <Route path="/resources/software/:software" element={<ResourceSoftwarePage />} />
         <Route path="/resources/topic/:value" element={<ResourceTaxonomyPage kind="topic" />} />
@@ -72,6 +76,11 @@ export function AppRoutes() {
         <Route path="/tools/beam-calculator" element={<BeamCalculatorPage />} />
         <Route path="/blog" element={<BlogListingPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
+        <Route path="/ansys-training-delhi-ncr" element={<LocalLandingPage area="delhi-ncr" />} />
+        <Route path="/ansys-training-delhi" element={<LocalLandingPage area="delhi" />} />
+        <Route path="/ansys-training-noida" element={<LocalLandingPage area="noida" />} />
+        <Route path="/ansys-training-gurgaon" element={<LocalLandingPage area="gurgaon" />} />
+        <Route path="/ansys-training-ghaziabad" element={<LocalLandingPage area="ghaziabad" />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route
@@ -79,6 +88,14 @@ export function AppRoutes() {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/classroom/:slug"
+          element={
+            <ProtectedRoute>
+              <LiveClassPage />
             </ProtectedRoute>
           }
         />

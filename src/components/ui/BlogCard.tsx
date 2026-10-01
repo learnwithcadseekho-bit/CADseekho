@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { responsiveImage } from "@/utils/imageUrl";
 import { PlaceholderArt } from "./PlaceholderArt";
 import { formatDate } from "@/utils/formatDate";
 import type { BlogPost } from "@/types/blogPost";
@@ -23,7 +24,10 @@ export function BlogCard({ post, index }: { post: BlogPost; index: number }) {
     <Link to={`/blog/${post.slug}`} className="blog-card drafting-frame drafting-frame--interactive">
       {post.featured_image ? (
         <img
-          src={post.featured_image}
+          {...responsiveImage(post.featured_image, 480)}
+          sizes="(max-width: 640px) 92vw, 480px"
+          width={480}
+          height={300}
           alt={post.title}
           className="blog-card__image"
           loading="lazy"

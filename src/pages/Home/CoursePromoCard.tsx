@@ -1,18 +1,16 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getCourseDetailBySlug } from "@/services/courseService";
-import type { CourseDetail } from "@/types/course";
+import { useCachedData } from "@/hooks/useCachedData";
+import { FEATURED_ANSYS_SLUG, WEEKLY_SCHEDULE_DAYS } from "@/content/batches";
 import { HeroImageSlider } from "./HeroImageSlider";
 import "./home.css";
 
-// Keep this in sync with the course the homepage should feature — swapping
-// the slug is enough, the card always reflects live price/curriculum data.
-const FEATURED_COURSE_SLUG = "ansys-workbench-level-1";
+// The featured course lives in content/batches.ts (shared with the Delhi NCR
+// pages) — swapping the slug is enough, the card always reflects live
+// price/curriculum data.
+const FEATURED_COURSE_SLUG = FEATURED_ANSYS_SLUG;
 const LOW_SEATS_THRESHOLD = 10;
 const MAX_TAGS = 5;
-// Weekly class days aren't a schema column — no per-course field for this
-// exists yet, so it's scoped to this one featured card like the slug above.
-const WEEKLY_SCHEDULE_DAYS = "Fri, Sat & Sun";
 // What a buyer gets alongside the classes. Paid members unlock the
 // Resources hub's partial/paid items (any enrolled course), so only list
 // kinds of material that actually live there.
@@ -34,20 +32,15 @@ function formatBatchDate(isoDate: string): string {
 }
 
 export function CoursePromoCard() {
-  const [course, setCourse] = useState<CourseDetail | null>(null);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    getCourseDetailBySlug(FEATURED_COURSE_SLUG)
-      .then((c) => (c ? setCourse(c) : setFailed(true)))
-      .catch(() => setFailed(true));
-  }, []);
+  const { data, error } = useCachedData(`course:${FEATURED_COURSE_SLUG}`, () => getCourseDetailBySlug(FEATURED_COURSE_SLUG));
+  const course = data ?? null;
+  const failed = Boolean(error) || data === null;
 
   // Course missing/unpublished or the fetch failed — fall back to the
   // gallery slider (itself falls back to the drafting sketch) rather than
   // leaving the hero's right column broken.
   if (failed) return <HeroImageSlider />;
-  if (!course) return <div className="course-promo course-promo--loading" aria-hidden="true" />;
+  if (!course) return <div className="course-promo course-promo--loading" aria-hidden="true" aria-busy="true" />;
 
   const enrolledCount = Math.max(course.registration_count, course.manual_enrolled_count ?? 0);
   const seatsLeft = course.seat_capacity != null ? Math.max(course.seat_capacity - enrolledCount, 0) : null;

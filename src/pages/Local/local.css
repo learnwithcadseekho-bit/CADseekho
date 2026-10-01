@@ -1,0 +1,206 @@
+/* Delhi NCR ANSYS landing pages (/ansys-training-*). */
+.local-hero {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.local-hero__grid-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.local-hero__inner {
+  position: relative;
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-12);
+  max-width: 920px;
+}
+
+.local-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.local-breadcrumb a {
+  color: var(--accent);
+}
+
+.local-hero__title {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1.05;
+  margin-bottom: var(--space-6);
+}
+
+.local-hero__lead {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  margin-bottom: var(--space-4);
+  max-width: 72ch;
+}
+
+.enquiry-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.local-body {
+  max-width: 920px;
+  padding-top: var(--space-12);
+  padding-bottom: var(--space-16);
+}
+
+.local-block {
+  margin-bottom: var(--space-12);
+}
+
+.local-block h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: var(--space-4);
+}
+
+.local-block p {
+  line-height: 1.75;
+  margin-bottom: var(--space-4);
+  max-width: 75ch;
+}
+
+.local-block a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.local-list {
+  padding-left: var(--space-6);
+  line-height: 1.8;
+}
+
+.local-courses {
+  display: grid;
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+}
+
+.local-course {
+  padding: var(--space-6);
+  background: var(--white);
+}
+
+.local-course__title {
+  font-size: 1.375rem;
+  margin: var(--space-2) 0 var(--space-3);
+}
+
+.local-course__title a {
+  color: var(--ink);
+}
+
+.local-course__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-4) 0 var(--space-6);
+}
+
+.local-course__facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--slate);
+}
+
+.local-course__facts dd {
+  margin: var(--space-1) 0 0;
+  font-weight: 600;
+}
+
+.local-course__was {
+  color: var(--slate);
+  font-weight: 400;
+  margin-left: var(--space-2);
+}
+
+.local-course .btn {
+  color: var(--white);
+}
+
+.local-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.local-step {
+  padding: var(--space-5);
+  background: var(--white);
+}
+
+.local-step h3 {
+  font-size: 1.0625rem;
+  margin-bottom: var(--space-2);
+}
+
+.local-step p {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.local-area-links {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.local-area-links li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.local-area-links span {
+  color: var(--slate);
+  font-size: 0.9375rem;
+}
+
+.local-faq__item {
+  border-bottom: 1px solid var(--line);
+  padding: var(--space-4) 0;
+}
+
+.local-faq__item summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.local-faq__item p {
+  margin: var(--space-3) 0 0;
+}
+
+.local-cta {
+  padding: var(--space-8);
+  background: var(--white);
+}
+
+.local-related {
+  margin-top: var(--space-6);
+  font-size: 0.9375rem;
+}
+
+.local-map {
+  display: block;
+  width: 100%;
+  height: 360px;
+  border: 1px solid var(--line);
+}

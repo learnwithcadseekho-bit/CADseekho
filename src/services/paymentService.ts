@@ -54,7 +54,7 @@ function loadCheckoutScript(): Promise<void> {
 
 // supabase.functions.invoke puts non-2xx bodies on error.context — surface
 // the function's own { error } message when there is one.
-async function invokeFunction<T>(name: string, body: Record<string, unknown>): Promise<T> {
+export async function invokeFunction<T>(name: string, body: Record<string, unknown>): Promise<T> {
   const { data, error } = await supabase.functions.invoke<T & { error?: string }>(name, { body });
   if (error) {
     let message = "Something went wrong. Please try again.";

@@ -12,7 +12,13 @@ export default function ResourceSoftwarePage() {
   const { software, topics, error } = useResourceTaxonomy();
 
   if (error) return <p className="section__status">Resources are temporarily unavailable. Please try again later.</p>;
-  if (!software || !topics) return <p className="section__status">Loading…</p>;
+  if (!software || !topics) {
+    return (
+      <p className="section__status" aria-busy="true">
+        Loading…
+      </p>
+    );
+  }
 
   const tool = software.find((s) => s.slug === slug);
   if (!tool) return <NotFoundPage />;
@@ -20,8 +26,16 @@ export default function ResourceSoftwarePage() {
   return (
     <>
       <Seo
-        title={`${tool.name} Resources — Tutorials, Cheat Sheets & Calculators`}
-        description={tool.description ?? `${tool.name} resources from CADseekho.`}
+        title={`${tool.name} Resources: Tutorials & Calculators`}
+        description={
+          tool.description ??
+          `${tool.name} tutorials, cheat sheets, solved problems and calculators from CADseekho — solve by hand first, validate in software.`
+        }
+        canonical={`/resources/software/${tool.slug}`}
+        breadcrumbs={[
+          { name: "Resources", path: "/resources" },
+          { name: tool.name, path: `/resources/software/${tool.slug}` },
+        ]}
       />
       <header className="resources-hero container">
         <nav className="resources-breadcrumb mono-label" aria-label="Breadcrumb">

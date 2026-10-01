@@ -8,18 +8,19 @@ export function HeroSection() {
       <div className="hero__grid-bg blueprint-grid" aria-hidden="true" />
       <div className="hero__inner">
         <div className="hero__copy">
-          <span className="mono-label section-eyebrow">CADSEEKHO — ENGINEERING TRAINING</span>
-          <h1 className="hero__headline">Learn CAD. Build Skills. Solve Real Engineering Problems.</h1>
+          <span className="mono-label section-eyebrow">CADSEEKHO — ENGINEERING TRAINING · DELHI NCR &amp; ONLINE</span>
+          <h1 className="hero__headline">ANSYS &amp; FEA Training in Delhi NCR</h1>
           <p className="hero__subhead">
-            Practical CAD and engineering training designed for students, engineers, designers, and
-            working professionals.
+            Solve it by hand first, then validate it in ANSYS Workbench. Practical simulation and CAD
+            training — SolidWorks, Creo and AutoCAD too — for students, engineers and working
+            professionals.
           </p>
           <div className="hero__actions">
             <Link to="/courses" className="btn btn--primary">
               Explore Courses
             </Link>
-            <Link to="/downloads" className="btn btn--outline">
-              Downloads
+            <Link to="/resources" className="btn btn--outline">
+              Free Resources
             </Link>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { responsiveImage } from "@/utils/imageUrl";
 import {
   RESOURCE_ACCESS_LABELS,
   RESOURCE_LEVEL_LABELS,
@@ -32,7 +33,7 @@ export function ResourceCard({ resource }: { resource: ResourceCardData }) {
     <article className="resource-card drafting-frame drafting-frame--interactive">
       {resource.thumbnail_url && (
         <div className="resource-card__thumb">
-          <img src={resource.thumbnail_url} alt="" loading="lazy" decoding="async" />
+          <img {...responsiveImage(resource.thumbnail_url, 400)} alt="" loading="lazy" decoding="async" />
         </div>
       )}
       <div className="resource-card__top">

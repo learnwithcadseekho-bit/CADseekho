@@ -16,6 +16,7 @@ import {
   type InterestedCourseSlug,
   type UserType,
 } from "@/types/profile";
+import { Seo } from "@/components/Seo";
 import "@/styles/forms.css";
 
 interface FormState {
@@ -130,6 +131,7 @@ export default function SignupPage() {
 
   return (
     <div className="auth-page">
+      <Seo title="Sign Up" noindex />
       <Link to="/" className="auth-page__brand">
         CADseekho
       </Link>
@@ -137,7 +139,7 @@ export default function SignupPage() {
         <span className="mono-label auth-card__eyebrow">CREATE ACCOUNT</span>
         <h1 className="auth-card__title">Join CADseekho</h1>
         <p className="auth-card__subtitle">
-          Create an account to register for courses and access free downloads.
+          Create an account to register for courses and access free resources.
         </p>
 
         <GoogleSignInButton />

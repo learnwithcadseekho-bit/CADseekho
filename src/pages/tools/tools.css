@@ -14,3 +14,43 @@
   border: 0;
   background: var(--paper);
 }
+
+/* Explanatory copy under the embedded tool (indexable text for the page). */
+.tool-guide {
+  max-width: 860px;
+  padding-top: var(--space-12);
+  padding-bottom: var(--space-12);
+}
+
+.tool-guide h2 {
+  font-size: clamp(1.375rem, 2.5vw, 1.75rem);
+  margin: var(--space-8) 0 var(--space-3);
+}
+
+.tool-guide p,
+.tool-guide li {
+  line-height: 1.75;
+}
+
+.tool-guide ol {
+  padding-left: var(--space-6);
+}
+
+.tool-guide a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.tool-faq details {
+  border-bottom: 1px solid var(--line);
+  padding: var(--space-4) 0;
+}
+
+.tool-faq summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tool-faq p {
+  margin-top: var(--space-3);
+}

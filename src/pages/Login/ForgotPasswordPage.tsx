@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { requestPasswordReset } from "@/services/authService";
+import { Seo } from "@/components/Seo";
 import "@/styles/forms.css";
 
 export default function ForgotPasswordPage() {
@@ -27,6 +28,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="auth-page">
+      <Seo title="Forgot Password" noindex />
       <Link to="/" className="auth-page__brand">
         CADseekho
       </Link>

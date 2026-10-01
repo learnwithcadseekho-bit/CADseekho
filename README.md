@@ -36,7 +36,8 @@ supabase/
   seed/          seed data (courses, sample blog posts)
   config.toml    local Supabase CLI config (optional, for local dev)
 scripts/
-  generate-sitemap.mjs   runs after `vite build`, emits dist/sitemap.xml
+  prerender.mjs   build-time prerender: real HTML per public page + sitemap.xml
+  serve-dist.mjs  local preview of dist/ with Vercel-style routing (npm run preview)
 ```
 
 ## 4. Installation
@@ -147,20 +148,56 @@ Opens at `http://localhost:5173`.
 
 ## 8. Deployment
 
-### Build
+### How pages are built (SEO)
 
-```bash
-npm run build
-```
+Every public page is **prerendered at build time** into its own HTML file, so
+search engines get the real content, title, description, canonical and JSON-LD
+without running JavaScript; React then hydrates that HTML in the browser.
 
-Outputs a static site to `dist/`, including a generated `sitemap.xml`.
+`npm run build` runs, in order:
 
-### Vercel or Netlify
+1. `tsc -b` — type check.
+2. `vite build` — the browser bundle → `dist/`.
+3. `vite build --ssr src/entry-server.tsx` — the build-time renderer → `dist-ssr/` (never deployed).
+4. `npm run build:seo` (`scripts/prerender.mjs`) — fetches every published course,
+   category, blog post and resource from Supabase, renders each public URL, and writes:
+   - `dist/<path>/index.html` for every public page (`dist/index.html` is the home page),
+   - `dist/404.html` (served with a real 404 status for unknown URLs),
+   - `dist/app.html` (plain shell, `noindex`, for login/signup/dashboard/admin/classroom),
+   - `dist/sitemap.xml` (only indexable, canonical, 200 pages, with `<lastmod>`).
 
-1. Connect the Git repository.
-2. Framework preset: **Vite**. Build command: `npm run build`. Output directory: `dist`.
-3. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` as environment variables in the hosting platform's dashboard (same values as your local `.env`).
-4. This is a client-side-routed SPA, so all paths need to serve `index.html` — both `vercel.json` (for Vercel) and `public/_redirects` (for Netlify) are already in the repo with this rewrite configured; no extra setup needed on either platform.
+The prerender **fails the build** rather than ship a broken page: on a Supabase fetch
+error, a public URL that renders as "not found", a non-canonical slug (anything not
+lowercase-hyphenated), invalid JSON-LD, or a legacy redirect missing from a host config.
+Title/description length and H1 problems are printed as warnings.
+
+**After publishing or editing a blog post, course or resource**, the live site
+keeps serving the old HTML until you rebuild. On Vercel, trigger a redeploy
+(Deployments → ⋯ → Redeploy, or push any commit). Locally you can regenerate just
+the pages and sitemap without rebuilding the JS: `npm run build:seo`. Tip: a Vercel
+**Deploy Hook** (Project → Settings → Git → Deploy Hooks) gives you a URL you can open
+after publishing to rebuild automatically.
+
+Preview the production build locally with real routing (redirects, 404 status,
+trailing-slash rules) with `npm run preview` → `http://localhost:4173`.
+(`vite preview` isn't suitable: it answers unknown URLs with the home page and a 200.)
+
+Optional build-time env vars (in `.env` locally, and in the Vercel dashboard):
+`VITE_SITE_URL` (canonical origin, default `https://cadseekho.com`),
+`VITE_GSC_VERIFICATION` (Google Search Console HTML-tag token) and `VITE_GA4_ID`
+(Google Analytics 4 measurement ID, e.g. `G-XXXXXXX`).
+
+### Vercel (current host)
+
+1. Connect the Git repository. Framework preset: **Vite**. Build command: `npm run build`. Output directory: `dist`.
+2. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (and the optional vars above) as environment variables.
+3. `vercel.json` already has the 301 redirects for old URLs, `trailingSlash: false`,
+   the app-shell rewrites for client-only routes and long caching for `/assets`.
+   There is deliberately **no** catch-all rewrite to `index.html` any more — unknown
+   URLs must 404.
+4. **Domains:** in Project → Settings → Domains, make `cadseekho.com` the primary
+   domain and set `www.cadseekho.com` to *Redirect to cadseekho.com (301/308)*.
+   Canonical URLs use the bare domain; Vercel handles http → https itself.
 
 ### Connecting `cadseekho.com` via Hostinger DNS
 
@@ -171,23 +208,26 @@ Outputs a static site to `dist/`, including a generated `sitemap.xml`.
 ### Alternative: hosting directly on Hostinger
 
 If you have an actual Hostinger hosting plan (not just the domain), you can upload
-the static build directly instead of using Vercel/Netlify:
+the static build directly instead of using Vercel:
 
 1. `npm run build` locally (reads your `.env` — the Supabase URL/anon key are public
    values, safe to embed in the build).
 2. Upload everything **inside** `dist/` (not the folder itself) to `public_html` via
    hPanel → **File Manager** (zip locally, upload, extract) or FTP (hPanel → **FTP
    Accounts**). Clear out any existing placeholder content in `public_html` first.
+   Don't upload `dist-ssr/`.
 3. hPanel → **SSL** → enable the free Let's Encrypt certificate if not already on.
-4. A `.htaccess` file (already included in every build via `public/.htaccess`)
-   rewrites all routes to `index.html`, which client-side routing needs — verify it
-   made it into `public_html` (File Manager may hide dotfiles by default; toggle
-   "show hidden files" if unsure), then confirm by refreshing a course page directly
-   (e.g. `yourdomain.com/courses/solidworks-essentials`) rather than only navigating
-   via in-app links.
-5. There's no auto-deploy this way — repeat steps 1–2 after every code change. If
-   your plan includes hPanel → **Advanced → Git**, that can automate deploys on push
-   instead.
+4. `public/.htaccess` (copied into `dist/`) handles: 301s for old URLs, www → non-www
+   and http → https in one hop, trailing slash removal, serving `/path` from
+   `/path/index.html`, the app shell for login/dashboard/admin, and a real 404 with
+   `404.html`. Make sure it made it into `public_html` (File Manager hides dotfiles by
+   default). Check with `curl -I https://cadseekho.com/blog/Deep%20Holes` (expect 301)
+   and `curl -I https://cadseekho.com/no-such-page` (expect 404).
+5. There's no auto-deploy this way — repeat steps 1–2 after every code or content
+   change. If your plan includes hPanel → **Advanced → Git**, that can automate
+   deploys on push instead.
+
+Netlify works too: `public/_redirects` mirrors the same redirects and rewrites.
 
 ## 9. Troubleshooting
 

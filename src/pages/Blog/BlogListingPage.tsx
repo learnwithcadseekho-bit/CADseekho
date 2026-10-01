@@ -1,22 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Seo } from "@/components/Seo";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { BlogCard } from "@/components/ui/BlogCard";
 import { getPublishedPosts } from "@/services/blogService";
-import type { BlogPost } from "@/types/blogPost";
+import { useCachedData } from "@/hooks/useCachedData";
 import "@/styles/cards.css";
 import "./blog.css";
 
 export default function BlogListingPage() {
-  const [posts, setPosts] = useState<BlogPost[] | null>(null);
-  const [error, setError] = useState(false);
+  const { data, error: loadError } = useCachedData("posts:published", getPublishedPosts);
+  const posts = data ?? null;
+  const error = Boolean(loadError);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-
-  useEffect(() => {
-    getPublishedPosts()
-      .then(setPosts)
-      .catch(() => setError(true));
-  }, []);
 
   const categories = useMemo(() => {
     if (!posts) return [];
@@ -31,8 +26,10 @@ export default function BlogListingPage() {
   return (
     <section className="section container">
       <Seo
-        title="Engineering & CAD Blog"
-        description="Practical articles on SolidWorks, AutoCAD, GD&T, DFM, and CAD workflows from CADseekho."
+        title="Engineering, FEA & CAD Blog | CADseekho"
+        description="Practical articles on design for manufacturing, stress concentration, GD&T, SolidWorks and AutoCAD workflows, from engineers who teach ANSYS and CAD."
+        canonical="/blog"
+        breadcrumbs={[{ name: "Blog", path: "/blog" }]}
       />
       <SectionHeading title="Engineering & CAD Blog" align="center" as="h1" />
 
@@ -59,7 +56,11 @@ export default function BlogListingPage() {
       )}
 
       {error && <p className="section__status">The blog is temporarily unavailable. Please try again later.</p>}
-      {!error && posts === null && <p className="section__status">Loading articles…</p>}
+      {!error && posts === null && (
+        <p className="section__status" aria-busy="true">
+          Loading articles…
+        </p>
+      )}
       {!error && posts?.length === 0 && <p className="section__status">No articles published yet.</p>}
 
       {!error && filteredPosts.length > 0 && (
