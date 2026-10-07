@@ -408,6 +408,7 @@ function RegisterCTA({ course }: { course: CourseDetail }) {
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isPaid = course.price != null;
+  const isAdmin = profile?.role === "admin";
   // ?enroll=1 (e.g. the homepage promo card) opens checkout on arrival —
   // including after a detour through /login, which preserves the query.
   const autoEnroll = searchParams.get("enroll") === "1";
@@ -458,7 +459,7 @@ function RegisterCTA({ course }: { course: CourseDetail }) {
   }
 
   useEffect(() => {
-    if (!autoEnroll || !isPaid || (status !== "idle" && status !== "registered")) return;
+    if (!autoEnroll || !isPaid || isAdmin || (status !== "idle" && status !== "registered")) return;
     setSearchParams(
       (params) => {
         params.delete("enroll");
@@ -468,13 +469,26 @@ function RegisterCTA({ course }: { course: CourseDetail }) {
     );
     handleCheckout();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- fire once, when the registration check settles
-  }, [autoEnroll, isPaid, status]);
+  }, [autoEnroll, isPaid, isAdmin, status]);
 
   if (!session) {
     return (
       <Link to="/login" state={{ from: location }} className="btn btn--primary">
         {ctaLabel(course)}
       </Link>
+    );
+  }
+
+  // Admins have every course without enrolling or paying.
+  if (isAdmin) {
+    return course.format === "live" ? (
+      <Link to={`/classroom/${course.slug}`} className="btn btn--primary">
+        Join Live Class (Admin)
+      </Link>
+    ) : (
+      <button type="button" className="btn btn--outline" disabled>
+        ✓ Admin access
+      </button>
     );
   }
 
