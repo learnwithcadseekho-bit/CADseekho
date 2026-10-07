@@ -8,6 +8,7 @@ import { ChapterMedia } from "@/components/ChapterMedia";
 import { getCourseDetailBySlug } from "@/services/courseService";
 import { getRegistration, registerForCourse } from "@/services/courseRegistrationService";
 import { startCourseCheckout } from "@/services/paymentService";
+import { trackPixel } from "@/lib/metaPixel";
 import { COURSE_FORMAT_LABEL, COURSE_LEVEL_LABEL, type CourseDetail } from "@/types/course";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
 import { useCachedData } from "@/hooks/useCachedData";
@@ -29,6 +30,16 @@ export default function CourseDetailPage() {
   const { data, error } = useCachedData(slug ? `course:${slug}` : null, () => getCourseDetailBySlug(slug!));
   const course = data ?? null;
   const state: LoadState = error ? "error" : data === undefined ? "loading" : data === null ? "not-found" : "ready";
+
+  useEffect(() => {
+    if (!course) return;
+    trackPixel("ViewContent", {
+      content_name: course.title,
+      content_ids: [course.id],
+      content_type: "product",
+      ...(course.price != null && { value: course.price, currency: "INR" }),
+    });
+  }, [course?.id]); // eslint-disable-line react-hooks/exhaustive-deps -- once per course viewed
 
   if (state === "loading") {
     return (
@@ -426,6 +437,13 @@ function RegisterCTA({ course }: { course: CourseDetail }) {
     const previous = status;
     setStatus("submitting");
     setErrorMessage(null);
+    trackPixel("InitiateCheckout", {
+      content_name: course.title,
+      content_ids: [course.id],
+      content_type: "product",
+      value: course.price,
+      currency: "INR",
+    });
     try {
       const result = await startCourseCheckout(course.id, {
         name: profile?.full_name,

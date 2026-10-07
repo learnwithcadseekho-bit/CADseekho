@@ -29,6 +29,9 @@ const SSR_ENTRY = "dist-ssr/entry-server.js";
 const SITE_URL = (process.env.VITE_SITE_URL || "https://cadseekho.com").replace(/\/$/, "");
 const GSC_VERIFICATION = process.env.VITE_GSC_VERIFICATION || ""; // TODO(seo): set in .env / Vercel
 const GA4_ID = process.env.VITE_GA4_ID || ""; // TODO(seo): set in .env / Vercel
+// Numeric only, so a placeholder never ships. Same check as src/lib/metaPixel.ts.
+const RAW_PIXEL_ID = (process.env.VITE_META_PIXEL_ID || "").trim();
+const META_PIXEL_ID = /^\d+$/.test(RAW_PIXEL_ID) ? RAW_PIXEL_ID : "";
 
 const warnings = [];
 const warn = (msg) => warnings.push(msg);
@@ -55,20 +58,36 @@ if (existsSync(appShellPath)) {
 }
 if (!template.includes('<div id="root">')) fail("template has no <div id=\"root\"> — is dist/app.html stale?");
 
-function headExtras() {
+// Meta Pixel base code + first PageView. Public (prerendered) pages only —
+// the client-only shell (login, dashboard, admin, classroom) never gets it.
+// disablePushState: MetaPixelTracker sends one PageView per route change, so
+// the pixel mustn't also send its own on history.pushState.
+function metaPixel() {
+  if (!META_PIXEL_ID) return "";
+  return (
+    `\n    <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};` +
+    `if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;` +
+    `s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');` +
+    `fbq.disablePushState=true;fbq('init','${META_PIXEL_ID}');fbq('track','PageView');</script>` +
+    `\n    <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=${META_PIXEL_ID}&amp;ev=PageView&amp;noscript=1" /></noscript>`
+  );
+}
+
+function headExtras({ pixel = true } = {}) {
   let out = "";
   if (GSC_VERIFICATION) out += `\n    <meta name="google-site-verification" content="${GSC_VERIFICATION}" />`;
   if (GA4_ID) {
     out += `\n    <script async src="https://www.googletagmanager.com/gtag/js?id=${GA4_ID}"></script>`;
     out += `\n    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA4_ID}');</script>`;
   }
+  if (pixel) out += metaPixel();
   return out;
 }
 
 // Client-only routes (login, dashboard, admin…): the shell with noindex.
 writeFileSync(
   appShellPath,
-  template.replace("</head>", () => `    <meta name="robots" content="noindex" />${headExtras()}\n  </head>`),
+  template.replace("</head>", () => `    <meta name="robots" content="noindex" />${headExtras({ pixel: false })}\n  </head>`),
   "utf-8"
 );
 
@@ -240,6 +259,12 @@ console.log(`prerender: wrote ${pages.length} pages + 404.html + app.html; sitem
 for (const p of pages) console.log(`  ${p.noindex ? "noindex " : "        "}${p.path}  —  ${p.title}`);
 if (!GSC_VERIFICATION) warnings.push("VITE_GSC_VERIFICATION not set — no Search Console verification tag (TODO(seo))");
 if (!GA4_ID) warnings.push("VITE_GA4_ID not set — GA4 not installed (TODO(seo))");
+if (!META_PIXEL_ID)
+  warnings.push(
+    RAW_PIXEL_ID
+      ? `VITE_META_PIXEL_ID "${RAW_PIXEL_ID}" isn't a numeric pixel ID — Meta Pixel not installed`
+      : "VITE_META_PIXEL_ID not set — Meta Pixel not installed"
+  );
 if (warnings.length > 0) {
   console.warn(`\nprerender: ${warnings.length} warning(s):`);
   for (const w of warnings) console.warn(`  - ${w}`);

@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabaseClient";
+import { trackPixel } from "@/lib/metaPixel";
 
 // Razorpay Checkout flow — see supabase/migrations/20260922090000_razorpay_payments.sql
 // for the full server-side picture. The browser only ever sends a course id;
@@ -95,7 +96,22 @@ export async function startCourseCheckout(
       theme: { color: "#E8622C" },
       handler: (response: RazorpaySuccess) => {
         invokeFunction("verify-razorpay-payment", { ...response })
-          .then(() => resolve("enrolled"))
+          .then(() => {
+            // Only once the server has verified the signature. Razorpay
+            // amounts are in paise; the payment id de-duplicates in Meta.
+            trackPixel(
+              "Purchase",
+              {
+                value: order.amount / 100,
+                currency: order.currency || "INR",
+                content_name: order.courseTitle,
+                content_ids: [courseId],
+                content_type: "product",
+              },
+              response.razorpay_payment_id
+            );
+            resolve("enrolled");
+          })
           // Payment went through but instant verification failed — the
           // webhook will still enroll them, so don't tell them it failed.
           .catch(() =>

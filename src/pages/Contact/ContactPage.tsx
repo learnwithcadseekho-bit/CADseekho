@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/FormMessage";
 import { submitContactMessage } from "@/services/contactService";
 import { BUSINESS, whatsappLink } from "@/config/site";
+import { trackPixel } from "@/lib/metaPixel";
 import "@/styles/cards.css";
 import "./contact.css";
 
@@ -34,6 +35,7 @@ export default function ContactPage() {
     setStatus("idle");
     try {
       await submitContactMessage(form);
+      trackPixel("Lead", { content_name: "Contact form" });
       setStatus("success");
       setForm(initialState);
     } catch {
