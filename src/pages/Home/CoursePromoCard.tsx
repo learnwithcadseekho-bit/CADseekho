@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { getCourseDetailBySlug } from "@/services/courseService";
 import { useCachedData } from "@/hooks/useCachedData";
+import { useAuth } from "@/hooks/useAuth";
 import { FEATURED_ANSYS_SLUG, WEEKLY_SCHEDULE_DAYS } from "@/content/batches";
 import { HeroImageSlider } from "./HeroImageSlider";
 import "./home.css";
@@ -31,6 +32,8 @@ function formatBatchDate(isoDate: string): string {
 }
 
 export function CoursePromoCard() {
+  // Admins have every course free: no price, and the CTA goes to the class.
+  const isAdmin = useAuth().profile?.role === "admin";
   const { data, error } = useCachedData(`course:${FEATURED_COURSE_SLUG}`, () => getCourseDetailBySlug(FEATURED_COURSE_SLUG));
   const course = data ?? null;
   const failed = Boolean(error) || data === null;
@@ -97,7 +100,7 @@ export function CoursePromoCard() {
           ))}
         </ul>
 
-        {course.price != null && (
+        {course.price != null && !isAdmin && (
           <div className="course-promo__price-row">
             <span className="course-promo__price">{CURRENCY_FORMAT.format(course.price)}</span>
             {hasDiscount && (
@@ -110,9 +113,18 @@ export function CoursePromoCard() {
 
         <div className="course-promo__cta-row">
           {/* ?enroll=1 opens the course page's own checkout on arrival (priced courses only). */}
-          <Link to={`/courses/${course.slug}${course.price != null ? "?enroll=1" : ""}`} className="course-promo__cta">
-            Enroll Now →
-          </Link>
+          {isAdmin ? (
+            <Link
+              to={course.format === "live" ? `/classroom/${course.slug}` : `/courses/${course.slug}`}
+              className="course-promo__cta"
+            >
+              {course.format === "live" ? "Join Live Class (Admin) →" : "Open Course (Admin) →"}
+            </Link>
+          ) : (
+            <Link to={`/courses/${course.slug}${course.price != null ? "?enroll=1" : ""}`} className="course-promo__cta">
+              Enroll Now →
+            </Link>
+          )}
           <span className="course-promo__caption">
             {course.format === "live" ? "Live, instructor-led" : "Self-paced"} · online
           </span>

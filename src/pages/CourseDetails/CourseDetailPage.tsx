@@ -27,6 +27,7 @@ type LoadState = "loading" | "not-found" | "error" | "ready";
 
 export default function CourseDetailPage() {
   const { slug } = useParams<{ slug: string }>();
+  const { profile } = useAuth();
   const { data, error } = useCachedData(slug ? `course:${slug}` : null, () => getCourseDetailBySlug(slug!));
   const course = data ?? null;
   const state: LoadState = error ? "error" : data === undefined ? "loading" : data === null ? "not-found" : "ready";
@@ -282,7 +283,8 @@ export default function CourseDetailPage() {
         </div>
 
         <aside className="course-detail__sidebar drafting-frame">
-          {c.price != null && <CoursePrice course={c} seatsLeft={seatsLeft} />}
+          {/* Admins have every course free — no price, see RegisterCTA. */}
+          {c.price != null && profile?.role !== "admin" && <CoursePrice course={c} seatsLeft={seatsLeft} />}
           <RegisterCTA course={c} />
 
           <span className="mono-label">Course Information</span>
