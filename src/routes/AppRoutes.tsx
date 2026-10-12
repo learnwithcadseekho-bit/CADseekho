@@ -31,6 +31,10 @@ const ForgotPasswordPage = trackedLazy("src/pages/Login/ForgotPasswordPage.tsx",
 const ResetPasswordPage = trackedLazy("src/pages/Login/ResetPasswordPage.tsx", () => import("@/pages/Login/ResetPasswordPage"));
 const DashboardPage = trackedLazy("src/pages/Dashboard/DashboardPage.tsx", () => import("@/pages/Dashboard/DashboardPage"));
 const LiveClassPage = trackedLazy("src/pages/Classroom/LiveClassPage.tsx", () => import("@/pages/Classroom/LiveClassPage"));
+const AnsysFoundationPage = trackedLazy("src/pages/Launch/AnsysFoundationPage.tsx", () => import("@/pages/Launch/AnsysFoundationPage"));
+const ThankYouPage = trackedLazy("src/pages/Launch/ThankYouPage.tsx", () => import("@/pages/Launch/ThankYouPage"));
+const PrivacyPolicyPage = trackedLazy("src/pages/Legal/PrivacyPolicyPage.tsx", () => import("@/pages/Legal/PrivacyPolicyPage"));
+const RefundPolicyPage = trackedLazy("src/pages/Legal/RefundPolicyPage.tsx", () => import("@/pages/Legal/RefundPolicyPage"));
 const NotFoundPage = trackedLazy("src/pages/NotFound/NotFoundPage.tsx", () => import("@/pages/NotFound/NotFoundPage"));
 
 // Admin is a large CRUD surface only admins ever load — code-split it out of
@@ -49,6 +53,7 @@ const AdminEntitlementsPage = lazy(() => import("@/admin/Resources/AdminEntitlem
 const AdminBlogPage = lazy(() => import("@/admin/Blog/AdminBlogPage"));
 const AdminUsersPage = lazy(() => import("@/admin/Users/AdminUsersPage"));
 const AdminMessagesPage = lazy(() => import("@/admin/Messages/AdminMessagesPage"));
+const AdminLeadsPage = lazy(() => import("@/admin/Leads/AdminLeadsPage"));
 
 function AdminLoading() {
   return <div style={{ padding: "var(--space-16)", textAlign: "center", color: "var(--slate)" }}>Loading admin…</div>;
@@ -77,6 +82,10 @@ export function AppRoutes() {
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/ansys-foundation" element={<AnsysFoundationPage />} />
+        <Route path="/thank-you" element={<ThankYouPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="/refund-policy" element={<RefundPolicyPage />} />
         <Route
           path="/dashboard"
           element={
@@ -152,6 +161,7 @@ export function AppRoutes() {
         <Route path="blog" element={<AdminBlogPage />} />
         <Route path="users" element={<AdminUsersPage />} />
         <Route path="messages" element={<AdminMessagesPage />} />
+        <Route path="leads" element={<AdminLeadsPage />} />
       </Route>
     </Routes>
   );

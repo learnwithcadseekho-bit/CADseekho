@@ -38,6 +38,9 @@ export function Footer() {
         <div className="site-footer__col">
           <span className="mono-label">Courses</span>
           <ul>
+            <li>
+              <Link to="/ansys-foundation">ANSYS Foundation — live batch</Link>
+            </li>
             {COURSE_CATEGORY_LINKS.map((link) => (
               <li key={link.to}>
                 <Link to={link.to}>{link.label}</Link>
@@ -72,6 +75,12 @@ export function Footer() {
             </li>
             <li>
               <Link to="/contact">Contact</Link>
+            </li>
+            <li>
+              <Link to="/privacy-policy">Privacy policy</Link>
+            </li>
+            <li>
+              <Link to="/refund-policy">Refund policy</Link>
             </li>
             {social.map((link) => (
               <li key={link.label}>

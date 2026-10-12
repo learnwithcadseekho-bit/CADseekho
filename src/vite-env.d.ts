@@ -5,6 +5,11 @@ interface ImportMetaEnv {
   readonly VITE_SUPABASE_ANON_KEY: string;
   readonly VITE_TURNSTILE_SITE_KEY: string;
   readonly VITE_META_PIXEL_ID?: string;
+  readonly VITE_GA4_ID?: string;
+  readonly VITE_GOOGLE_ADS_ID?: string;
+  readonly VITE_GOOGLE_ADS_LEAD_LABEL?: string;
+  readonly VITE_GOOGLE_ADS_PURCHASE_LABEL?: string;
+  readonly VITE_GOOGLE_ADS_CONTACT_LABEL?: string;
 }
 
 interface ImportMeta {

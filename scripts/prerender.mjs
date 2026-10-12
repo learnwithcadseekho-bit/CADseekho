@@ -28,8 +28,11 @@ const DIST = "dist";
 const SSR_ENTRY = "dist-ssr/entry-server.js";
 const SITE_URL = (process.env.VITE_SITE_URL || "https://cadseekho.com").replace(/\/$/, "");
 const GSC_VERIFICATION = process.env.VITE_GSC_VERIFICATION || ""; // TODO(seo): set in .env / Vercel
-const GA4_ID = process.env.VITE_GA4_ID || ""; // TODO(seo): set in .env / Vercel
-// Numeric only, so a placeholder never ships. Same check as src/lib/metaPixel.ts.
+// Shape-checked so a placeholder never ships. Same checks as src/lib/track.ts / metaPixel.ts.
+const envMatching = (name, re) => ((process.env[name] || "").trim().match(re) ? process.env[name].trim() : "");
+const GA4_ID = envMatching("VITE_GA4_ID", /^G-[A-Z0-9]+$/);
+const ADS_ID = envMatching("VITE_GOOGLE_ADS_ID", /^AW-\d+$/);
+const META_DOMAIN_VERIFICATION = envMatching("VITE_META_DOMAIN_VERIFICATION", /^[a-z0-9]+$/);
 const RAW_PIXEL_ID = (process.env.VITE_META_PIXEL_ID || "").trim();
 const META_PIXEL_ID = /^\d+$/.test(RAW_PIXEL_ID) ? RAW_PIXEL_ID : "";
 
@@ -73,21 +76,33 @@ function metaPixel() {
   );
 }
 
-function headExtras({ pixel = true } = {}) {
+// gtag.js for GA4 and Google Ads. GA4's config sends this first page view;
+// AnalyticsTracker (src/lib/track.ts) sends one per later client-side route
+// change — so GA4's "page changes based on browser history events" enhanced
+// measurement must be OFF, or route changes count twice (docs/launch-qa.md).
+function gtagTags() {
+  if (!GA4_ID && !ADS_ID) return "";
+  const configs = [GA4_ID && `gtag('config','${GA4_ID}');`, ADS_ID && `gtag('config','${ADS_ID}');`].filter(Boolean).join("");
+  return (
+    `\n    <script async src="https://www.googletagmanager.com/gtag/js?id=${GA4_ID || ADS_ID}"></script>` +
+    `\n    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());${configs}</script>`
+  );
+}
+
+// Public pages only. The client-only shell (login, dashboard, admin,
+// classroom) gets the verification metas but no tracking tags.
+function headExtras({ tags = true } = {}) {
   let out = "";
   if (GSC_VERIFICATION) out += `\n    <meta name="google-site-verification" content="${GSC_VERIFICATION}" />`;
-  if (GA4_ID) {
-    out += `\n    <script async src="https://www.googletagmanager.com/gtag/js?id=${GA4_ID}"></script>`;
-    out += `\n    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA4_ID}');</script>`;
-  }
-  if (pixel) out += metaPixel();
+  if (META_DOMAIN_VERIFICATION) out += `\n    <meta name="facebook-domain-verification" content="${META_DOMAIN_VERIFICATION}" />`;
+  if (tags) out += gtagTags() + metaPixel();
   return out;
 }
 
 // Client-only routes (login, dashboard, admin…): the shell with noindex.
 writeFileSync(
   appShellPath,
-  template.replace("</head>", () => `    <meta name="robots" content="noindex" />${headExtras({ pixel: false })}\n  </head>`),
+  template.replace("</head>", () => `    <meta name="robots" content="noindex" />${headExtras({ tags: false })}\n  </head>`),
   "utf-8"
 );
 
@@ -258,7 +273,8 @@ writeFileSync(path.join(DIST, "sitemap.xml"), sitemap, "utf-8");
 console.log(`prerender: wrote ${pages.length} pages + 404.html + app.html; sitemap.xml has ${indexable.length} URLs`);
 for (const p of pages) console.log(`  ${p.noindex ? "noindex " : "        "}${p.path}  —  ${p.title}`);
 if (!GSC_VERIFICATION) warnings.push("VITE_GSC_VERIFICATION not set — no Search Console verification tag (TODO(seo))");
-if (!GA4_ID) warnings.push("VITE_GA4_ID not set — GA4 not installed (TODO(seo))");
+if (!GA4_ID) warnings.push("VITE_GA4_ID not set (or not G-XXXX) — GA4 not installed (TODO(launch))");
+if (!ADS_ID) warnings.push("VITE_GOOGLE_ADS_ID not set (or not AW-XXXX) — Google Ads tag not installed (optional)");
 if (!META_PIXEL_ID)
   warnings.push(
     RAW_PIXEL_ID

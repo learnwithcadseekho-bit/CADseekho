@@ -118,6 +118,11 @@ export async function getPrerenderRoutes(): Promise<{ routes: PrerenderRoute[]; 
     { path: "/tools/beam-calculator", source: "src/pages/tools/BeamCalculatorPage.tsx" },
     { path: "/about", source: "src/pages/About/AboutPage.tsx" },
     { path: "/contact", source: "src/pages/Contact/ContactPage.tsx" },
+    { path: "/ansys-foundation", source: "src/pages/Launch/AnsysFoundationPage.tsx" },
+    // noindex pages: prerendered so they load fast; the sitemap leaves them out automatically.
+    { path: "/thank-you", source: "src/pages/Launch/ThankYouPage.tsx" },
+    { path: "/privacy-policy", source: "src/pages/Legal/PrivacyPolicyPage.tsx" },
+    { path: "/refund-policy", source: "src/pages/Legal/RefundPolicyPage.tsx" },
   ];
 
   const check = <T,>(label: string, res: { data: T[] | null; error: unknown }): T[] => {

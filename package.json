@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx && npm run build:seo",
     "lint": "eslint .",
     "preview": "node scripts/serve-dist.mjs",
-    "build:seo": "node --env-file-if-exists=.env scripts/prerender.mjs"
+    "build:seo": "node --env-file-if-exists=.env scripts/prerender.mjs",
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test \"tests/*.test.ts\""
   },
   "dependencies": {
     "@google/model-viewer": "^4.3.1",
@@ -26,6 +27,7 @@
     "react-router-dom": "^6.26.2"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.9",
     "@eslint/js": "^9.9.1",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.10.2",

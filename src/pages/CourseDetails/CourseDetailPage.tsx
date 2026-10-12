@@ -8,7 +8,8 @@ import { ChapterMedia } from "@/components/ChapterMedia";
 import { getCourseDetailBySlug } from "@/services/courseService";
 import { getRegistration, registerForCourse } from "@/services/courseRegistrationService";
 import { startCourseCheckout } from "@/services/paymentService";
-import { trackPixel } from "@/lib/metaPixel";
+import { trackBeginCheckout, trackViewContent } from "@/lib/track";
+import { LAUNCH, PRICE_LABEL, istDay } from "@/content/launch";
 import { COURSE_FORMAT_LABEL, COURSE_LEVEL_LABEL, type CourseDetail } from "@/types/course";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
 import { useCachedData } from "@/hooks/useCachedData";
@@ -34,12 +35,7 @@ export default function CourseDetailPage() {
 
   useEffect(() => {
     if (!course) return;
-    trackPixel("ViewContent", {
-      content_name: course.title,
-      content_ids: [course.id],
-      content_type: "product",
-      ...(course.price != null && { value: course.price, currency: "INR" }),
-    });
+    trackViewContent({ name: course.title, id: course.id, value: course.price });
   }, [course?.id]); // eslint-disable-line react-hooks/exhaustive-deps -- once per course viewed
 
   if (state === "loading") {
@@ -130,6 +126,16 @@ export default function CourseDetailPage() {
           (x): x is Record<string, unknown> => x !== null
         )}
       />
+      {c.slug === LAUNCH.courseSlug && (
+        <Link to={LAUNCH.path} className="launch-banner">
+          <span className="launch-banner__tag">New live batch</span>
+          <span>
+            ANSYS Workbench Foundation starts {istDay(LAUNCH.batchStart)}, 8 PM IST · free demo{" "}
+            {istDay(LAUNCH.demoStart)} · {PRICE_LABEL} launch offer
+          </span>
+          <span className="launch-banner__cta">Book free demo →</span>
+        </Link>
+      )}
       <section className="course-hero">
         <div className="course-hero__grid-bg blueprint-grid" aria-hidden="true" />
         <div className="container course-hero__inner">
@@ -440,13 +446,7 @@ function RegisterCTA({ course }: { course: CourseDetail }) {
     const previous = status;
     setStatus("submitting");
     setErrorMessage(null);
-    trackPixel("InitiateCheckout", {
-      content_name: course.title,
-      content_ids: [course.id],
-      content_type: "product",
-      value: course.price,
-      currency: "INR",
-    });
+    trackBeginCheckout({ name: course.title, id: course.id, value: course.price });
     try {
       const result = await startCourseCheckout(course.id, {
         name: profile?.full_name,
