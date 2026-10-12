@@ -9,6 +9,7 @@ desktop. Tick each box. Do the real test lead and the test payment last.
 - [ ] Vercel env vars set: `VITE_META_PIXEL_ID`, `VITE_GA4_ID`, optional `VITE_GOOGLE_ADS_ID` + labels, optional `VITE_META_DOMAIN_VERIFICATION`. Redeploy after changing any `VITE_` var — they're baked in at build time.
 - [ ] `public/media/ad-4x5.mp4` and `public/media/ad-4x5-poster.jpg` exist (poster = a 1080×1350 still from the video).
 - [ ] GA4 → Admin → Data streams → (web stream) → Enhanced measurement → gear → **turn OFF "Page changes based on browser history events"**. The site sends its own page views per route change; leaving this on double-counts.
+- [ ] Google Ads → Tools → Data manager → Google tag (AW-18509360305) → Configuration → Manage automatic event detection → **turn OFF "Page changes based on browser history events"** (if shown). The site sends a page_view to Google Ads on every route change itself; leaving this on sends two per navigation.
 - [ ] Install the Chrome extensions **Meta Pixel Helper** and **Tag Assistant Companion**.
 
 ## 1. Pages render

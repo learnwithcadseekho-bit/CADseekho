@@ -7,7 +7,7 @@ import { captureAttribution } from "@/lib/attribution";
 // double effect run in development sending the same page view twice.
 let lastKey: string | null = null;
 
-// Page views for a single-page app (Meta Pixel + GA4): one per client-side
+// Page views for a single-page app (Meta Pixel, GA4, Google Ads): one per client-side
 // navigation. On the first page of a visit the prerendered <head> base code
 // has already sent the page view, so that one is skipped for whichever tags
 // were already there; on a page served from the client-only shell there is

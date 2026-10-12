@@ -58,7 +58,7 @@ function loadGtag() {
   window.gtag("js", new Date());
   // Page views are sent by trackPageView, one per route change.
   if (GA4_ID) window.gtag("config", GA4_ID, { send_page_view: false });
-  if (ADS_ID) window.gtag("config", ADS_ID);
+  if (ADS_ID) window.gtag("config", ADS_ID, { send_page_view: false });
 }
 
 function gtag(...args: unknown[]) {
@@ -87,9 +87,12 @@ export function newEventId(prefix: string): string {
 export function trackPageView(firstLoad: { pixel: boolean; gtag: boolean } | null) {
   if (!active()) return;
   if (!firstLoad?.pixel) trackPixel("PageView");
-  if (GA4_ID && !firstLoad?.gtag) {
+  // Google Ads too: its page-load conversions (e.g. "Submit lead form" on
+  // /thank-you) need a page_view for the URL, including after an SPA navigation.
+  const sendTo = [GA4_ID, ADS_ID].filter(Boolean);
+  if (sendTo.length > 0 && !firstLoad?.gtag) {
     gtag("event", "page_view", {
-      send_to: GA4_ID,
+      send_to: sendTo,
       page_location: window.location.href,
       page_path: window.location.pathname,
       page_title: document.title,
