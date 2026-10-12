@@ -8,7 +8,7 @@ import { FormMessage } from "@/components/ui/FormMessage";
 import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { signUp } from "@/services/authService";
-import { trackPixel } from "@/lib/metaPixel";
+import { trackLead } from "@/lib/track";
 import {
   EXPERIENCE_OPTIONS,
   INTERESTED_COURSE_OPTIONS,
@@ -93,7 +93,7 @@ export default function SignupPage() {
         },
         turnstileToken
       );
-      trackPixel("Lead", { content_name: "Signup" });
+      trackLead({ name: "Signup", method: "signup" });
 
       if (result.session) {
         navigate("/dashboard", { replace: true });

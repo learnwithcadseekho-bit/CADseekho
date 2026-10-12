@@ -66,9 +66,24 @@ function loadPixel() {
   n("init", META_PIXEL_ID);
 }
 
+// Call through src/lib/track.ts, not directly, so every tag stays in one place.
+
 /** fbq('track', …). `eventID` lets Meta de-duplicate (e.g. the Razorpay payment id). */
 export function trackPixel(event: string, params?: Record<string, unknown>, eventID?: string) {
   if (!enabled()) return;
   loadPixel();
   window.fbq!("track", event, params ?? {}, eventID ? { eventID } : undefined);
+}
+
+/**
+ * Advanced matching: re-init with what the visitor typed in a form, so later
+ * events match their Meta account. Plain values — the pixel hashes them in
+ * the browser before sending.
+ */
+export function setPixelUserData(data: { em?: string; ph?: string }) {
+  if (!enabled()) return;
+  const clean = Object.fromEntries(Object.entries(data).filter(([, v]) => v));
+  if (Object.keys(clean).length === 0) return;
+  loadPixel();
+  window.fbq!("init", META_PIXEL_ID, clean);
 }

@@ -390,3 +390,33 @@
   color: var(--accent);
   font-weight: 600;
 }
+
+/* Launch banner → /ansys-foundation (content/launch.ts). */
+.launch-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--ink);
+  color: var(--white);
+  font-size: 0.9375rem;
+  text-align: center;
+}
+
+.launch-banner__tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--accent-on-ink);
+  color: var(--accent-on-ink);
+  padding: 0.15rem 0.5rem;
+}
+
+.launch-banner__cta {
+  font-weight: 600;
+  color: var(--accent-on-ink);
+  text-decoration: underline;
+}

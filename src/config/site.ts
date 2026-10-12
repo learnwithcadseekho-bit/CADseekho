@@ -14,9 +14,9 @@ export const BUSINESS = {
   /** E.164 for tel: links and schema; `phoneDisplay` is the human format. */
   phone: "+919358502626",
   phoneDisplay: "+91 93585 02626",
-  // TODO(seo): WhatsApp number (digits only, with country code, e.g. "919358502626").
-  // While null, enquiry CTAs fall back to the phone number and contact form.
-  whatsapp: null as string | null,
+  // WhatsApp number (digits only, with country code). Set to null to make
+  // enquiry CTAs fall back to the phone number and contact form.
+  whatsapp: "919358502626" as string | null,
   // Classes are online only, so there is no public address. If a physical
   // centre ever opens, set it here: JSON-LD then adds LocalBusiness and the
   // contact page shows it with a map. Until then the site makes no
