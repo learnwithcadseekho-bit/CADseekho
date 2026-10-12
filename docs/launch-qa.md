@@ -13,7 +13,7 @@ desktop. Tick each box. Do the real test lead and the test payment last.
 
 ## 1. Pages render
 
-- [ ] `/ansys-foundation` — hero, chips, video plays muted on loop (after load), countdown ticks, 5 topic cards, schedule shows "No class — Dussehra", testimonials, price ₹1,999, FAQ opens, sticky bar on mobile only.
+- [ ] `/ansys-foundation` — hero, chips, video plays muted on loop (after load), countdown ticks, 5 topic cards, testimonials, price ₹1,999, FAQ opens, sticky bar on mobile only.
 - [ ] At 360 px wide (Chrome DevTools → device toolbar): no sideways scrolling; hero buttons visible without scrolling.
 - [ ] Countdown: change your computer's timezone to e.g. London — the countdown still targets 8 PM IST.
 - [ ] `/courses/ansys-workbench-level-1` shows the dark banner linking to `/ansys-foundation`.
@@ -62,7 +62,7 @@ Open `/ansys-foundation?utm_source=qa&utm_campaign=launch_qa&utm_content=test` a
 - [ ] Email to info@cadseekho.com and/or Telegram message arrived, with a working "WhatsApp" link.
 - [ ] Book again with the same number → still one lead in `/admin/leads`, "booked 2×"; the Sheet row is updated, not duplicated.
 - [ ] Toggle Attended / Paid and add a note → refresh → saved. Export CSV opens in Excel.
-- [ ] Add to Google Calendar on `/thank-you` → event on Sat 17 Oct, 8:00 PM IST.
+- [ ] Add to Google Calendar on `/thank-you` → event on Sun 18 Oct, 8:00 PM IST.
 - [ ] Delete the test lead afterwards (Supabase → Table editor → leads) and the Sheet row.
 
 ## 7. One test payment (Razorpay test mode)

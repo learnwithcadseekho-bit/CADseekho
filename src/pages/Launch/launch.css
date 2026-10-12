@@ -266,11 +266,6 @@
   color: var(--accent);
 }
 
-.launch-schedule__off,
-.launch-schedule__off .launch-schedule__date {
-  color: var(--slate);
-}
-
 .launch-form-card {
   background: var(--white);
   padding: var(--space-6) var(--space-5);

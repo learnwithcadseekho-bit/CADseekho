@@ -13,12 +13,10 @@ export const LAUNCH = {
   courseSlug: FEATURED_ANSYS_SLUG,
   topics: ["Static structural", "Thermal", "Modal", "Buckling", "Design optimization"],
 
-  demoStart: "2026-10-17T20:00:00+05:30",
+  demoStart: "2026-10-18T20:00:00+05:30",
   // TODO(launch): demo length — only used for the calendar invite's end time.
   demoMinutes: 60,
   batchStart: "2026-10-19T20:00:00+05:30",
-  /** No class this day (Dussehra). */
-  holiday: "2026-10-20",
 
   price: 1999,
   currency: "INR",
@@ -48,7 +46,7 @@ export const PRICE_LABEL = new Intl.NumberFormat("en-IN", {
   maximumFractionDigits: 0,
 }).format(LAUNCH.price);
 
-/** "Sat 17 Oct" in IST, whatever the visitor's timezone. */
+/** "Sun 18 Oct" in IST, whatever the visitor's timezone. */
 export function istDay(iso: string): string {
   return new Date(iso).toLocaleDateString("en-IN", {
     timeZone: "Asia/Kolkata",

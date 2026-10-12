@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { getCourseDetailBySlug } from "@/services/courseService";
 import { useCachedData } from "@/hooks/useCachedData";
 import { useAuth } from "@/hooks/useAuth";
-import { FEATURED_ANSYS_SLUG, WEEKLY_SCHEDULE_DAYS } from "@/content/batches";
+import { FEATURED_ANSYS_SLUG } from "@/content/batches";
 import { HeroImageSlider } from "./HeroImageSlider";
 import "./home.css";
 
@@ -71,7 +71,7 @@ export function CoursePromoCard() {
 
         {hasNextBatch && (
           <p className="course-promo__schedule">
-            Live classes start {formatBatchDate(course.next_batch_date!)} · {WEEKLY_SCHEDULE_DAYS}
+            Live classes start {formatBatchDate(course.next_batch_date!)}
           </p>
         )}
 

@@ -46,10 +46,6 @@ function faqItems() {
       answer: `Classes are live online at 8:00 PM IST. The free demo is on ${istDay(LAUNCH.demoStart)} at 8:00 PM and the batch starts ${istDay(LAUNCH.batchStart)} at 8:00 PM.`,
     },
     {
-      question: "Is there a break for Dussehra?",
-      answer: `Yes — there is no class on ${istDay(`${LAUNCH.holiday}T12:00:00+05:30`)} (Dussehra). Classes continue as normal after that.`,
-    },
-    {
       question: "Which ANSYS version do I need?",
       answer: "The free ANSYS Student version is enough for this course. We help you install it before the classes start.",
     },
@@ -108,8 +104,8 @@ export default function AnsysFoundationPage() {
   }, []);
 
   const description =
-    `Live online ANSYS Workbench course for beginners — batch starts Mon 19 Oct, 8 PM IST. ` +
-    `Free demo class Sat 17 Oct. Launch price ${PRICE_LABEL}, recordings included.`;
+    `Live online ANSYS Workbench course for beginners — batch starts ${istDay(LAUNCH.batchStart)}, 8 PM IST. ` +
+    `Free demo class ${istDay(LAUNCH.demoStart)}. Launch price ${PRICE_LABEL}, recordings included.`;
   const faqs = faqItems();
   const testimonials = course?.course_testimonials ?? [];
 
@@ -215,12 +211,6 @@ export default function AnsysFoundationPage() {
               <span className="launch-schedule__date">{istDay(LAUNCH.batchStart)}</span>
               <span>
                 <strong>Batch starts</strong> · 8:00 PM IST
-              </span>
-            </li>
-            <li className="launch-schedule__off">
-              <span className="launch-schedule__date">{istDay(`${LAUNCH.holiday}T12:00:00+05:30`)}</span>
-              <span>
-                <strong>No class</strong> — Dussehra
               </span>
             </li>
           </ol>
