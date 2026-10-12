@@ -16,6 +16,7 @@ type Fbq = ((...args: unknown[]) => void) & {
   loaded: boolean;
   version: string;
   disablePushState?: boolean;
+  allowDuplicatePageViews?: boolean;
 };
 
 declare global {
@@ -57,6 +58,9 @@ function loadPixel() {
   // Page views are sent by MetaPixelTracker; stop the pixel also sending one
   // itself on every history.pushState.
   n.disablePushState = true;
+  // …and let those manual PageViews through: by default the pixel drops
+  // every PageView after the first one per page load.
+  n.allowDuplicatePageViews = true;
   window.fbq = n;
   window._fbq ??= n;
   const script = document.createElement("script");
