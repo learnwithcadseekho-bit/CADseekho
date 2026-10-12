@@ -21,7 +21,7 @@ export function MethodSection() {
         </p>
         <ul className="method-home__links">
           <li>
-            <Link to="/courses/ansys-workbench-level-1">ANSYS Workbench course — syllabus, fees &amp; next batch</Link>
+            <Link to="/courses/ansys-workbench-foundation">ANSYS Workbench course — syllabus, fees &amp; next batch</Link>
           </li>
           <li>
             <Link to="/tools/beam-calculator">Free beam calculator</Link>

@@ -118,7 +118,7 @@ export default function BlogPostPage() {
           <p style={{ marginBottom: "var(--space-4)" }}>
             Learn to check designs like this in simulation — and validate every result by hand.
           </p>
-          <Link to="/courses/ansys-workbench-level-1" className="btn btn--primary">
+          <Link to="/courses/ansys-workbench-foundation" className="btn btn--primary">
             ANSYS Workbench Course
           </Link>
         </>

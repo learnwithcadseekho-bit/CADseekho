@@ -16,7 +16,7 @@ desktop. Tick each box. Do the real test lead and the test payment last.
 - [ ] `/ansys-foundation` — hero, chips, video plays muted on loop (after load), countdown ticks, 5 topic cards, testimonials, price ₹1,999, FAQ opens, sticky bar on mobile only.
 - [ ] At 360 px wide (Chrome DevTools → device toolbar): no sideways scrolling; hero buttons visible without scrolling.
 - [ ] Countdown: change your computer's timezone to e.g. London — the countdown still targets 8 PM IST.
-- [ ] `/courses/ansys-workbench-level-1` shows the dark banner linking to `/ansys-foundation`.
+- [ ] `/courses/ansys-workbench-foundation` shows the dark banner linking to `/ansys-foundation`.
 - [ ] Footer has Privacy policy and Refund policy links; both pages open.
 - [ ] View source of `/thank-you` → contains `<meta name="robots" content="noindex, follow">`.
 - [ ] `/sitemap.xml` lists `/ansys-foundation` and `/privacy-policy`; not `/thank-you`.

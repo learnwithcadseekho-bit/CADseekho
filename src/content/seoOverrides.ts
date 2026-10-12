@@ -4,7 +4,7 @@
 // Anything not listed falls back to an automatic title from the DB data.
 
 export const COURSE_SEO: Record<string, { title?: string; description?: string }> = {
-  "ansys-workbench-level-1": {
+  "ansys-workbench-foundation": {
     title: "ANSYS Workbench Course for Beginners (Online) | CADseekho",
     description:
       "Beginner ANSYS Workbench course, live online: meshing, static structural, thermal and buckling — with every result validated by hand calculation.",

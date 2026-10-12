@@ -12,7 +12,17 @@
     { "source": "/downloads", "destination": "/resources", "statusCode": 301 },
     {
       "source": "/ansys-training-(delhi-ncr|delhi|noida|gurgaon|ghaziabad)",
-      "destination": "/courses/ansys-workbench-level-1",
+      "destination": "/courses/ansys-workbench-foundation",
+      "statusCode": 301
+    },
+    {
+      "source": "/courses/ansys-workbench-level-1",
+      "destination": "/courses/ansys-workbench-foundation",
+      "statusCode": 301
+    },
+    {
+      "source": "/classroom/ansys-workbench-level-1",
+      "destination": "/classroom/ansys-workbench-foundation",
       "statusCode": 301
     },
     { "source": "/index.html", "destination": "/", "statusCode": 301 }

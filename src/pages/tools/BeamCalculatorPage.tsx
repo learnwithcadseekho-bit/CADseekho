@@ -136,7 +136,7 @@ export default function BeamCalculatorPage() {
           The calculator shows a hand-calculation check next to every result, so you can follow the
           equilibrium equations and standard beam formulas instead of trusting a black box. That is the same
           method we teach in our{" "}
-          <Link to="/courses/ansys-workbench-level-1">ANSYS Workbench course</Link>: estimate the answer with
+          <Link to="/courses/ansys-workbench-foundation">ANSYS Workbench course</Link>: estimate the answer with
           the right formula, build the model in simulation software, and compare. For holes and notches, use
           the <Link to="/resources/plate-with-hole-stress-concentration-calculator">plate-with-a-hole Kt calculator</Link>.
         </p>

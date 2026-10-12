@@ -8,11 +8,14 @@ export const LEGACY_REDIRECTS: { from: string; to: string }[] = [
   { from: "/courses/Solidworks Simulation for Begginner", to: "/courses/solidworks-simulation-for-beginners" },
   { from: "/downloads", to: "/resources" },
   // Delhi NCR pages, removed: classes are online only.
-  { from: "/ansys-training-delhi-ncr", to: "/courses/ansys-workbench-level-1" },
-  { from: "/ansys-training-delhi", to: "/courses/ansys-workbench-level-1" },
-  { from: "/ansys-training-noida", to: "/courses/ansys-workbench-level-1" },
-  { from: "/ansys-training-gurgaon", to: "/courses/ansys-workbench-level-1" },
-  { from: "/ansys-training-ghaziabad", to: "/courses/ansys-workbench-level-1" },
+  { from: "/ansys-training-delhi-ncr", to: "/courses/ansys-workbench-foundation" },
+  { from: "/ansys-training-delhi", to: "/courses/ansys-workbench-foundation" },
+  { from: "/ansys-training-noida", to: "/courses/ansys-workbench-foundation" },
+  { from: "/ansys-training-gurgaon", to: "/courses/ansys-workbench-foundation" },
+  { from: "/ansys-training-ghaziabad", to: "/courses/ansys-workbench-foundation" },
+  // ANSYS Workbench Level 1 was renamed ANSYS Workbench Foundation (Oct 2026).
+  { from: "/courses/ansys-workbench-level-1", to: "/courses/ansys-workbench-foundation" },
+  { from: "/classroom/ansys-workbench-level-1", to: "/classroom/ansys-workbench-foundation" },
 ];
 
 /** New path for a legacy path (decoded or percent-encoded), if any. */
