@@ -11,6 +11,7 @@ import {
   demoCalendarUrl,
   istDay,
 } from "@/content/launch";
+import { AdVideo } from "./AdVideo";
 import "./launch.css";
 
 // Lead conversion fires here, on ?lead=1, and only when the demo form has
@@ -92,6 +93,8 @@ export default function ThankYouPage() {
           Zoom: <a href={LAUNCH.zoomLink}>{LAUNCH.zoomLink}</a>
         </p>
       )}
+
+      <AdVideo className="thank-you__video" />
 
       <div className="launch-price drafting-frame thank-you__enroll">
         <span className="mono-label">Can't wait?</span>

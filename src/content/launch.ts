@@ -32,7 +32,11 @@ export const LAUNCH = {
   // TODO(launch): instructor name + short bio. While null, the Instructor section is left out.
   instructor: null as null | { name: string; bio: string; photo?: string },
 
-  video: { src: "/media/ad-4x5.mp4", poster: "/media/ad-4x5-poster.jpg", width: 1080, height: 1350 },
+  // public/media — 720px-wide H.264 re-encodes of the ad (originals stay out of the repo).
+  video: {
+    mobile: { src: "/media/ad-9x16.mp4", poster: "/media/ad-9x16-poster.webp", width: 720, height: 1280 },
+    desktop: { src: "/media/ad-4x5.mp4", poster: "/media/ad-4x5-poster.webp", width: 720, height: 900 },
+  },
 };
 
 export const LAUNCH_WHATSAPP_URL = `https://wa.me/${LAUNCH.whatsappNumber}?text=${encodeURIComponent(LAUNCH.whatsappMessage)}`;

@@ -16,6 +16,7 @@ import {
   istDay,
   nextMilestone,
 } from "@/content/launch";
+import { AdVideo } from "./AdVideo";
 import { DemoForm } from "./DemoForm";
 import "@/styles/cards.css";
 import "./launch.css";
@@ -146,7 +147,7 @@ export default function AnsysFoundationPage() {
               </a>
             </div>
           </div>
-          <HeroVideo />
+          <AdVideo autoplay />
         </div>
       </section>
 
@@ -346,52 +347,6 @@ export default function AnsysFoundationPage() {
 }
 
 // ---------------------------------------------------------------------------
-
-/**
- * The ad video, muted and looping. The prerendered HTML has only the poster;
- * the video source is attached after the page has loaded, so it never
- * competes with the first paint. Skipped when the visitor asks for reduced
- * motion or data.
- */
-function HeroVideo() {
-  const ref = useRef<HTMLVideoElement>(null);
-  const [src, setSrc] = useState<string | null>(null);
-
-  useEffect(() => {
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
-    if (reduce || saveData) return;
-    const attach = () => setSrc(LAUNCH.video.src);
-    if (document.readyState === "complete") {
-      const id = window.setTimeout(attach, 300);
-      return () => window.clearTimeout(id);
-    }
-    window.addEventListener("load", attach, { once: true });
-    return () => window.removeEventListener("load", attach);
-  }, []);
-
-  useEffect(() => {
-    if (src) ref.current?.play().catch(() => {});
-  }, [src]);
-
-  return (
-    <div className="launch-video">
-      <video
-        ref={ref}
-        src={src ?? undefined}
-        poster={LAUNCH.video.poster}
-        width={LAUNCH.video.width}
-        height={LAUNCH.video.height}
-        muted
-        loop
-        playsInline
-        autoPlay
-        preload="none"
-        aria-label="ANSYS Workbench Foundation course preview"
-      />
-    </div>
-  );
-}
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
