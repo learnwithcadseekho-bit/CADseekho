@@ -154,7 +154,7 @@ export default function AnsysFoundationPage() {
       <Countdown />
 
       {/* 3. What you'll learn */}
-      <section className="section container">
+      <section className="section container launch-anchor" id="syllabus">
         <span className="mono-label">Curriculum</span>
         <h2 className="launch-h2">What you'll learn</h2>
         <div className="launch-cards">
@@ -190,8 +190,9 @@ export default function AnsysFoundationPage() {
       </section>
 
       {/* 5. Schedule + inline booking form */}
-      <section className="section container launch-split" id="book-demo">
-        <div>
+      <section className="section container launch-split launch-anchor" id="demo">
+        {/* Old anchor, kept in case a live ad or link still uses it. */}
+        <div id="book-demo" className="launch-anchor">
           <span className="mono-label">Schedule</span>
           <h2 className="launch-h2">Dates</h2>
           <ol className="launch-schedule">
@@ -264,8 +265,8 @@ export default function AnsysFoundationPage() {
       )}
 
       {/* 8. Pricing */}
-      <section className="section container" id="pricing">
-        <div className="launch-price drafting-frame">
+      <section className="section container launch-anchor" id="fees">
+        <div className="launch-price drafting-frame launch-anchor" id="pricing">
           <span className="mono-label">Launch offer</span>
           <h2 className="launch-h2">{LAUNCH.courseName}</h2>
           {!isAdmin && (
@@ -298,7 +299,7 @@ export default function AnsysFoundationPage() {
       </section>
 
       {/* 9. FAQ */}
-      <section className="section container launch-faq">
+      <section className="section container launch-faq launch-anchor" id="faq">
         <span className="mono-label">FAQ</span>
         <h2 className="launch-h2">Questions</h2>
         <div className="faq-list">

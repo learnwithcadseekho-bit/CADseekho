@@ -229,12 +229,18 @@
   margin-bottom: var(--space-2);
 }
 
+/* ---- Section anchors (#demo, #syllabus, #fees, #faq — Google Ads sitelinks) */
+
+/* Clear the sticky header when the page jumps to a #anchor. */
+.launch-anchor {
+  scroll-margin-top: calc(var(--header-height) + var(--space-4));
+}
+
 /* ---- Schedule + form ------------------------------------------------------ */
 
 .launch-split {
   display: grid;
   gap: var(--space-10);
-  scroll-margin-top: calc(var(--header-height) + var(--space-4));
 }
 
 @media (min-width: 900px) {
