@@ -10,6 +10,7 @@ import {
   PRICE_LABEL,
   demoCalendarUrl,
   istDay,
+  istTime,
 } from "@/content/launch";
 import { AdVideo } from "./AdVideo";
 import "./launch.css";
@@ -65,7 +66,7 @@ export default function ThankYouPage() {
       <span className="mono-label">Booking confirmed</span>
       <h1 className="thank-you__title">You're booked!</h1>
       <p className="thank-you__sub">
-        Free ANSYS demo — {istDay(LAUNCH.demoStart)}, 8:00 PM IST on Zoom.
+        Free ANSYS demo — {istDay(LAUNCH.demoStart)}, {istTime(LAUNCH.demoStart)} IST on Zoom.
       </p>
       <p>
         {LAUNCH.zoomLink

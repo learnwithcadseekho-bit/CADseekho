@@ -14,6 +14,7 @@ import {
   LAUNCH_WHATSAPP_URL,
   PRICE_LABEL,
   istDay,
+  istTime,
   nextMilestone,
 } from "@/content/launch";
 import { AdVideo } from "./AdVideo";
@@ -44,7 +45,7 @@ function faqItems() {
     },
     {
       question: "What are the class timings?",
-      answer: `Classes are live online at 8:00 PM IST. The free demo is on ${istDay(LAUNCH.demoStart)} at 8:00 PM and the batch starts ${istDay(LAUNCH.batchStart)} at 8:00 PM.`,
+      answer: `Classes are live online at 8:00 PM IST. The free demo is on ${istDay(LAUNCH.demoStart)} at ${istTime(LAUNCH.demoStart)} IST and the batch starts ${istDay(LAUNCH.batchStart)} at 8:00 PM.`,
     },
     {
       question: "Which ANSYS version do I need?",
@@ -106,7 +107,7 @@ export default function AnsysFoundationPage() {
 
   const description =
     `Live online ANSYS Workbench course for beginners — batch starts ${istDay(LAUNCH.batchStart)}, 8 PM IST. ` +
-    `Free demo class ${istDay(LAUNCH.demoStart)}. Launch price ${PRICE_LABEL}, recordings included.`;
+    `Free demo class ${istDay(LAUNCH.demoStart)}, ${istTime(LAUNCH.demoStart)} IST. Launch price ${PRICE_LABEL}, recordings included.`;
   const faqs = faqItems();
   const testimonials = course?.course_testimonials ?? [];
 
@@ -200,7 +201,7 @@ export default function AnsysFoundationPage() {
             <li>
               <span className="launch-schedule__date">{istDay(LAUNCH.demoStart)}</span>
               <span>
-                <strong>Free demo class</strong> · 8:00 PM IST on Zoom
+                <strong>Free demo class</strong> · {istTime(LAUNCH.demoStart)} IST on Zoom
               </span>
             </li>
             <li>
@@ -374,7 +375,7 @@ function Countdown() {
       <div className="container launch-countdown__inner">
         {now === null ? (
           <p className="launch-countdown__label">
-            Free demo: {istDay(LAUNCH.demoStart)}, 8 PM IST · Batch starts {istDay(LAUNCH.batchStart)}
+            Free demo: {istDay(LAUNCH.demoStart)}, {istTime(LAUNCH.demoStart)} IST · Batch starts {istDay(LAUNCH.batchStart)}
           </p>
         ) : target ? (
           <>

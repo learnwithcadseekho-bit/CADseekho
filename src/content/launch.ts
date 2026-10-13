@@ -13,9 +13,9 @@ export const LAUNCH = {
   courseSlug: FEATURED_ANSYS_SLUG,
   topics: ["Static structural", "Thermal", "Modal", "Buckling", "Design optimization"],
 
-  demoStart: "2026-10-18T20:00:00+05:30",
-  // TODO(launch): demo length — only used for the calendar invite's end time.
-  demoMinutes: 60,
+  demoStart: "2026-10-18T14:00:00+05:30",
+  // Demo length — only used for the calendar invite's end time.
+  demoMinutes: 45,
   batchStart: "2026-10-19T20:00:00+05:30",
 
   price: 1999,
@@ -57,6 +57,15 @@ export function istDay(iso: string): string {
     weekday: "short",
     day: "numeric",
     month: "short",
+  });
+}
+
+/** "2:00 PM" in IST, whatever the visitor's timezone. */
+export function istTime(iso: string): string {
+  return new Date(iso).toLocaleTimeString("en-US", {
+    timeZone: "Asia/Kolkata",
+    hour: "numeric",
+    minute: "2-digit",
   });
 }
 

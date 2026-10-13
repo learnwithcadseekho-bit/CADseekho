@@ -7,7 +7,7 @@ import { FormMessage } from "@/components/ui/FormMessage";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { submitDemoLead, setPendingLead, type DemoLeadInput } from "@/services/leadService";
 import { newEventId } from "@/lib/track";
-import { LAUNCH, LAUNCH_WHATSAPP_URL, istDay } from "@/content/launch";
+import { LAUNCH, LAUNCH_WHATSAPP_URL, istDay, istTime } from "@/content/launch";
 // One source of truth for the rules, shared with the Edge Function.
 import { CAD_OPTIONS, CONSENT_TEXT, ROLES, normaliseIndianMobile } from "../../../supabase/functions/submit-lead/lead.ts";
 
@@ -210,7 +210,7 @@ export function DemoForm({ idPrefix }: { idPrefix: string }) {
       <button type="submit" className="btn btn--primary btn--block" disabled={busy}>
         {submitting ? "Booking…" : waitingForCheck ? "Checking you're human…" : "Book my free demo seat"}
       </button>
-      <p className="demo-form__note">Free · {istDay(LAUNCH.demoStart)}, 8 PM IST on Zoom · No payment needed</p>
+      <p className="demo-form__note">Free · {istDay(LAUNCH.demoStart)}, {istTime(LAUNCH.demoStart)} IST on Zoom · No payment needed</p>
     </form>
   );
 }

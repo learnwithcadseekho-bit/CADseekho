@@ -9,7 +9,7 @@ import { getCourseDetailBySlug } from "@/services/courseService";
 import { getRegistration, registerForCourse } from "@/services/courseRegistrationService";
 import { startCourseCheckout } from "@/services/paymentService";
 import { trackBeginCheckout, trackViewContent } from "@/lib/track";
-import { LAUNCH, PRICE_LABEL, istDay } from "@/content/launch";
+import { LAUNCH, PRICE_LABEL, istDay, istTime } from "@/content/launch";
 import { COURSE_FORMAT_LABEL, COURSE_LEVEL_LABEL, type CourseDetail } from "@/types/course";
 import { sanitizeHtml } from "@/utils/sanitizeHtml";
 import { useCachedData } from "@/hooks/useCachedData";
@@ -131,7 +131,7 @@ export default function CourseDetailPage() {
           <span className="launch-banner__tag">New live batch</span>
           <span>
             ANSYS Workbench Foundation starts {istDay(LAUNCH.batchStart)}, 8 PM IST · free demo{" "}
-            {istDay(LAUNCH.demoStart)} · {PRICE_LABEL} launch offer
+            {istDay(LAUNCH.demoStart)}, {istTime(LAUNCH.demoStart)} IST · {PRICE_LABEL} launch offer
           </span>
           <span className="launch-banner__cta">Book free demo →</span>
         </Link>
