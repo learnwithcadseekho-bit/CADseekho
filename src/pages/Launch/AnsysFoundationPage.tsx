@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, type MouseEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/hooks/useAuth";
@@ -15,6 +15,7 @@ import {
   PRICE_LABEL,
   istDay,
   istTime,
+  istTimeShort,
   nextMilestone,
 } from "@/content/launch";
 import { AdVideo } from "./AdVideo";
@@ -28,6 +29,49 @@ const TOPIC_CARDS: { title: string; body: string }[] = [
   { title: "Modal", body: "Natural frequencies and mode shapes, so a design doesn't resonate in service." },
   { title: "Buckling", body: "Eigenvalue buckling for slender members — the failure a stress check alone misses." },
   { title: "Design optimization", body: "Parameters and response surfaces to find a lighter, stronger design instead of guessing." },
+];
+
+// Line icons, 24px, drawn in currentColor.
+const DEMO_POINTS: { text: string; icon: ReactNode }[] = [
+  {
+    text: "Import a real bracket and mesh it",
+    icon: (
+      <>
+        <path d="M4 4h6v10h10v6H4z" />
+        <path d="M4 9h6M4 14h6M10 14v6M15 14v6M7 4v16" />
+      </>
+    ),
+  },
+  {
+    text: "Apply loads & supports, solve live",
+    icon: (
+      <>
+        <path d="M12 3v10M8 9l4 4 4-4" />
+        <path d="M4 17h16" />
+        <path d="M6 17l-2 4M10 17l-2 4M14 17l-2 4M18 17l-2 4" />
+      </>
+    ),
+  },
+  {
+    text: "Read stress & deformation results",
+    icon: (
+      <>
+        <path d="M4 20V4" />
+        <path d="M4 20h16" />
+        <path d="M8 16v-4M12 16V8M16 16v-6" />
+      </>
+    ),
+  },
+  {
+    text: "Ask your doubts live + course roadmap",
+    icon: (
+      <>
+        <path d="M4 5h16v11H9l-5 4z" />
+        <path d="M10 9.5a2 2 0 1 1 2.5 1.9c-.4.1-.5.4-.5.8" />
+        <path d="M12 14.2v.1" />
+      </>
+    ),
+  },
 ];
 
 const HOW_IT_WORKS: { title: string; body: string }[] = [
@@ -98,7 +142,6 @@ export default function AnsysFoundationPage() {
   const isAdmin = profile?.role === "admin";
   // Live course row: testimonials and the course id for tracking. The launch facts themselves are in content/launch.ts.
   const { data: course } = useCachedData(`course:${LAUNCH.courseSlug}`, () => getCourseDetailBySlug(LAUNCH.courseSlug));
-  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     trackViewContent({ name: LAUNCH.courseName, id: course?.id, value: LAUNCH.price });
@@ -125,35 +168,98 @@ export default function AnsysFoundationPage() {
         jsonLd={[courseJsonLd(description), faqSchema(faqs)].filter((x): x is Record<string, unknown> => x !== null)}
       />
 
-      {/* 1. Hero */}
+      {/* 1. Hero — the free demo is the offer here; the paid batch is sold further down. */}
       <section className="launch-hero">
         <div className="launch-hero__bg blueprint-grid" aria-hidden="true" />
         <div className="container launch-hero__inner">
           <div className="launch-hero__copy">
-            <span className="mono-label">New live batch · Beginner friendly</span>
-            <h1 className="launch-hero__title">ANSYS Workbench Foundation — Live Online</h1>
-            <p className="launch-hero__sub">Know CAD but not simulation? Learn ANSYS from zero.</p>
-            <ul className="launch-chips" aria-label="Batch details">
-              <li>Batch starts {istDay(LAUNCH.batchStart)} · 8 PM IST</li>
-              <li className="launch-chips__accent">{PRICE_LABEL} launch offer</li>
-              <li>Recordings included</li>
-              <li>Limited seats</li>
-            </ul>
+            <span className="launch-tag">Free live demo</span>
+            <h1 className="launch-hero__title">
+              Free ANSYS Demo Class —{" "}
+              <span className="launch-nowrap">
+                {istDay(LAUNCH.demoStart).replace(",", "")}, {istTimeShort(LAUNCH.demoStart)}
+              </span>
+            </h1>
+            <p className="launch-hero__sub">
+              {LAUNCH.demoMinutes} min live on Zoom · See a real simulation solved step by step · No cost
+            </p>
+            <Countdown />
             <div className="launch-hero__ctas">
-              <button type="button" className="btn btn--primary" onClick={() => setModalOpen(true)}>
-                Book free demo
-              </button>
-              <a href={LAUNCH_WHATSAPP_URL} className="btn btn--outline" target="_blank" rel="noopener noreferrer">
-                <WhatsAppIcon /> WhatsApp us
+              <a href="#demo" className="btn btn--primary launch-hero__cta" onClick={goToForm}>
+                Book My Free Seat
+              </a>
+              <a href={LAUNCH_WHATSAPP_URL} className="launch-hero__wa" target="_blank" rel="noopener noreferrer">
+                <WhatsAppIcon /> Or WhatsApp us
               </a>
             </div>
           </div>
+          {/* After the CTA in the DOM, so on phones it sits below the fold and never pushes the button down. */}
           <AdVideo autoplay />
         </div>
       </section>
 
-      {/* 2. Countdown */}
-      <Countdown />
+      {/* 2. What the demo covers */}
+      <section className="section container launch-see" aria-labelledby="see-title">
+        <span className="mono-label">{LAUNCH.demoMinutes}-minute live session</span>
+        <h2 className="launch-h2" id="see-title">
+          What you'll see in the free demo
+        </h2>
+        <ul className="launch-see__list">
+          {DEMO_POINTS.map((p) => (
+            <li key={p.text}>
+              <svg
+                className="launch-see__icon"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                {p.icon}
+              </svg>
+              <span>{p.text}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 3. Inline booking form + dates (#demo is also an Ads sitelink) */}
+      <section className="section container launch-split launch-form-section launch-anchor" id="demo">
+        <div className="launch-form-card drafting-frame">
+          <h2 className="launch-h2 launch-h2--sm">Reserve your free seat</h2>
+          <DemoForm idPrefix="inline" />
+        </div>
+        {/* Old anchor, kept in case a live ad or link still uses it. */}
+        <div id="book-demo" className="launch-anchor">
+          <span className="mono-label">Schedule</span>
+          <h2 className="launch-h2">Dates</h2>
+          <ol className="launch-schedule">
+            <li>
+              <span className="launch-schedule__date">{istDay(LAUNCH.demoStart)}</span>
+              <span>
+                <strong>Free demo class</strong> · {istTime(LAUNCH.demoStart)} IST on Zoom
+              </span>
+            </li>
+            <li>
+              <span className="launch-schedule__date">{istDay(LAUNCH.offerEnds)}</span>
+              <span>
+                <strong>Launch offer ends</strong> · 11:59 PM IST
+              </span>
+            </li>
+            <li>
+              <span className="launch-schedule__date">{istDay(LAUNCH.batchStart)}</span>
+              <span>
+                <strong>Batch starts</strong> · 8:00 PM IST · {PRICE_LABEL}
+              </span>
+            </li>
+          </ol>
+        </div>
+      </section>
 
       {/* 3. What you'll learn */}
       <section className="section container launch-anchor" id="syllabus">
@@ -188,39 +294,6 @@ export default function AnsysFoundationPage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* 5. Schedule + inline booking form */}
-      <section className="section container launch-split launch-anchor" id="demo">
-        {/* Old anchor, kept in case a live ad or link still uses it. */}
-        <div id="book-demo" className="launch-anchor">
-          <span className="mono-label">Schedule</span>
-          <h2 className="launch-h2">Dates</h2>
-          <ol className="launch-schedule">
-            <li>
-              <span className="launch-schedule__date">{istDay(LAUNCH.demoStart)}</span>
-              <span>
-                <strong>Free demo class</strong> · {istTime(LAUNCH.demoStart)} IST on Zoom
-              </span>
-            </li>
-            <li>
-              <span className="launch-schedule__date">{istDay(LAUNCH.offerEnds)}</span>
-              <span>
-                <strong>Launch offer ends</strong> · 11:59 PM IST
-              </span>
-            </li>
-            <li>
-              <span className="launch-schedule__date">{istDay(LAUNCH.batchStart)}</span>
-              <span>
-                <strong>Batch starts</strong> · 8:00 PM IST
-              </span>
-            </li>
-          </ol>
-        </div>
-        <div className="launch-form-card drafting-frame">
-          <h2 className="launch-h2 launch-h2--sm">Book your free demo seat</h2>
-          <DemoForm idPrefix="inline" />
         </div>
       </section>
 
@@ -328,9 +401,9 @@ export default function AnsysFoundationPage() {
 
       {/* 10. Sticky mobile bar */}
       <div className="launch-sticky" role="region" aria-label="Quick actions">
-        <button type="button" className="btn btn--primary" onClick={() => setModalOpen(true)}>
-          Book free demo
-        </button>
+        <a href="#demo" className="btn btn--primary" onClick={goToForm}>
+          Book My Free Seat
+        </a>
         <a
           href={LAUNCH_WHATSAPP_URL}
           className="launch-sticky__wa"
@@ -341,13 +414,21 @@ export default function AnsysFoundationPage() {
           <WhatsAppIcon />
         </a>
       </div>
-
-      {modalOpen && <DemoModal onClose={() => setModalOpen(false)} />}
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
+
+/** "Book My Free Seat": scroll to the inline form and put the cursor in Name. Works as a plain #demo link without JS. */
+function goToForm(e: MouseEvent<HTMLAnchorElement>) {
+  const form = document.getElementById("demo");
+  if (!form) return;
+  e.preventDefault();
+  const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  form.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  document.getElementById("inline-name")?.focus({ preventScroll: true });
+}
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -371,64 +452,27 @@ function Countdown() {
   ];
 
   return (
-    <section className="launch-countdown" aria-live="off">
-      <div className="container launch-countdown__inner">
-        {now === null ? (
-          <p className="launch-countdown__label">
-            Free demo: {istDay(LAUNCH.demoStart)}, {istTime(LAUNCH.demoStart)} IST · Batch starts {istDay(LAUNCH.batchStart)}
-          </p>
-        ) : target ? (
-          <>
-            <p className="launch-countdown__label">{target.label}</p>
-            <div className="launch-countdown__clock" role="timer">
-              {parts.map((p) => (
-                <span key={p.label}>
-                  <strong>{pad(p.value)}</strong>
-                  <small>{p.label}</small>
-                </span>
-              ))}
-            </div>
-          </>
-        ) : (
-          <p className="launch-countdown__label">Next batch coming soon — WhatsApp us to get notified.</p>
-        )}
-      </div>
-    </section>
-  );
-}
-
-function DemoModal({ onClose }: { onClose: () => void }) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    dialog?.showModal();
-    return () => dialog?.close();
-  }, []);
-
-  return (
-    <dialog
-      ref={dialogRef}
-      className="launch-modal"
-      aria-labelledby="demo-modal-title"
-      onClose={onClose}
-      onClick={(e) => {
-        // Click on the backdrop (outside the panel) closes it.
-        if (e.target === dialogRef.current) onClose();
-      }}
-    >
-      <div className="launch-modal__panel">
-        <div className="launch-modal__head">
-          <h2 id="demo-modal-title" className="launch-h2 launch-h2--sm">
-            Book your free demo seat
-          </h2>
-          <button type="button" className="launch-modal__close" onClick={onClose} aria-label="Close">
-            ×
-          </button>
-        </div>
-        <DemoForm idPrefix="modal" />
-      </div>
-    </dialog>
+    <div className="launch-countdown" aria-live="off">
+      {now === null ? (
+        <p className="launch-countdown__label">
+          Free demo: {istDay(LAUNCH.demoStart)}, {istTime(LAUNCH.demoStart)} IST · Batch starts {istDay(LAUNCH.batchStart)}
+        </p>
+      ) : target ? (
+        <>
+          <p className="launch-countdown__label">{target.label}</p>
+          <div className="launch-countdown__clock" role="timer">
+            {parts.map((p) => (
+              <span key={p.label}>
+                <strong>{pad(p.value)}</strong>
+                <small>{p.label}</small>
+              </span>
+            ))}
+          </div>
+        </>
+      ) : (
+        <p className="launch-countdown__label">Next batch coming soon — WhatsApp us to get notified.</p>
+      )}
+    </div>
   );
 }
 

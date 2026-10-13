@@ -69,6 +69,11 @@ export function istTime(iso: string): string {
   });
 }
 
+/** "2 PM" (or "2:30 PM") in IST — the short form for headlines. */
+export function istTimeShort(iso: string): string {
+  return istTime(iso).replace(":00", "");
+}
+
 /** What the countdown counts to right now: the demo, then the batch, then nothing. */
 export function nextMilestone(now: number): { label: string; at: number } | null {
   const demo = Date.parse(LAUNCH.demoStart);

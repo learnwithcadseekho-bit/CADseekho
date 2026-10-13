@@ -40,7 +40,7 @@ function check(f: DemoLeadInput): Errors {
   return e;
 }
 
-/** The demo booking form, used inline on the page and inside the modal. */
+/** The demo booking form, inline on the landing page. Only Name, WhatsApp and role are shown up front. */
 export function DemoForm({ idPrefix }: { idPrefix: string }) {
   const navigate = useNavigate();
   const [form, setForm] = useState<DemoLeadInput>(EMPTY);
@@ -51,6 +51,8 @@ export function DemoForm({ idPrefix }: { idPrefix: string }) {
   const [touched, setTouched] = useState(false);
   const [widgetKey, setWidgetKey] = useState(0);
   const [waitingForCheck, setWaitingForCheck] = useState(false);
+  // Optional fields (email, college, city, CAD) start folded away.
+  const [moreOpen, setMoreOpen] = useState(false);
   const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
   const formRef = useRef(form);
   formRef.current = form;
@@ -82,6 +84,7 @@ export function DemoForm({ idPrefix }: { idPrefix: string }) {
     setTouched(true);
     const found = check(form);
     setErrors(found);
+    if (found.email) setMoreOpen(true); // the only optional field that can be wrong
     if (Object.keys(found).length > 0) return;
     if (!form.turnstileToken) {
       // The check is still running — submit as soon as it passes.
@@ -133,15 +136,6 @@ export function DemoForm({ idPrefix }: { idPrefix: string }) {
         error={errors.phone}
         onChange={(e) => update("phone", e.target.value)}
       />
-      <TextField
-        id={`${idPrefix}-email`}
-        label="Email (optional)"
-        type="email"
-        autoComplete="email"
-        value={form.email}
-        error={errors.email}
-        onChange={(e) => update("email", e.target.value)}
-      />
       <SelectField
         id={`${idPrefix}-role`}
         label="I am a *"
@@ -151,25 +145,37 @@ export function DemoForm({ idPrefix }: { idPrefix: string }) {
         error={errors.role}
         onChange={(e) => update("role", e.target.value as DemoLeadInput["role"])}
       />
-      <div className="demo-form__pair">
+      <details className="demo-form__more" open={moreOpen} onToggle={(e) => setMoreOpen(e.currentTarget.open)}>
+        <summary>More details (optional)</summary>
         <TextField
-          id={`${idPrefix}-org`}
-          label="College or company"
-          autoComplete="organization"
-          maxLength={100}
-          value={form.org}
-          onChange={(e) => update("org", e.target.value)}
+          id={`${idPrefix}-email`}
+          label="Email (optional)"
+          type="email"
+          autoComplete="email"
+          value={form.email}
+          error={errors.email}
+          onChange={(e) => update("email", e.target.value)}
         />
-        <TextField
-          id={`${idPrefix}-city`}
-          label="City"
-          autoComplete="address-level2"
-          maxLength={60}
-          value={form.city}
-          onChange={(e) => update("city", e.target.value)}
-        />
-      </div>
-      <CheckboxGroup label="CAD you know" options={CAD_CHOICES} value={form.cad} onChange={(v) => update("cad", v)} />
+        <div className="demo-form__pair">
+          <TextField
+            id={`${idPrefix}-org`}
+            label="College or company"
+            autoComplete="organization"
+            maxLength={100}
+            value={form.org}
+            onChange={(e) => update("org", e.target.value)}
+          />
+          <TextField
+            id={`${idPrefix}-city`}
+            label="City"
+            autoComplete="address-level2"
+            maxLength={60}
+            value={form.city}
+            onChange={(e) => update("city", e.target.value)}
+          />
+        </div>
+        <CheckboxGroup label="CAD you know" options={CAD_CHOICES} value={form.cad} onChange={(v) => update("cad", v)} />
+      </details>
 
       {/* Honeypot: hidden from people and screen readers; bots fill it in. */}
       <div className="demo-form__hp" aria-hidden="true">
@@ -208,7 +214,7 @@ export function DemoForm({ idPrefix }: { idPrefix: string }) {
       )}
 
       <button type="submit" className="btn btn--primary btn--block" disabled={busy}>
-        {submitting ? "Booking…" : waitingForCheck ? "Checking you're human…" : "Book my free demo seat"}
+        {submitting ? "Booking…" : waitingForCheck ? "Checking you're human…" : "Book My Free Seat"}
       </button>
       <p className="demo-form__note">Free · {istDay(LAUNCH.demoStart)}, {istTime(LAUNCH.demoStart)} IST on Zoom · No payment needed</p>
     </form>
