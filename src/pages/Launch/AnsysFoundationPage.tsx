@@ -347,13 +347,6 @@ export default function AnsysFoundationPage() {
           {!isAdmin && (
             <p className="launch-price__amount">
               {PRICE_LABEL}
-              {course?.original_price != null && course.original_price > LAUNCH.price && (
-                <s className="launch-price__was">
-                  {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(
-                    course.original_price
-                  )}
-                </s>
-              )}
             </p>
           )}
           <p className="launch-price__ends">Offer ends {istDay(LAUNCH.offerEnds)}, 11:59 PM IST</p>

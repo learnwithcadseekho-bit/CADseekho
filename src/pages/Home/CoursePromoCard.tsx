@@ -9,7 +9,6 @@ import "./home.css";
 // The featured course lives in content/batches.ts — swapping the slug is enough, the card always reflects live
 // price/curriculum data.
 const FEATURED_COURSE_SLUG = FEATURED_ANSYS_SLUG;
-const LOW_SEATS_THRESHOLD = 10;
 const MAX_TAGS = 5;
 // What a buyer gets alongside the classes. Paid members unlock the
 // Resources hub's partial/paid items (any enrolled course), so only list
@@ -44,17 +43,9 @@ export function CoursePromoCard() {
   if (failed) return <HeroImageSlider />;
   if (!course) return <div className="course-promo course-promo--loading" aria-hidden="true" aria-busy="true" />;
 
-  const enrolledCount = Math.max(course.registration_count, course.manual_enrolled_count ?? 0);
-  const seatsLeft = course.seat_capacity != null ? Math.max(course.seat_capacity - enrolledCount, 0) : null;
   const hasNextBatch = course.format === "live" && Boolean(course.next_batch_date);
-  const hasDiscount = course.original_price != null && course.price != null && course.original_price > course.price;
 
-  const statusLabel =
-    seatsLeft !== null && seatsLeft > 0 && seatsLeft <= LOW_SEATS_THRESHOLD
-      ? `Only ${seatsLeft} seats left`
-      : hasNextBatch
-        ? "New batch enrolling"
-        : "Enrolling now";
+  const statusLabel = hasNextBatch ? "New batch enrolling" : "Enrolling now";
 
   return (
     <div className="course-promo">
@@ -103,11 +94,6 @@ export function CoursePromoCard() {
         {course.price != null && !isAdmin && (
           <div className="course-promo__price-row">
             <span className="course-promo__price">{CURRENCY_FORMAT.format(course.price)}</span>
-            {hasDiscount && (
-              <span className="course-promo__price-original">
-                {CURRENCY_FORMAT.format(course.original_price!)}
-              </span>
-            )}
           </div>
         )}
 

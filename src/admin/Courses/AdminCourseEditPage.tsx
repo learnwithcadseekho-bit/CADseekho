@@ -229,7 +229,7 @@ export default function AdminCourseEditPage() {
             type="number"
             min="0"
             step="1"
-            placeholder="e.g. 22 — for enrollments confirmed outside the site (a college batch, etc.)"
+            placeholder="e.g. 22 — not shown on the site"
             value={form.manual_enrolled_count}
             onChange={(e) => setForm((f) => ({ ...f, manual_enrolled_count: e.target.value }))}
           />
@@ -238,7 +238,7 @@ export default function AdminCourseEditPage() {
             type="number"
             min="0"
             step="1"
-            placeholder="e.g. 30 — enables a real 'X seats left' badge"
+            placeholder="e.g. 30 — not shown on the site"
             value={form.seat_capacity}
             onChange={(e) => setForm((f) => ({ ...f, seat_capacity: e.target.value }))}
           />
@@ -274,7 +274,7 @@ export default function AdminCourseEditPage() {
             type="number"
             min="0"
             step="1"
-            placeholder="e.g. 3998 — shown struck through"
+            placeholder="e.g. 3998 — not shown on the site"
             value={form.original_price}
             onChange={(e) => setForm((f) => ({ ...f, original_price: e.target.value }))}
           />
