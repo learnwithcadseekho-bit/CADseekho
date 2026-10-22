@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 import { useAuth } from "@/hooks/useAuth";
-import { NAV_LINKS } from "./navLinks";
+import { NAV_LINKS, TOOL_LINKS } from "./navLinks";
 
 export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [coursesOpen, setCoursesOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const { categories, loading, error } = useActiveCategories(open && coursesOpen);
   const { session, profile, signOut } = useAuth();
   const navigate = useNavigate();
@@ -53,11 +54,34 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
           </div>
         )}
 
-        {NAV_LINKS.filter((l) => l.to !== "/").map((link) => (
-          <Link key={link.to} to={link.to} className="mobile-menu__link" onClick={onClose}>
-            {link.label}
-          </Link>
-        ))}
+        {NAV_LINKS.filter((l) => l.to !== "/").map((link) =>
+          "menu" in link ? (
+            <Fragment key={link.to}>
+              <button
+                type="button"
+                className="mobile-menu__link mobile-menu__accordion-trigger"
+                aria-expanded={toolsOpen}
+                onClick={() => setToolsOpen((o) => !o)}
+              >
+                {link.label}
+                <span aria-hidden>{toolsOpen ? "−" : "+"}</span>
+              </button>
+              {toolsOpen && (
+                <div className="mobile-menu__submenu">
+                  {TOOL_LINKS.map((tool) => (
+                    <Link key={tool.to} to={tool.to} className="mobile-menu__sublink" onClick={onClose}>
+                      {tool.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </Fragment>
+          ) : (
+            <Link key={link.to} to={link.to} className="mobile-menu__link" onClick={onClose}>
+              {link.label}
+            </Link>
+          ),
+        )}
       </nav>
 
       <div className="mobile-menu__actions">

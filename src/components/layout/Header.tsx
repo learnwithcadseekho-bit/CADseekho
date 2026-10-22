@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { CoursesMegaMenu } from "./CoursesMegaMenu";
 import { MobileMenu } from "./MobileMenu";
 import { NAV_LINKS } from "./navLinks";
+import { ToolsMenu } from "./ToolsMenu";
 import "@/styles/layout.css";
 
 function navLinkClass({ isActive }: { isActive: boolean }) {
@@ -38,11 +39,15 @@ export function Header() {
             Home
           </NavLink>
           <CoursesMegaMenu />
-          {NAV_LINKS.filter((l) => l.to !== "/").map((link) => (
-            <NavLink key={link.to} to={link.to} className={navLinkClass}>
-              {link.label}
-            </NavLink>
-          ))}
+          {NAV_LINKS.filter((l) => l.to !== "/").map((link) =>
+            "menu" in link ? (
+              <ToolsMenu key={link.to} />
+            ) : (
+              <NavLink key={link.to} to={link.to} className={navLinkClass}>
+                {link.label}
+              </NavLink>
+            ),
+          )}
         </nav>
 
         <div className="site-header__actions">

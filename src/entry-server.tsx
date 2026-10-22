@@ -10,6 +10,7 @@ import { AppShell } from "./App";
 import { dumpTouched, flushSsrFetches, ssrErrorKeys, startSsrPage } from "@/lib/cache";
 import { takeRenderedModules } from "@/lib/trackedLazy";
 import { takeSsrStatus } from "@/lib/httpStatus";
+import { EMBEDDED_TOOLS } from "@/pages/tools/embeddedTools";
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
 
@@ -116,6 +117,7 @@ export async function getPrerenderRoutes(): Promise<{ routes: PrerenderRoute[]; 
     { path: "/blog", source: "src/pages/Blog/BlogListingPage.tsx" },
     { path: "/resources", source: "src/pages/Resources/ResourcesHubPage.tsx" },
     { path: "/tools/beam-calculator", source: "src/pages/tools/BeamCalculatorPage.tsx" },
+    ...EMBEDDED_TOOLS.map((t) => ({ path: `/tools/${t.slug}`, source: `public/tools/${t.slug}.html` })),
     { path: "/about", source: "src/pages/About/AboutPage.tsx" },
     { path: "/contact", source: "src/pages/Contact/ContactPage.tsx" },
     { path: "/ansys-foundation", source: "src/pages/Launch/AnsysFoundationPage.tsx" },

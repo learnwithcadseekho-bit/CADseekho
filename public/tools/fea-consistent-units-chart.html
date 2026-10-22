@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,600;87.5,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<style>[hidden]{display:none!important}
+:root{--paper:#F5F3ED;--ink:#1B2A4A;--slate:#46566B;--accent:#E8622C;--line:#AEB9C9;--line2:#75849C;--card:#FFFFFF;--ok:#2E7D4F;--okbg:#E3F1E8;--warn:#9A6A00;--warnbg:#FBF0D3;--bad:#B23A2B;--badbg:#F8E1DD;--soft:#EEF1F5}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{background:var(--ink);color:#fff;border-bottom:4px solid var(--accent)}
+header.hero .wrap{padding-top:22px;padding-bottom:18px}
+.kicker{font:600 12px/1 "IBM Plex Sans",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#F6B79C}
+h1{font:700 clamp(30px,5vw,44px)/1.05 "Archivo","Arial Narrow","Segoe UI",sans-serif;font-stretch:87.5%;letter-spacing:.02em;margin:8px 0 6px}
+.sub{color:#D5DCE6;margin:0;max-width:760px}
+h2{font:700 18px/1.3 "Archivo","Arial Narrow","Segoe UI",sans-serif;font-stretch:87.5%;margin:0 0 12px;color:var(--ink)}
+h3{font:700 14px/1.3 "Archivo","Arial Narrow","Segoe UI",sans-serif;font-stretch:87.5%;margin:16px 0 8px;color:var(--slate);text-transform:uppercase;letter-spacing:.06em}
+main .wrap{padding-top:22px;padding-bottom:40px}
+.grid>*{min-width:0}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px}
+.card+.card{margin-top:20px}
+label{display:block;font-size:13px;color:var(--slate);margin:10px 0 4px}
+input,select{width:100%;padding:9px 10px;border:1px solid var(--line2);border-radius:4px;font:inherit;color:var(--ink);background:#FFFBEF}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.unit{color:var(--slate);font-size:12px}
+.hint{font-size:12px;color:var(--slate);margin-top:4px}
+.err{color:var(--bad);font-size:13px;margin-top:8px;min-height:1em}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--paper)}
+.stat .k{font-size:12px;color:var(--slate)}
+.stat .v{font:600 22px/1.2 "IBM Plex Sans",sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat .v small{font-size:12px;color:var(--slate);font-weight:400;margin-left:3px}
+.stat.hl{border-color:var(--accent);background:#FFF4EE}
+.stat.hl .v{color:var(--accent)}
+.verdict{display:inline-block;padding:6px 12px;border-radius:4px;font-weight:600;margin-top:12px}
+.v-ok{background:var(--okbg);color:var(--ok)}.v-warn{background:var(--warnbg);color:var(--warn)}.v-bad{background:var(--badbg);color:var(--bad)}
+.pro{position:relative}
+.pro-badge{display:inline-block;font:700 10px/1 "IBM Plex Sans",sans-serif;letter-spacing:.1em;background:var(--accent);color:#fff;padding:4px 7px;border-radius:3px;vertical-align:middle;margin-left:8px}
+.steps .step{border-left:3px solid var(--accent);padding:6px 0 6px 12px;margin:10px 0}
+.steps .t{font-weight:600;font-size:13px;color:var(--accent)}
+.steps .m{overflow-x:auto;padding:4px 0}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:"IBM Plex Sans",Arial,sans-serif;fill:var(--slate)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font:600 12px/1.3 "IBM Plex Sans",sans-serif;text-transform:uppercase;letter-spacing:.06em;color:var(--slate);background:var(--soft)}
+.tablewrap{overflow-x:auto}
+.src{font-size:12px;color:var(--slate);margin-top:14px}
+footer{border-top:1px solid var(--line);color:var(--slate);font-size:13px}
+footer .wrap{padding-top:14px;padding-bottom:24px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tabs button{border:1px solid var(--line2);background:#fff;color:var(--ink);padding:7px 12px;border-radius:4px;font:inherit;font-size:14px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--slate);margin-top:8px}
+.legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:6px}
+</style>
+<script>
+function tex(el, s){ if(!el) return; if(window.katex){ try{ katex.render(s.replace(/\\frac/g,'\\dfrac'), el, {throwOnError:false, displayMode:false}); return; }catch(e){} } el.textContent = s; }
+function fmt(v, d){ if(!isFinite(v)) return "—"; const a=Math.abs(v); if(a!==0 && (a>=1e9 || a<1e-3)) return v.toExponential(3).replace("e","×10^").replace("+",""); return v.toLocaleString("en-IN",{maximumFractionDigits:d, minimumFractionDigits:d}); }
+function texnum(v, d){ if(!isFinite(v)) return "\\text{—}"; const a=Math.abs(v); if(a!==0 && (a>=1e9 || a<1e-3)){ const e=Math.floor(Math.log10(a)); const m=v/Math.pow(10,e); return m.toFixed(3)+"\\times10^{"+e+"}"; } return v.toLocaleString("en-IN",{maximumFractionDigits:d, minimumFractionDigits:d}).replace(/,/g,"{,}"); }
+</script>
+<title>Consistent Units for FEA — Unit System Chart &amp; Converter | CADSeekho</title>
+<meta name="description" content="Consistent unit systems for FEA (SI, mm-t-s, mm-kg-ms, mm-g-ms, inch-slinch). Convert E, density, gravity, loads and energy into the right values for your solver and catch unit mistakes.">
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">CADSeekho · Reference chart</div>
+  <h1>Consistent Units for FEA</h1>
+  <p class="sub">Most solvers have no units — they trust you to be consistent. Pick your values once and see exactly what to type in every common unit system.</p>
+</div></header>
+
+<main><div class="wrap grid">
+  <section class="card" aria-label="Your values">
+    <h2>Your values (everyday units)</h2>
+    <label for="mat">Quick material</label>
+    <select id="mat">
+      <option value="200,7850">Structural steel</option>
+      <option value="193,8000">Stainless steel 304</option>
+      <option value="68.9,2700">Aluminium 6061-T6</option>
+      <option value="113.8,4430">Titanium Ti-6Al-4V</option>
+      <option value="110,7200">Grey cast iron</option>
+      <option value="2.4,1200">ABS / PC (approx.)</option>
+      <option value="custom">Custom</option>
+    </select>
+    <div class="row2">
+      <div><label for="E">Young's modulus, E <span class="unit">(GPa)</span></label><input id="E" type="number" value="200" step="any"></div>
+      <div><label for="rho">Density, ρ <span class="unit">(kg/m³)</span></label><input id="rho" type="number" value="7850" step="any"></div>
+    </div>
+    <div class="row2">
+      <div><label for="F">Force <span class="unit">(N)</span></label><input id="F" type="number" value="1000" step="any"></div>
+      <div><label for="p">Pressure <span class="unit">(MPa)</span></label><input id="p" type="number" value="1" step="any"></div>
+    </div>
+    <div class="row2">
+      <div><label for="v">Velocity <span class="unit">(m/s)</span></label><input id="v" type="number" value="10" step="any"></div>
+      <div><label for="t">Time <span class="unit">(s)</span></label><input id="t" type="number" value="0.001" step="any"></div>
+    </div>
+    <label for="g">Gravity <span class="unit">(m/s²)</span></label><input id="g" type="number" value="9.81" step="any">
+    <div class="hint">Poisson's ratio and strain have no units — they never change.</div>
+    <div class="err" id="err" role="alert"></div>
+  </section>
+
+  <div>
+    <section class="card" aria-label="Unit systems">
+      <h2>Consistent unit systems</h2>
+      <div class="tablewrap"><table id="sys"></table></div>
+      <p class="hint">Rule: choose length, mass and time. Everything else follows — force = mass × length ÷ time², stress = force ÷ length².</p>
+    </section>
+
+    <section class="card" aria-label="Your values in each system">
+      <h2>What to type in your solver</h2>
+      <div class="tablewrap"><table id="conv"></table></div>
+      <p class="hint">Highlighted column = the system ANSYS Workbench users usually pick for structural work (mm, t, s → N, MPa).</p>
+    </section>
+
+    <section class="card pro" aria-label="Unit mistake detector">
+      <h2>Unit mistake detector <span class="pro-badge">PRO</span></h2>
+      <p class="hint" style="margin-top:0">Type the E and density exactly as you entered them in the solver. We'll tell you if they don't make sense together.</p>
+      <div class="row2" style="max-width:640px">
+        <div><label for="dsys">Unit system you used</label><select id="dsys"></select></div>
+        <div></div>
+      </div>
+      <div class="row2" style="max-width:640px">
+        <div><label for="dE">E as entered</label><input id="dE" type="number" value="200000" step="any"></div>
+        <div><label for="drho">Density as entered</label><input id="drho" type="number" value="7850" step="any"></div>
+      </div>
+      <div id="det" style="margin-top:12px"></div>
+    </section>
+
+    <section class="card" aria-label="Common mistakes">
+      <h2>The five unit mistakes we see most</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Mistake</th><th>What happens</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>Density 7850 in an mm model</td><td>Mass 10¹² × too high — natural frequencies far too low, gravity loads huge</td><td>Use 7.85e-9 t/mm³ in mm-t-s</td></tr>
+          <tr><td>E in GPa with geometry in mm</td><td>Stiffness 1000 × too low — deflections 1000 × too high</td><td>Use MPa (200 000) in mm-t-s</td></tr>
+          <tr><td>Gravity 9.81 with mm</td><td>Gravity 1000 × too small</td><td>Use 9810 mm/s²</td></tr>
+          <tr><td>Imported CAD in metres, loads in mm system</td><td>Part is 1000 × too small</td><td>Check model size after import; set units before import</td></tr>
+          <tr><td>Mixing kN and N</td><td>Stresses off by 1000</td><td>Convert all loads before entering</td></tr>
+        </tbody>
+      </table></div>
+      <p class="src">Sanity check: the wave speed √(E/ρ) is about 5 000 m/s for steel and aluminium. If your values give something wildly different, a unit is wrong.</p>
+    </section>
+  </div>
+</div></main>
+<footer><div class="wrap">Free reference by <a href="https://cadseekho.com">CADSeekho</a> · Solve by hand first, validate in software. For learning purposes — verify critical designs against applicable codes and standards.</div></footer>
+
+<script>
+const $ = id => document.getElementById(id);
+/* Base units in SI: length (m), mass (kg), time (s) */
+const SYS = [
+  {id:"si",  name:"SI",           L:[1,"m"],      M:[1,"kg"],        T:[1,"s"],   F:"N",   S:"Pa",  D:"kg/m³",      En:"J",   use:"Textbooks, CFD"},
+  {id:"mmt", name:"mm – t – s",   L:[1e-3,"mm"],  M:[1000,"t"],      T:[1,"s"],   F:"N",   S:"MPa", D:"t/mm³",      En:"mJ",  use:"ANSYS / Abaqus structural, modal", hl:true},
+  {id:"mmkg",name:"mm – kg – ms", L:[1e-3,"mm"],  M:[1,"kg"],        T:[1e-3,"ms"],F:"kN", S:"GPa", D:"kg/mm³",     En:"J",   use:"LS-DYNA crash / impact"},
+  {id:"mmg", name:"mm – g – ms",  L:[1e-3,"mm"],  M:[1e-3,"g"],      T:[1e-3,"ms"],F:"N",  S:"MPa", D:"g/mm³",      En:"mJ",  use:"Explicit drop tests"},
+  {id:"in",  name:"in – slinch – s", L:[0.0254,"in"], M:[175.1268,"lbf·s²/in"], T:[1,"s"], F:"lbf", S:"psi", D:"lbf·s²/in⁴", En:"in·lbf", use:"US legacy models"},
+];
+SYS.forEach(s=>{ const f=s.M[0]*s.L[0]/s.T[0]**2; s.f={F:f, S:f/s.L[0]**2, D:s.M[0]/s.L[0]**3, A:s.L[0]/s.T[0]**2, V:s.L[0]/s.T[0], T:s.T[0], En:f*s.L[0]}; });
+
+function sci(v){
+  if (!isFinite(v)) return "—"; if (v===0) return "0";
+  const a=Math.abs(v); if (a>=0.01 && a<1e6) return Number(v.toPrecision(4)).toLocaleString("en-IN",{maximumFractionDigits:6});
+  const e=Math.floor(Math.log10(a)); const m=v/10**e; const sup=String(e).replace(/-/g,"⁻").replace(/\d/g,d=>"⁰¹²³⁴⁵⁶⁷⁸⁹"[d]);
+  return `${Number(m.toPrecision(4))}×10${sup}`;
+}
+
+$("sys").innerHTML = `<thead><tr><th>System</th><th>Length</th><th>Mass</th><th>Time</th><th>Force</th><th>Stress</th><th>Density</th><th>Energy</th><th>Typical use</th></tr></thead><tbody>`+
+  SYS.map(s=>`<tr${s.hl?' style="background:#FFF4EE"':''}><td><b>${s.name}</b></td><td>${s.L[1]}</td><td>${s.M[1]}</td><td>${s.T[1]}</td><td>${s.F}</td><td>${s.S}</td><td>${s.D}</td><td>${s.En}</td><td>${s.use}</td></tr>`).join("")+"</tbody>";
+SYS.forEach(s=>$("dsys").add(new Option(s.name, s.id))); $("dsys").value="mmt";
+
+function update(){
+  const m=$("mat").value; if (m!=="custom" && document.activeElement!==$("E") && document.activeElement!==$("rho")){ const [e,r]=m.split(","); $("E").value=e; $("rho").value=r; }
+  const E=+$("E").value*1e9, rho=+$("rho").value, F=+$("F").value, p=+$("p").value*1e6, v=+$("v").value, t=+$("t").value, g=+$("g").value;
+  $("err").textContent = (E>0 && rho>0) ? "" : "E and density must be positive.";
+  const rows=[["Young's modulus, E",E,"S"],["Density, ρ",rho,"D"],["Force",F,"F"],["Pressure",p,"S"],["Gravity",g,"A"],["Velocity",v,"V"],["Time",t,"T"],["Energy of F × 1 mm",F*1e-3,"En"]];
+  const unitOf=(s,k)=>({S:s.S,D:s.D,F:s.F,A:`${s.L[1]}/${s.T[1]}²`,V:`${s.L[1]}/${s.T[1]}`,T:s.T[1],En:s.En})[k];
+  $("conv").innerHTML = `<thead><tr><th>Quantity</th>${SYS.map(s=>`<th>${s.name}</th>`).join("")}</tr></thead><tbody>`+
+    rows.map(r=>`<tr><td><b>${r[0]}</b></td>${SYS.map(s=>`<td${s.hl?' style="background:#FFF4EE"':''}><b>${sci(r[1]/s.f[r[2]])}</b> <span class="unit">${unitOf(s,r[2])}</span></td>`).join("")}</tr>`).join("")+
+    `<tr><td><b>Wave speed check, √(E/ρ)</b></td><td colspan="${SYS.length}">${sci(Math.sqrt(E/rho))} m/s — same in every system once converted back</td></tr></tbody>`;
+  detect();
+}
+
+function detect(){
+  const s=SYS.find(x=>x.id===$("dsys").value), Ein=+$("dE").value, rin=+$("drho").value;
+  if (!(Ein>0 && rin>0)){ $("det").innerHTML='<p class="err">Enter positive values.</p>'; return; }
+  const E=Ein*s.f.S, rho=rin*s.f.D, c=Math.sqrt(E/rho);
+  const msgs=[]; let bad=false;
+  if (E<1e8 || E>1.2e12){ bad=true; const fixE=200e9/s.f.S; msgs.push(`E = ${sci(E/1e9)} GPa in real units — not a solid material. For steel in ${s.name} type <b>${sci(fixE)}</b> ${s.S}.`); }
+  else msgs.push(`E = ${sci(E/1e9)} GPa in real units — plausible.`);
+  if (rho<300 || rho>25000){ bad=true; msgs.push(`Density = ${sci(rho)} kg/m³ in real units — not plausible. For steel in ${s.name} type <b>${sci(7850/s.f.D)}</b> ${s.D}.`); }
+  else msgs.push(`Density = ${sci(rho)} kg/m³ in real units — plausible.`);
+  msgs.push(`Wave speed √(E/ρ) = ${sci(c)} m/s ${c>1000&&c<12000?"— in the normal range for solids.":"— outside the 1 000–12 000 m/s range of engineering solids."}`);
+  if (!(c>1000&&c<12000)) bad=true;
+  $("det").innerHTML = `<span class="verdict ${bad?"v-bad":"v-ok"}">${bad?"Unit problem likely":"Looks consistent"}</span><ul>${msgs.map(m=>`<li>${m}</li>`).join("")}</ul>`;
+}
+$("mat").addEventListener("input",()=>{ if($("mat").value!=="custom"){ const [e,r]=$("mat").value.split(","); $("E").value=e; $("rho").value=r; } update(); });
+["E","rho"].forEach(id=>$(id).addEventListener("input",()=>{ $("mat").value="custom"; update(); }));
+["F","p","v","t","g"].forEach(id=>$(id).addEventListener("input",update));
+["dsys","dE","drho"].forEach(id=>$(id).addEventListener("input",detect));
+update();
+</script>
+<script>
+/* Embed mode: /tools/fea-consistent-units-chart.html?embed=1 hides the page header/footer
+   and reports its content height to the parent page. */
+(function(){
+  var embed=/[?&]embed=1\b/.test(location.search);
+  if(!embed) return;
+  var css=document.createElement('style');
+  css.textContent='header.hero,footer{display:none!important}main .wrap{padding-top:0!important}';
+  document.head.appendChild(css);
+  function post(){ try{ parent.postMessage({type:'cadseekho-tool-height',height:Math.ceil(document.documentElement.getBoundingClientRect().height)},'*'); }catch(e){} }
+  new ResizeObserver(post).observe(document.body); window.addEventListener('load',post);
+})();
+</script>
+</body>
+</html>

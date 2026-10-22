@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,600;87.5,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<style>[hidden]{display:none!important}
+:root{--paper:#F5F3ED;--ink:#1B2A4A;--slate:#46566B;--accent:#E8622C;--line:#AEB9C9;--line2:#75849C;--card:#FFFFFF;--ok:#2E7D4F;--okbg:#E3F1E8;--warn:#9A6A00;--warnbg:#FBF0D3;--bad:#B23A2B;--badbg:#F8E1DD;--soft:#EEF1F5}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{background:var(--ink);color:#fff;border-bottom:4px solid var(--accent)}
+header.hero .wrap{padding-top:22px;padding-bottom:18px}
+.kicker{font:600 12px/1 "IBM Plex Sans",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#F6B79C}
+h1{font:700 clamp(30px,5vw,44px)/1.05 "Archivo","Arial Narrow","Segoe UI",sans-serif;font-stretch:87.5%;letter-spacing:.02em;margin:8px 0 6px}
+.sub{color:#D5DCE6;margin:0;max-width:760px}
+h2{font:700 18px/1.3 "Archivo","Arial Narrow","Segoe UI",sans-serif;font-stretch:87.5%;margin:0 0 12px;color:var(--ink)}
+h3{font:700 14px/1.3 "Archivo","Arial Narrow","Segoe UI",sans-serif;font-stretch:87.5%;margin:16px 0 8px;color:var(--slate);text-transform:uppercase;letter-spacing:.06em}
+main .wrap{padding-top:22px;padding-bottom:40px}
+.grid>*{min-width:0}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px}
+.card+.card{margin-top:20px}
+label{display:block;font-size:13px;color:var(--slate);margin:10px 0 4px}
+input,select{width:100%;padding:9px 10px;border:1px solid var(--line2);border-radius:4px;font:inherit;color:var(--ink);background:#FFFBEF}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.unit{color:var(--slate);font-size:12px}
+.hint{font-size:12px;color:var(--slate);margin-top:4px}
+.err{color:var(--bad);font-size:13px;margin-top:8px;min-height:1em}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--paper)}
+.stat .k{font-size:12px;color:var(--slate)}
+.stat .v{font:600 22px/1.2 "IBM Plex Sans",sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat .v small{font-size:12px;color:var(--slate);font-weight:400;margin-left:3px}
+.stat.hl{border-color:var(--accent);background:#FFF4EE}
+.stat.hl .v{color:var(--accent)}
+.verdict{display:inline-block;padding:6px 12px;border-radius:4px;font-weight:600;margin-top:12px}
+.v-ok{background:var(--okbg);color:var(--ok)}.v-warn{background:var(--warnbg);color:var(--warn)}.v-bad{background:var(--badbg);color:var(--bad)}
+.pro{position:relative}
+.pro-badge{display:inline-block;font:700 10px/1 "IBM Plex Sans",sans-serif;letter-spacing:.1em;background:var(--accent);color:#fff;padding:4px 7px;border-radius:3px;vertical-align:middle;margin-left:8px}
+.steps .step{border-left:3px solid var(--accent);padding:6px 0 6px 12px;margin:10px 0}
+.steps .t{font-weight:600;font-size:13px;color:var(--accent)}
+.steps .m{overflow-x:auto;padding:4px 0}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:"IBM Plex Sans",Arial,sans-serif;fill:var(--slate)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font:600 12px/1.3 "IBM Plex Sans",sans-serif;text-transform:uppercase;letter-spacing:.06em;color:var(--slate);background:var(--soft)}
+.tablewrap{overflow-x:auto}
+.src{font-size:12px;color:var(--slate);margin-top:14px}
+footer{border-top:1px solid var(--line);color:var(--slate);font-size:13px}
+footer .wrap{padding-top:14px;padding-bottom:24px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tabs button{border:1px solid var(--line2);background:#fff;color:var(--ink);padding:7px 12px;border-radius:4px;font:inherit;font-size:14px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--slate);margin-top:8px}
+.legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:6px}
+</style>
+<script>
+function tex(el, s){ if(!el) return; if(window.katex){ try{ katex.render(s.replace(/\\frac/g,'\\dfrac'), el, {throwOnError:false, displayMode:false}); return; }catch(e){} } el.textContent = s; }
+function fmt(v, d){ if(!isFinite(v)) return "—"; const a=Math.abs(v); if(a!==0 && (a>=1e9 || a<1e-3)) return v.toExponential(3).replace("e","×10^").replace("+",""); return v.toLocaleString("en-IN",{maximumFractionDigits:d, minimumFractionDigits:d}); }
+function texnum(v, d){ if(!isFinite(v)) return "\\text{—}"; const a=Math.abs(v); if(a!==0 && (a>=1e9 || a<1e-3)){ const e=Math.floor(Math.log10(a)); const m=v/Math.pow(10,e); return m.toFixed(3)+"\\times10^{"+e+"}"; } return v.toLocaleString("en-IN",{maximumFractionDigits:d, minimumFractionDigits:d}).replace(/,/g,"{,}"); }
+</script>
+<title>Mesh Quality Metrics Chart — Skewness, Orthogonal Quality, Aspect Ratio | CADSeekho</title>
+<meta name="description" content="Interactive ANSYS mesh quality reference: skewness and orthogonal quality spectrums, element quality, aspect ratio and Jacobian ratio. Check your mesh statistics and calculate skewness from element angles.">
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">CADSeekho · Reference chart</div>
+  <h1>Mesh Quality Metrics — Is My Mesh Good Enough?</h1>
+  <p class="sub">The quality spectrums ANSYS uses, with your own mesh statistics plotted on them. Works for structural (Mechanical) and CFD (Fluent) meshes.</p>
+</div></header>
+
+<main><div class="wrap grid">
+  <section class="card" aria-label="Your mesh statistics">
+    <h2>Your mesh statistics</h2>
+    <p class="hint" style="margin-top:0">In ANSYS Meshing: Mesh → Quality → Mesh Metric. Enter the worst value (max or min) shown.</p>
+    <label for="an">Analysis type</label>
+    <select id="an"><option value="struct">Structural (Mechanical)</option><option value="cfd">CFD (Fluent)</option></select>
+    <label for="sk">Skewness — maximum</label><input id="sk" type="number" value="0.82" step="0.01" min="0" max="1">
+    <label for="oq">Orthogonal quality — minimum</label><input id="oq" type="number" value="0.18" step="0.01" min="0" max="1">
+    <label for="eq">Element quality — average</label><input id="eq" type="number" value="0.76" step="0.01" min="0" max="1">
+    <label for="ar">Aspect ratio — maximum</label><input id="ar" type="number" value="12" step="any" min="1">
+    <label for="jr">Jacobian ratio — maximum</label><input id="jr" type="number" value="4" step="any" min="1">
+    <div class="err" id="err" role="alert"></div>
+  </section>
+
+  <div>
+    <section class="card" aria-label="Quality report">
+      <h2>Quality report</h2>
+      <div id="report"></div>
+      <div id="overall"></div>
+    </section>
+
+    <section class="card" aria-label="Spectrums">
+      <h2>Quality spectrums</h2>
+      <div id="spectra"></div>
+      <p class="src">Skewness and orthogonal quality bands: ANSYS Meshing User's Guide (mesh quality spectrum). Element quality, aspect ratio and Jacobian ratio bands are widely used rules of thumb and MAPDL shape-check defaults — limits vary with element type, physics and solver version, so always confirm in your version's documentation.</p>
+    </section>
+
+    <section class="card pro" aria-label="Skewness from angles">
+      <h2>Calculate skewness from element angles <span class="pro-badge">PRO</span></h2>
+      <div class="row2" style="max-width:520px">
+        <div><label for="shape">Element face</label><select id="shape"><option value="tri">Triangle (θe = 60°)</option><option value="quad">Quadrilateral (θe = 90°)</option></select></div>
+        <div></div>
+      </div>
+      <div class="row2" style="max-width:520px">
+        <div><label for="a1">Angle 1 (°)</label><input id="a1" type="number" value="40" step="any"></div>
+        <div><label for="a2">Angle 2 (°)</label><input id="a2" type="number" value="70" step="any"></div>
+      </div>
+      <div class="row2" style="max-width:520px" id="g-q">
+        <div><label for="a3">Angle 3 (°)</label><input id="a3" type="number" value="80" step="any"></div>
+        <div><label for="a4">Angle 4 (°) <span class="unit">auto</span></label><input id="a4" type="number" disabled></div>
+      </div>
+      <div class="hint" id="angHint"></div>
+      <div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);margin-top:12px">
+        <svg id="elem" viewBox="-10 -10 330 240" role="img" aria-label="Element shape"></svg>
+        <div class="steps" id="skSteps"></div>
+      </div>
+    </section>
+
+    <section class="card pro" aria-label="Fixes">
+      <h2>How to fix a bad metric <span class="pro-badge">PRO</span></h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Problem</th><th>Usual cause</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>High skewness</td><td>Slivers at thin faces, sharp corners, tiny edges</td><td>Virtual topology / defeature small edges, face sizing, switch to patch-independent tets or sweep</td></tr>
+          <tr><td>Low orthogonal quality</td><td>Poor inflation layers, stretched cells at junctions</td><td>Smooth transition (growth rate 1.1–1.2), fewer inflation layers at corners, improve surface mesh first</td></tr>
+          <tr><td>High aspect ratio</td><td>Large element size on thin features</td><td>Add face/edge sizing on thin regions, use sweep or shell elements for thin walls</td></tr>
+          <tr><td>High Jacobian ratio</td><td>Mid-side nodes forced onto curved geometry</td><td>Refine on curved faces, or use dropped mid-side nodes locally</td></tr>
+          <tr><td>Results change with mesh</td><td>Not converged, or a stress singularity</td><td>Run a mesh convergence study; if stress keeps rising at a sharp corner it is a singularity — add a fillet or read stress away from it</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+  </div>
+</div></main>
+<footer><div class="wrap">Free reference by <a href="https://cadseekho.com">CADSeekho</a> · Solve by hand first, validate in software. For learning purposes — verify critical designs against applicable codes and standards.</div></footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const C = {ex:"#1E7A46", vg:"#4FA36B", gd:"#9CC46B", ac:"#E3B53B", bd:"#E8622C", un:"#B23A2B"};
+/* each band: [from, to, label, colourKey]. dir: "low" = lower is better */
+const METRICS = {
+  sk:{name:"Skewness (max)", dir:"low", lo:0, hi:1, bands:[[0,.25,"Excellent","ex"],[.25,.5,"Very good","vg"],[.5,.8,"Good","gd"],[.8,.95,"Acceptable","ac"],[.95,.98,"Bad","bd"],[.98,1,"Unacceptable","un"]],
+      note:{struct:"Keep max below ~0.9 for structural solids.", cfd:"Fluent: keep max skewness below 0.95; average ideally below 0.33."}},
+  oq:{name:"Orthogonal quality (min)", dir:"high", lo:0, hi:1, bands:[[0,.001,"Unacceptable","un"],[.001,.15,"Bad","bd"],[.15,.2,"Acceptable","ac"],[.2,.7,"Good","gd"],[.7,.95,"Very good","vg"],[.95,1,"Excellent","ex"]],
+      note:{struct:"Mainly a CFD metric, but still a good indicator of distorted cells.", cfd:"Fluent: minimum should be above 0.01, preferably above 0.1."}},
+  eq:{name:"Element quality (avg)", dir:"high", lo:0, hi:1, bands:[[0,.2,"Bad","bd"],[.2,.5,"Acceptable","ac"],[.5,.7,"Good","gd"],[.7,.9,"Very good","vg"],[.9,1,"Excellent","ex"]],
+      note:{struct:"1 = perfect cube/tetra. An average above ~0.7 is a common target.", cfd:"Average above ~0.7 is a common target."}},
+  ar:{name:"Aspect ratio (max)", dir:"low", lo:1, hi:50, bands:[[1,5,"Excellent","ex"],[5,10,"Good","gd"],[10,20,"Acceptable","ac"],[20,50,"Bad","bd"]],
+      note:{struct:"Below ~5 where stress gradients are high; MAPDL warns above 20.", cfd:"High values are normal inside boundary-layer inflation; keep core cells low."}},
+  jr:{name:"Jacobian ratio (max)", dir:"low", lo:1, hi:50, bands:[[1,10,"Good","gd"],[10,30,"Acceptable","ac"],[30,50,"Bad","bd"]],
+      note:{struct:"1 = ideal. MAPDL shape checking warns above 30 by default.", cfd:"Mainly relevant to higher-order structural elements."}},
+};
+function rate(key, v){ const m=METRICS[key]; const b=m.bands.find(b=>v>=b[0] && v<b[1]) || (v>=m.bands[m.bands.length-1][0]? m.bands[m.bands.length-1] : m.bands[0]); return b; }
+
+function bar(key, v){
+  const m=METRICS[key], W=Math.round(Math.max(300, $("spectra").getBoundingClientRect().width||680)), H=74, ml=10, mr=10, X=x=>ml+(W-ml-mr)*(Math.min(Math.max(x,m.lo),m.hi)-m.lo)/(m.hi-m.lo);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${m.name} spectrum">`;
+  let lastTick=-99;
+  m.bands.forEach(b=>{ const x0=X(b[0]), x1=X(b[1]); s+=`<rect x="${x0}" y="22" width="${Math.max(1,x1-x0)}" height="22" fill="${C[b[3]]}"/>`;
+    if (x1-x0>58) s+=`<text x="${(x0+x1)/2}" y="37" text-anchor="middle" font-size="11" style="fill:#fff;font-weight:600">${b[2]}</text>`;
+    if (x0-lastTick>=34 && X(m.hi)-x0>=34 || b[0]===m.lo){ s+=`<text x="${x0}" y="60" font-size="10" text-anchor="${b[0]===m.lo?'start':'middle'}">${b[0]}</text>`; lastTick=x0; } });
+  s+=`<text x="${X(m.hi)}" y="60" font-size="10" text-anchor="end">${m.hi}${key==="ar"||key==="jr"?"+":""}</text>`;
+  if (isFinite(v)){ const x=X(v); s+=`<path d="M${x-7},6 L${x+7},6 L${x},20 Z" fill="#1B2A4A"/><text x="${Math.min(Math.max(x,30),W-30)}" y="4" text-anchor="middle" font-size="11" style="fill:#1B2A4A;font-weight:700" dominant-baseline="hanging"></text>`; }
+  return s+"</svg>";
+}
+
+function update(){
+  const an=$("an").value, vals={sk:+$("sk").value, oq:+$("oq").value, eq:+$("eq").value, ar:+$("ar").value, jr:+$("jr").value};
+  let err=""; if (vals.sk<0||vals.sk>1||vals.oq<0||vals.oq>1||vals.eq<0||vals.eq>1) err="Skewness, orthogonal quality and element quality are between 0 and 1."; else if (vals.ar<1||vals.jr<1) err="Aspect ratio and Jacobian ratio are 1 or more.";
+  $("err").textContent=err;
+  const keys = an==="cfd" ? ["sk","oq","eq","ar"] : ["sk","eq","ar","jr","oq"];
+  let worst=0; const rank={ex:0,vg:0,gd:1,ac:2,bd:3,un:4};
+  $("report").innerHTML = `<div class="tablewrap"><table><thead><tr><th>Metric</th><th>Your value</th><th>Rating</th><th>Guidance</th></tr></thead><tbody>`+
+    keys.map(k=>{ const b=rate(k,vals[k]); worst=Math.max(worst,rank[b[3]]); return `<tr><td>${METRICS[k].name}</td><td><b>${vals[k]}</b></td><td><span class="verdict" style="margin:0;padding:2px 8px;background:${C[b[3]]};color:#fff">${b[2]}</span></td><td>${METRICS[k].note[an]}</td></tr>`; }).join("")+`</tbody></table></div>`;
+  const ov = worst<=1 ? ["v-ok","Mesh quality looks good — now check convergence."] : worst===2 ? ["v-warn","Usable, but improve the flagged metrics in critical regions."] : ["v-bad","Fix the flagged metrics before trusting results."];
+  $("overall").innerHTML=`<span class="verdict ${ov[0]}">${ov[1]}</span>`;
+  $("spectra").innerHTML = ["sk","oq","eq","ar","jr"].map(k=>`<h3>${METRICS[k].name} — ${METRICS[k].dir==="low"?"lower is better":"higher is better"}</h3>${bar(k, vals[k])}`).join("");
+  skew();
+}
+
+function skew(){
+  const sh=$("shape").value, te = sh==="tri"?60:90;
+  $("g-q").hidden = sh!=="quad";
+  const a1=+$("a1").value, a2=+$("a2").value, a3=+$("a3").value;
+  let ang;
+  if (sh==="tri"){ ang=[a1,a2,180-a1-a2]; $("angHint").textContent=`Angle 3 = 180 − ${a1} − ${a2} = ${fmt(ang[2],1)}°`; }
+  else { ang=[a1,a2,a3,360-a1-a2-a3]; $("a4").value=fmt(ang[3],1); $("angHint").textContent="Angle 4 = 360 − (angle 1 + 2 + 3). Angles go round the quad in order."; }
+  if (ang.some(a=>!(a>0 && a<180))){ $("skSteps").innerHTML='<p class="err">Every angle must be between 0° and 180°.</p>'; $("elem").innerHTML=""; return; }
+  const mx=Math.max(...ang), mn=Math.min(...ang), t1=(mx-te)/(180-te), t2=(te-mn)/te, s=Math.max(t1,t2), b=rate("sk",s);
+  const svg=$("elem"); let pts;
+  if (sh==="tri"){ const A=a1*Math.PI/180, B=a2*Math.PI/180, base=1, Cc=Math.PI-A-B; const sideb=base*Math.sin(B)/Math.sin(Cc);
+    pts=[[0,0],[base,0],[sideb*Math.cos(A), sideb*Math.sin(A)]]; }
+  else { /* walk the polygon with unit-ish sides adjusted to close: use angles as interior, equal sides except last two solved */
+    const ext=ang.map(a=>180-a); let dir=0, p=[[0,0]]; const L=[1,1]; for(let i=0;i<2;i++){ p.push([p[i][0]+L[i]*Math.cos(dir*Math.PI/180), p[i][1]+L[i]*Math.sin(dir*Math.PI/180)]); dir+=ext[i+1]; }
+    /* third side direction dir, fourth side direction dir+ext[3]; solve lengths to close back to origin */
+    const d3=dir*Math.PI/180, d4=(dir+ext[3])*Math.PI/180, P=p[2];
+    const det=Math.cos(d3)*Math.sin(d4)-Math.sin(d3)*Math.cos(d4);
+    const l3=(-P[0]*Math.sin(d4)+P[1]*Math.cos(d4))/det, l4=(-Math.cos(d3)*P[1]+Math.sin(d3)*P[0])/det;
+    if (l3<=0 || l4<=0){ pts=null; } else pts=[[0,0],p[1],p[2],[P[0]+l3*Math.cos(d3),P[1]+l3*Math.sin(d3)]]; }
+  if (pts){ const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]); const minx=Math.min(...xs), maxx=Math.max(...xs), miny=Math.min(...ys), maxy=Math.max(...ys);
+    const sc=Math.min(260/(maxx-minx||1),180/(maxy-miny||1)); const tr=p=>[20+(p[0]-minx)*sc, 200-(p[1]-miny)*sc];
+    svg.innerHTML=`<polygon points="${pts.map(p=>tr(p).join(",")).join(" ")}" fill="${C[b[3]]}" fill-opacity=".25" stroke="${C[b[3]]}" stroke-width="3"/>`+pts.map((p,i)=>{const q=tr(p); return `<circle cx="${q[0]}" cy="${q[1]}" r="4" fill="#1B2A4A"/><text x="${q[0]+6}" y="${q[1]-6}" font-size="12">${fmt(ang[i],0)}°</text>`;}).join(""); }
+  else svg.innerHTML=`<text x="150" y="110" text-anchor="middle" font-size="12">These angles don't form a convex quad</text>`;
+  const steps=[
+    ["Ideal angle", `\\theta_e=${te}^\\circ,\\quad \\theta_{max}=${fmt(mx,1)}^\\circ,\\quad \\theta_{min}=${fmt(mn,1)}^\\circ`],
+    ["Equiangular skewness", `S=\\max\\left[\\frac{\\theta_{max}-\\theta_e}{180-\\theta_e},\\ \\frac{\\theta_e-\\theta_{min}}{\\theta_e}\\right]=\\max\\left[\\frac{${fmt(mx,1)}-${te}}{180-${te}},\\ \\frac{${te}-${fmt(mn,1)}}{${te}}\\right]`],
+    ["Result", `S=\\max(${t1.toFixed(3)},\\ ${t2.toFixed(3)})=${s.toFixed(3)}\\ \\Rightarrow\\ \\text{${b[2]}}`],
+  ];
+  $("skSteps").innerHTML=steps.map((st,i)=>`<div class="step"><div class="t">${st[0]}</div><div class="m" id="sk${i}"></div></div>`).join("");
+  steps.forEach((st,i)=>tex($("sk"+i),st[1]));
+}
+document.querySelectorAll("input,select").forEach(e=>e.addEventListener("input",update));
+window.addEventListener("resize",()=>{clearTimeout(window._rt);window._rt=setTimeout(update,150);});
+window.addEventListener("load",update); update();
+</script>
+<script>
+/* Embed mode: /tools/mesh-quality-metrics-chart.html?embed=1 hides the page header/footer
+   and reports its content height to the parent page. */
+(function(){
+  var embed=/[?&]embed=1\b/.test(location.search);
+  if(!embed) return;
+  var css=document.createElement('style');
+  css.textContent='header.hero,footer{display:none!important}main .wrap{padding-top:0!important}';
+  document.head.appendChild(css);
+  function post(){ try{ parent.postMessage({type:'cadseekho-tool-height',height:Math.ceil(document.documentElement.getBoundingClientRect().height)},'*'); }catch(e){} }
+  new ResizeObserver(post).observe(document.body); window.addEventListener('load',post);
+})();
+</script>
+</body>
+</html>

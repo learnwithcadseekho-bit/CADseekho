@@ -7,6 +7,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 // entry point paints straight after the main bundle, with no second round-trip
 // for a route chunk.
 import HomePage from "@/pages/Home/HomePage";
+import { EMBEDDED_TOOLS } from "@/pages/tools/embeddedTools";
 
 // Every other public page is code-split per route so a visit to any one page
 // only downloads and parses that page's JS, not the entire site (previously all
@@ -21,6 +22,7 @@ const ResourceSoftwarePage = trackedLazy("src/pages/Resources/ResourceSoftwarePa
 const ResourceTaxonomyPage = trackedLazy("src/pages/Resources/ResourceTaxonomyPage.tsx", () => import("@/pages/Resources/ResourceTaxonomyPage"));
 const ResourceDetailPage = trackedLazy("src/pages/Resources/ResourceDetailPage.tsx", () => import("@/pages/Resources/ResourceDetailPage"));
 const BeamCalculatorPage = trackedLazy("src/pages/tools/BeamCalculatorPage.tsx", () => import("@/pages/tools/BeamCalculatorPage"));
+const EmbeddedToolPage = trackedLazy("src/pages/tools/EmbeddedToolPage.tsx", () => import("@/pages/tools/EmbeddedToolPage"));
 const BlogListingPage = trackedLazy("src/pages/Blog/BlogListingPage.tsx", () => import("@/pages/Blog/BlogListingPage"));
 const BlogPostPage = trackedLazy("src/pages/Blog/BlogPostPage.tsx", () => import("@/pages/Blog/BlogPostPage"));
 const AboutPage = trackedLazy("src/pages/About/AboutPage.tsx", () => import("@/pages/About/AboutPage"));
@@ -78,6 +80,9 @@ export function AppRoutes() {
         <Route path="/resources/type/:value" element={<ResourceTaxonomyPage kind="type" />} />
         <Route path="/resources/:slug" element={<ResourceDetailPage />} />
         <Route path="/tools/beam-calculator" element={<BeamCalculatorPage />} />
+        {EMBEDDED_TOOLS.map((tool) => (
+          <Route key={tool.slug} path={`/tools/${tool.slug}`} element={<EmbeddedToolPage tool={tool} />} />
+        ))}
         <Route path="/blog" element={<BlogListingPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/about" element={<AboutPage />} />

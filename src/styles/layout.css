@@ -126,6 +126,11 @@
   flex-direction: column;
 }
 
+/* Tools dropdown: longer item names, so a wider panel keeps each on one line. */
+.mega-menu__panel--wide {
+  min-width: 380px;
+}
+
 .mega-menu__item {
   display: flex;
   align-items: center;
