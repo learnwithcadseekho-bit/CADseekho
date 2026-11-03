@@ -1,87 +1,95 @@
-/* /courses/solidworks-simulation and its lesson player. Builds on launch.css
-   (hero, cards, band, form, sticky bar). Mobile first. */
+/* SOLIDWORKS Simulation Level 1 / Level 2 pages and the lesson player.
+   Layout comes from course-detail.css (same blocks as every course page);
+   the form, sticky bar and anchors from launch.css. Mobile first. */
 
-.sws-narrow {
-  max-width: 860px;
+.sws {
+  /* Room for the sticky mobile bar so it never covers the footer. */
+  padding-bottom: 76px;
 }
 
-.sws-lead {
-  font-size: 1.0625rem;
+@media (min-width: 768px) {
+  .sws {
+    padding-bottom: 0;
+  }
+}
+
+.sws-header {
+  max-width: 900px;
+}
+
+.sws-header__switch {
+  font-size: 0.9375rem;
+  color: var(--slate);
+}
+
+.sws-header__switch a,
+.sws-prereq a,
+.sws .faq-item__answer a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sws-para {
+  line-height: 1.65;
+  color: var(--slate);
+}
+
+.sws-para + .sws-para {
+  margin-top: var(--space-4);
+}
+
+.sws-para + .course-detail__list,
+.sws-para + .sws-outcomes {
+  margin-top: var(--space-4);
+}
+
+.sws-prereq {
+  margin-top: var(--space-5);
+}
+
+/* ---- Learning outcomes ---------------------------------------------------- */
+
+.sws-outcomes {
+  /* The global reset strips list markers; these outcomes are numbered. */
+  list-style: decimal;
+  display: grid;
+  gap: var(--space-3);
+  padding-left: var(--space-6);
+  margin: 0;
+}
+
+.sws-outcomes li {
   line-height: 1.6;
   color: var(--slate);
-  max-width: 72ch;
 }
 
-/* ---- Hero ---------------------------------------------------------------- */
-
-@media (min-width: 960px) {
-  .sws-hero__inner {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    align-items: center;
-    padding-top: var(--space-12);
-    padding-bottom: var(--space-12);
-  }
-}
-
-.sws-hero__title {
-  font-size: clamp(2rem, 6vw, 3.25rem);
-}
-
-.sws-hero__secondary {
-  min-height: 56px;
-  justify-content: center;
-  width: 100%;
-}
-
-@media (min-width: 520px) {
-  .sws-hero__secondary {
-    width: auto;
-  }
-}
-
-.sws-diagram {
-  margin: 0;
-  background: var(--white);
-  padding: var(--space-4);
-}
-
-.sws-diagram__svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.sws-diagram__label {
+.sws-outcomes li::marker {
   font-family: var(--font-mono);
-  font-size: 15px;
+  color: var(--accent);
   font-weight: 600;
-  fill: var(--accent);
 }
 
-.sws-diagram__dim {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  fill: var(--slate);
+.sws-outcomes strong {
+  color: var(--ink);
 }
 
-.sws-diagram__value {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-  fill: var(--ink);
+/* ---- Skills (grouped) ------------------------------------------------------ */
+
+.sws-skills {
+  display: grid;
+  gap: var(--space-6);
 }
 
-.sws-diagram__value--ok {
-  fill: #1f7a4a;
-}
-
-.sws-diagram__caption {
+.sws-skills__group h3 {
   font-family: var(--font-mono);
   font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--slate);
-  margin-top: var(--space-3);
-  text-align: center;
+  margin-bottom: var(--space-3);
 }
 
 /* ---- Badges -------------------------------------------------------------- */
@@ -106,27 +114,7 @@
   border: 1px solid var(--line-strong);
 }
 
-/* ---- Syllabus ------------------------------------------------------------ */
-
-.sws-level + .sws-level {
-  margin-top: var(--space-12);
-}
-
-.sws-level__title {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3);
-  font-size: 1.25rem;
-  margin-bottom: var(--space-4);
-}
-
-.sws-level__hours {
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  font-weight: 400;
-  color: var(--slate);
-}
+/* ---- Course Modules ------------------------------------------------------ */
 
 .sws-modules {
   border-top: 1px solid var(--line);
@@ -138,7 +126,7 @@
 
 .sws-module__summary {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 1em 1fr;
   gap: var(--space-1) var(--space-3);
   align-items: baseline;
   padding: var(--space-4) var(--space-2);
@@ -153,14 +141,21 @@
 
 .sws-module__summary::before {
   content: "+";
-  grid-row: span 2;
+  grid-row: span 3;
   color: var(--accent);
   font-weight: 700;
-  width: 1em;
 }
 
 .sws-module[open] > .sws-module__summary::before {
   content: "−";
+}
+
+.sws-module__summary--static {
+  cursor: default;
+}
+
+.sws-module__summary--static::before {
+  content: "";
 }
 
 .sws-module__summary:focus-visible {
@@ -185,10 +180,12 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-2) var(--space-3);
 }
 
-.sws-module__hours {
+.sws-module__hours,
+.sws-module__licence,
+.sws-module__soon {
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   color: var(--slate);
@@ -196,7 +193,7 @@
 
 @media (min-width: 720px) {
   .sws-module__summary {
-    grid-template-columns: auto 6.5rem 1fr auto;
+    grid-template-columns: 1em 6rem 1fr auto;
   }
 
   .sws-module__summary::before {
@@ -211,12 +208,6 @@
   .sws-module__meta {
     justify-content: flex-end;
   }
-}
-
-.sws-module__empty {
-  padding: 0 var(--space-2) var(--space-4) calc(1em + var(--space-5));
-  color: var(--slate);
-  font-size: 0.9375rem;
 }
 
 .sws-lessons {
@@ -238,7 +229,7 @@
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   color: var(--slate);
-  min-width: 3.5rem;
+  min-width: 3rem;
 }
 
 .sws-lesson__title {
@@ -266,131 +257,94 @@
   text-underline-offset: 3px;
 }
 
-/* ---- What you get / software --------------------------------------------- */
+/* ---- Sidebar + combo card --------------------------------------------------- */
 
-.sws-get,
-.sws-software {
+.sws-side {
   display: grid;
-  gap: var(--space-3);
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  gap: var(--space-6);
+  align-content: start;
 }
 
-.sws-get {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+/* Not sticky: with the combo card under it the column is taller than most screens. */
+.sws-side .course-detail__sidebar {
+  position: static;
 }
 
-.sws-get li {
-  border-left: 3px solid var(--accent-bright);
-  padding: var(--space-2) var(--space-4);
-  background: var(--paper);
-}
-
-.sws-software li {
-  line-height: 1.55;
-}
-
-/* ---- Pricing ------------------------------------------------------------- */
-
-.sws-plans {
-  display: grid;
-  gap: var(--space-5);
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  margin-top: var(--space-6);
-}
-
-.sws-plan {
-  display: flex;
-  flex-direction: column;
-  background: var(--white);
-  padding: var(--space-6) var(--space-5);
-}
-
-.sws-plan--best {
-  border-color: var(--accent);
-}
-
-.sws-plan__title {
-  font-size: 1.125rem;
-}
-
-.sws-plan__blurb {
-  color: var(--slate);
-  font-size: 0.9375rem;
-  margin: var(--space-2) 0 var(--space-5);
-  flex: 1;
-}
-
-.sws-plan__price {
+.sws-side__price {
   font-family: var(--font-display);
   font-stretch: var(--font-display-stretch);
-  font-size: 2.25rem;
+  font-size: 1.375rem;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.25;
   color: var(--ink);
 }
 
-.sws-plan__soon {
-  font-size: 1.25rem;
-  color: var(--slate);
-}
-
-.sws-plan__gst {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--slate);
-  margin: var(--space-2) 0 0;
-}
-
-.sws-plan .btn {
-  margin-top: var(--space-5);
+.course-detail__sidebar .btn--block {
   min-height: 48px;
 }
 
-/* ---- FAQ ----------------------------------------------------------------- */
-
-.sws-faq__item {
-  border-bottom: 1px solid var(--line);
-  padding: var(--space-4) 0;
-}
-
-.sws-faq__item summary {
-  cursor: pointer;
+.sws-side__link {
+  display: block;
+  margin: 0 auto;
+  min-height: 40px;
+  padding: 0;
+  font: inherit;
+  font-size: 0.9375rem;
   font-weight: 600;
-  color: var(--ink);
-  list-style: none;
-  min-height: 28px;
-}
-
-.sws-faq__item summary::-webkit-details-marker {
-  display: none;
-}
-
-.sws-faq__item summary::before {
-  content: "+";
-  display: inline-block;
-  width: 1.25em;
   color: var(--accent);
-  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: 0;
+  cursor: pointer;
 }
 
-.sws-faq__item[open] summary::before {
-  content: "−";
-}
-
-.sws-faq__item summary:focus-visible {
+.sws-side__link:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-.sws-faq__item p {
+.course-detail__sidebar > .mono-label {
   margin-top: var(--space-2);
-  padding-left: 1.25em;
-  color: var(--slate);
 }
 
-/* ---- Notify -------------------------------------------------------------- */
+.sws-combo {
+  background: var(--white);
+  border-color: var(--accent);
+  padding: var(--space-6) var(--space-5);
+}
+
+.sws-combo__title {
+  font-size: 1.25rem;
+  margin: var(--space-3) 0 var(--space-2);
+}
+
+.sws-combo__line {
+  color: var(--slate);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.sws-combo__price {
+  font-family: var(--font-display);
+  font-stretch: var(--font-display-stretch);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: var(--space-4) 0;
+}
+
+.sws-combo .btn {
+  min-height: 48px;
+}
+
+.sws-combo__note {
+  font-size: 0.8125rem;
+  color: var(--slate);
+  margin-top: var(--space-3);
+}
+
+/* ---- Waitlist ---------------------------------------------------------- */
 
 .sws-notify__done h3 {
   font-size: 1.25rem;
@@ -400,34 +354,6 @@
 .sws-notify__done a {
   color: var(--accent);
   text-decoration: underline;
-}
-
-/* ---- Final CTA band ------------------------------------------------------ */
-
-.sws-final {
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.sws-final__inner {
-  display: grid;
-  gap: var(--space-6);
-  padding-top: var(--space-12);
-  padding-bottom: var(--space-12);
-  justify-items: start;
-}
-
-.sws-final__title {
-  color: var(--paper);
-  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
-  max-width: 24ch;
-}
-
-@media (min-width: 900px) {
-  .sws-final__inner {
-    grid-template-columns: 1fr auto;
-    align-items: center;
-  }
 }
 
 /* ---- Lesson player (/classroom/solidworks-simulation/:code) ------------- */
@@ -486,6 +412,11 @@
   justify-self: center;
 }
 
+.sws-player__gate a:not(.btn) {
+  color: var(--accent-on-ink);
+  text-decoration: underline;
+}
+
 .sws-player__files {
   margin-top: var(--space-8);
 }
@@ -542,9 +473,4 @@
 
 .sws-player__nav span {
   color: var(--slate);
-}
-
-.sws-player__gate a:not(.btn) {
-  color: var(--accent-on-ink);
-  text-decoration: underline;
 }

@@ -138,6 +138,12 @@
   padding: 0.25rem 0.55rem;
 }
 
+.course-card__new--muted {
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--line-strong);
+}
+
 .course-card__image {
   /* width/height attributes are only for layout hints; aspect-ratio sets the height. */
   height: auto;

@@ -5,7 +5,9 @@
 export const LEGACY_REDIRECTS: { from: string; to: string }[] = [
   { from: "/blog/Deep Holes", to: "/blog/deep-hole-drilling-design-guide" },
   { from: "/blog/Stress Concentration", to: "/blog/stress-concentration-factor" },
-  { from: "/courses/Solidworks Simulation for Begginner", to: "/courses/solidworks-simulation-for-beginners" },
+  { from: "/courses/Solidworks Simulation for Begginner", to: "/courses/solidworks-simulation" },
+  // The live SOLIDWORKS Simulation course became self-paced Level 1 / Level 2 (Nov 2026).
+  { from: "/courses/solidworks-simulation-for-beginners", to: "/courses/solidworks-simulation" },
   { from: "/downloads", to: "/resources" },
   // Delhi NCR pages, removed: classes are online only.
   { from: "/ansys-training-delhi-ncr", to: "/courses/ansys-workbench-foundation" },

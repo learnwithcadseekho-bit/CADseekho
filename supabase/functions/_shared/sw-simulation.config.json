@@ -9,8 +9,11 @@
     "regular": { "level1": 7999, "level2": 11999, "combo": 16999 }
   },
   "activePriceTier": "foundingBatch",
-  "freeModules": ["L1-M0", "L1-M1"],
+  "fallbackPriceTier": "launch",
+  "freeModules": ["L1-M0", "L1-M1", "L1-M2"],
   "level2Status": "coming-soon",
+  "level2Launch": null,
+  "accessPeriod": null,
   "courseSlugs": {
     "level1": "solidworks-simulation",
     "level2": "solidworks-simulation-level-2",

@@ -20,6 +20,8 @@ import createDOMPurify from "dompurify";
 
 export { SSR_DATA_ELEMENT_ID } from "@/lib/cache";
 export { LEGACY_REDIRECTS } from "@/content/legacyRedirects";
+import { LEGACY_REDIRECTS as REDIRECTS } from "@/content/legacyRedirects";
+const LEGACY_REDIRECT_SOURCES = new Set(REDIRECTS.map((r) => r.from.toLowerCase()));
 
 const MAX_PASSES = 8;
 
@@ -119,8 +121,9 @@ export async function getPrerenderRoutes(): Promise<{ routes: PrerenderRoute[]; 
     { path: "/about", source: "src/pages/About/AboutPage.tsx" },
     { path: "/contact", source: "src/pages/Contact/ContactPage.tsx" },
     { path: "/ansys-foundation", source: "src/pages/Launch/AnsysFoundationPage.tsx" },
-    // Also listed by the courses query once Level 1 is published; add() skips the repeat.
+    // Also listed by the courses query once published; add() skips the repeat.
     { path: "/courses/solidworks-simulation", source: "src/pages/SwSimulation/SwSimulationPage.tsx" },
+    { path: "/courses/solidworks-simulation-level-2", source: "src/pages/SwSimulation/SwSimulationLevel2Page.tsx" },
     // noindex pages: prerendered so they load fast; the sitemap leaves them out automatically.
     { path: "/thank-you", source: "src/pages/Launch/ThankYouPage.tsx" },
     { path: "/privacy-policy", source: "src/pages/Legal/PrivacyPolicyPage.tsx" },
@@ -164,6 +167,8 @@ export async function getPrerenderRoutes(): Promise<{ routes: PrerenderRoute[]; 
       }
       const path = `${prefix}${row.slug}`;
       if (routes.some((r) => r.path === path)) continue;
+      // Redirected at the host (content/legacyRedirects.ts): no page, no sitemap entry.
+      if (LEGACY_REDIRECT_SOURCES.has(path.toLowerCase())) continue;
       const listing = /^\/resources\/(software|topic)\//.test(path);
       routes.push({ path, lastmod: row.updated_at, thin: listing && thin(path) });
     }

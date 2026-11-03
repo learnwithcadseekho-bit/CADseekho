@@ -114,7 +114,7 @@ export default function LessonPage() {
     ) : (
       <>
         <p>This lesson is part of the paid course.</p>
-        <Link to={`${SW_SIM.path}#pricing`} className="btn btn--primary">
+        <Link to={SW_SIM.path} className="btn btn--primary">
           See pricing
         </Link>
       </>
@@ -132,7 +132,7 @@ export default function LessonPage() {
       play.code === "locked" ? (
         <>
           <p>{play.message}</p>
-          <Link to={`${SW_SIM.path}#pricing`} className="btn btn--primary">
+          <Link to={SW_SIM.path} className="btn btn--primary">
             See pricing
           </Link>
         </>
@@ -211,7 +211,7 @@ export default function LessonPage() {
             );
           })}
         </ol>
-        <Link to={`${SW_SIM.path}#syllabus`}>Full syllabus →</Link>
+        <Link to={`${SW_SIM.path}#modules`}>All modules →</Link>
       </nav>
     </div>
   );

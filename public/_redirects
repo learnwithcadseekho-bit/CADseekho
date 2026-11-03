@@ -1,7 +1,8 @@
 # Netlify. Keep in sync with src/content/legacyRedirects.ts (the build checks).
 /blog/Deep%20Holes                                 /blog/deep-hole-drilling-design-guide        301!
 /blog/Stress%20Concentration                       /blog/stress-concentration-factor            301!
-/courses/Solidworks%20Simulation%20for%20Begginner /courses/solidworks-simulation-for-beginners 301!
+/courses/Solidworks%20Simulation%20for%20Begginner /courses/solidworks-simulation 301!
+/courses/solidworks-simulation-for-beginners       /courses/solidworks-simulation 301!
 /downloads                                         /resources                                   301!
 /ansys-training-delhi-ncr /courses/ansys-workbench-foundation 301!
 /ansys-training-delhi /courses/ansys-workbench-foundation 301!

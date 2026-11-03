@@ -15,8 +15,14 @@ export interface SwSimConfig {
   gstNote: string;
   prices: Record<string, Partial<Record<SwSimProduct, number>> & { seats?: number }>;
   activePriceTier: string;
+  /** Used for a product the active tier has no price for (e.g. Level 2 at its launch price during the founding batch). */
+  fallbackPriceTier?: string;
   freeModules: string[];
   level2Status: string;
+  /** e.g. "January 2027"; null until decided. */
+  level2Launch?: string | null;
+  /** e.g. "12 months" or "Lifetime"; null until decided (the FAQ is hidden until then). */
+  accessPeriod?: string | null;
   courseSlugs: Record<SwSimProduct, string>;
 }
 
@@ -25,12 +31,27 @@ export function swSimProductForSlug(config: SwSimConfig, slug: string): SwSimPro
   return SW_SIM_PRODUCTS.find((p) => config.courseSlugs[p] === slug) ?? null;
 }
 
-/** Active-tier price in rupees (before GST), or null when the product has no price in this tier. */
+/** The price charged now (rupees, before GST) and the tier it comes from: the active tier, else the fallback tier. */
+export function swSimPriceTier(config: SwSimConfig, product: SwSimProduct): { price: number; tier: string } | null {
+  if (!config.prices[config.activePriceTier])
+    throw new Error(`sw-simulation config: activePriceTier "${config.activePriceTier}" has no prices`);
+  for (const tier of [config.activePriceTier, config.fallbackPriceTier]) {
+    const price = tier ? config.prices[tier]?.[product] : undefined;
+    if (typeof price === "number" && price > 0) return { price, tier: tier! };
+  }
+  return null;
+}
+
+/** Current price in rupees (before GST), or null when there's none. */
 export function swSimPrice(config: SwSimConfig, product: SwSimProduct): number | null {
-  const tier = config.prices[config.activePriceTier];
-  if (!tier) throw new Error(`sw-simulation config: activePriceTier "${config.activePriceTier}" has no prices`);
-  const price = tier[product];
-  return typeof price === "number" && price > 0 ? price : null;
+  return swSimPriceTier(config, product)?.price ?? null;
+}
+
+/** The "regular" price shown alongside the current one, if it's higher. */
+export function swSimRegularPrice(config: SwSimConfig, product: SwSimProduct): number | null {
+  const regular = config.prices.regular?.[product];
+  const now = swSimPrice(config, product);
+  return typeof regular === "number" && now !== null && regular > now ? regular : null;
 }
 
 /** Level 2 (and so the Combo, which includes it) is on sale only once it's out of "coming-soon". */

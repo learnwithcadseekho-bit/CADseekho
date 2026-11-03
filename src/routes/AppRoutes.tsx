@@ -32,6 +32,7 @@ const ResetPasswordPage = trackedLazy("src/pages/Login/ResetPasswordPage.tsx", (
 const DashboardPage = trackedLazy("src/pages/Dashboard/DashboardPage.tsx", () => import("@/pages/Dashboard/DashboardPage"));
 const LiveClassPage = trackedLazy("src/pages/Classroom/LiveClassPage.tsx", () => import("@/pages/Classroom/LiveClassPage"));
 const SwSimulationPage = trackedLazy("src/pages/SwSimulation/SwSimulationPage.tsx", () => import("@/pages/SwSimulation/SwSimulationPage"));
+const SwSimulationLevel2Page = trackedLazy("src/pages/SwSimulation/SwSimulationLevel2Page.tsx", () => import("@/pages/SwSimulation/SwSimulationLevel2Page"));
 const SwSimulationLessonPage = trackedLazy("src/pages/SwSimulation/LessonPage.tsx", () => import("@/pages/SwSimulation/LessonPage"));
 const AnsysFoundationPage = trackedLazy("src/pages/Launch/AnsysFoundationPage.tsx", () => import("@/pages/Launch/AnsysFoundationPage"));
 const ThankYouPage = trackedLazy("src/pages/Launch/ThankYouPage.tsx", () => import("@/pages/Launch/ThankYouPage"));
@@ -72,8 +73,9 @@ export function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/courses" element={<CoursesListingPage />} />
         <Route path="/courses/category/:categorySlug" element={<CourseCategoryPage />} />
-        {/* Before /courses/:slug — its own landing page (content/swSimulation.ts). */}
+        {/* Before /courses/:slug — their own pages (content/swSimulation.ts). */}
         <Route path="/courses/solidworks-simulation" element={<SwSimulationPage />} />
+        <Route path="/courses/solidworks-simulation-level-2" element={<SwSimulationLevel2Page />} />
         <Route path="/courses/:slug" element={<CourseDetailPage />} />
         <Route path="/downloads" element={<Navigate to="/resources" replace />} />
         <Route path="/resources" element={<ResourcesHubPage />} />

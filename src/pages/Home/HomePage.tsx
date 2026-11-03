@@ -4,6 +4,7 @@ import { FeaturedCoursesSection } from "./FeaturedCoursesSection";
 import { MethodSection } from "./MethodSection";
 import { WhySection } from "./WhySection";
 import { AnnouncementBar } from "./AnnouncementBar";
+import { SwSimPromoSection } from "./SwSimPromoSection";
 
 export default function HomePage() {
   return (
@@ -15,6 +16,7 @@ export default function HomePage() {
       />
       <AnnouncementBar />
       <HeroSection />
+      <SwSimPromoSection />
       <FeaturedCoursesSection />
       <MethodSection />
       <WhySection />

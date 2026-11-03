@@ -18,7 +18,8 @@ ErrorDocument 404 /404.html
   #    so http/www variants also take a single hop.
   RewriteRule ^blog/Deep\sHoles/?$ https://cadseekho.com/blog/deep-hole-drilling-design-guide [R=301,L,NC]
   RewriteRule ^blog/Stress\sConcentration/?$ https://cadseekho.com/blog/stress-concentration-factor [R=301,L,NC]
-  RewriteRule ^courses/Solidworks\sSimulation\sfor\sBegginner/?$ https://cadseekho.com/courses/solidworks-simulation-for-beginners [R=301,L,NC]
+  RewriteRule ^courses/Solidworks\sSimulation\sfor\sBegginner/?$ https://cadseekho.com/courses/solidworks-simulation [R=301,L,NC]
+  RewriteRule ^courses/solidworks-simulation-for-beginners/?$ https://cadseekho.com/courses/solidworks-simulation [R=301,L]
   RewriteRule ^downloads/?$ https://cadseekho.com/resources [R=301,L]
   RewriteRule ^ansys-training-(delhi-ncr|delhi|noida|gurgaon|ghaziabad)/?$ https://cadseekho.com/courses/ansys-workbench-foundation [R=301,L]
   RewriteRule ^courses/ansys-workbench-level-1/?$ https://cadseekho.com/courses/ansys-workbench-foundation [R=301,L]

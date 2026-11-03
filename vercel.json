@@ -6,7 +6,12 @@
     { "source": "/blog/Stress%20Concentration", "destination": "/blog/stress-concentration-factor", "statusCode": 301 },
     {
       "source": "/courses/Solidworks%20Simulation%20for%20Begginner",
-      "destination": "/courses/solidworks-simulation-for-beginners",
+      "destination": "/courses/solidworks-simulation",
+      "statusCode": 301
+    },
+    {
+      "source": "/courses/solidworks-simulation-for-beginners",
+      "destination": "/courses/solidworks-simulation",
       "statusCode": 301
     },
     { "source": "/downloads", "destination": "/resources", "statusCode": 301 },

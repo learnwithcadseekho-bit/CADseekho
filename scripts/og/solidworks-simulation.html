@@ -1,7 +1,8 @@
 <!doctype html>
-<!-- Source of public/og/solidworks-simulation.png (1200×630). Re-render:
-     "C:/Program Files/Google/Chrome/Application/chrome.exe" --headless=new --disable-gpu --hide-scrollbars \
-       --window-size=1200,630 --screenshot=public/og/solidworks-simulation.png scripts/og/solidworks-simulation.html -->
+<!-- Source of the 1200x630 OG images. Re-render with headless Chrome:
+     chrome --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=8000 --window-size=1200,630
+       --screenshot=public/og/solidworks-simulation.png file:///<repo>/scripts/og/solidworks-simulation.html
+     and for Level 2 the same with --screenshot=public/og/solidworks-simulation-level-2.png and the URL ending #level2 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -33,9 +34,9 @@
 <body>
   <div class="frame"></div>
   <div class="copy">
-    <span class="tag">Module 1 free</span>
-    <h1>SOLIDWORKS Simulation for Industry Professionals</h1>
-    <p>Hand calculation first, then FEA. Report a number you can defend.</p>
+    <span class="tag" id="tag">Modules 1–2 free</span>
+    <h1 id="title">SOLIDWORKS Simulation Level 1 — Foundation</h1>
+    <p id="line">Linear static analysis, every result checked by hand. Self-paced.</p>
   </div>
   <div class="art">
     <svg viewBox="0 0 360 170" width="360" height="170" aria-hidden="true">
@@ -56,5 +57,12 @@
     <div class="check"><span>HAND CALC<b>120 MPa</b></span><span>FEA<b>123 MPa</b></span><span class="ok">Δ<b>2.5% ✓</b></span></div>
   </div>
   <img class="logo" src="../../public/logo.svg" alt="">
+  <script>
+    if (location.hash === "#level2") {
+      document.getElementById("tag").textContent = "Coming soon";
+      document.getElementById("title").textContent = "SOLIDWORKS Simulation Level 2 — Professional";
+      document.getElementById("line").textContent = "Shells, frames, assemblies, bolted joints, buckling and optimization.";
+    }
+  </script>
 </body>
 </html>

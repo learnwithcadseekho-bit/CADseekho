@@ -1,5 +1,5 @@
 -- Seed: "SOLIDWORKS Simulation for Industry Professionals".
---   Level 1: Foundation   (published; M0 + M1 free and released, M2–M7 + capstone "Coming soon")
+--   Level 1: Foundation   (published; M0–M2 free, M0 + M1 released, M2–M7 + capstone "Coming soon")
 --   Level 2: Professional (unpublished, coming soon)
 --   Combo                 (unpublished bundle: buying it enrolls into Level 1 and Level 2)
 --
@@ -26,9 +26,9 @@ insert into public.courses (
 values
   (
     (select id from public.categories where slug = 'solidworks'),
-    'SOLIDWORKS Simulation — Level 1: Foundation',
+    'SOLIDWORKS Simulation Level 1 — Foundation',
     'solidworks-simulation',
-    'Linear static FEA of parts the industry way: hand calculation first, then SOLIDWORKS Simulation. Module 1 free.',
+    'Linear static analysis of parts, every result checked by hand. Self-paced, ~28 h. Modules 1–2 free.',
     '<p>For working design engineers who already model in SOLIDWORKS. Every problem is solved by hand, then in SOLIDWORKS Simulation, and compared — then reported on a one-page validation sheet.</p>',
     'intermediate',
     'SOLIDWORKS Simulation',
@@ -37,9 +37,9 @@ values
   ),
   (
     (select id from public.categories where slug = 'solidworks'),
-    'SOLIDWORKS Simulation — Level 2: Professional',
+    'SOLIDWORKS Simulation Level 2 — Professional',
     'solidworks-simulation-level-2',
-    'Shells, assemblies, contact, bolted joints, buckling, thermal and optimization in SOLIDWORKS Simulation.',
+    'Shells, frames, assemblies, bolted joints, thermal, buckling and optimization. Self-paced, ~35 h.',
     null,
     'advanced',
     'SOLIDWORKS Simulation',
@@ -48,7 +48,7 @@ values
   ),
   (
     (select id from public.categories where slug = 'solidworks'),
-    'SOLIDWORKS Simulation — Combo (Level 1 + Level 2)',
+    'SOLIDWORKS Simulation Level 1 + 2 (Combo)',
     'solidworks-simulation-combo',
     'Level 1: Foundation and Level 2: Professional together.',
     null,
@@ -72,34 +72,34 @@ insert into public.course_modules (course_id, code, order_number, title, hours, 
 select c.id, m.code, m.ord, m.title, m.hours, m.is_free, m.is_released
 from public.courses c
 cross join (values
-  ('L1-M0', 1, 'Mechanics refresher', 1.0, true, true),
+  ('L1-M0', 1, 'Mechanics refresher: stress, strain, Mohr''s circle, von Mises', 1.0, true, true),
   ('L1-M1', 2, 'How FEA works and your first static study', 3.5, true, true),
-  ('L1-M2', 3, 'Reading results: stress, displacement, strain', 3.5, false, false),
+  ('L1-M2', 3, 'Reading results: stress, displacement, strain', 3.5, true, false),
   ('L1-M3', 4, 'Materials, failure criteria and factor of safety', 3.5, false, false),
   ('L1-M4', 5, 'Axial, torsion, bending and beam shear', 3.5, false, false),
-  ('L1-M5', 6, 'Mesh, convergence, stress concentration, singularities', 4.0, false, false),
+  ('L1-M5', 6, 'Mesh, convergence, stress concentration and singularities', 4.0, false, false),
   ('L1-M6', 7, 'Realistic loads and fixtures: split lines, curved beams, reactions', 3.5, false, false),
   ('L1-M7', 8, 'Symmetry and 2D simplification', 2.5, false, false),
-  ('L1-CP', 9, 'Capstone: industrial bracket validation report', 3.0, false, false)
+  ('L1-CP', 9, 'Industrial bracket validation report', 3.0, false, false)
 ) as m(code, ord, title, hours, is_free, is_released)
 where c.slug = 'solidworks-simulation'
 on conflict (course_id, code) where code is not null do nothing;
 
-insert into public.course_modules (course_id, code, order_number, title, is_free, is_released)
-select c.id, m.code, m.ord, m.title, false, false
+insert into public.course_modules (course_id, code, order_number, title, hours, is_free, is_released)
+select c.id, m.code, m.ord, m.title, m.hours, false, false
 from public.courses c
 cross join (values
-  ('L2-M1', 1, 'Shells and sheet-metal parts'),
-  ('L2-M2', 2, 'Thick-walled and axisymmetric parts'),
-  ('L2-M3', 3, 'Beams, trusses and weldment frames'),
-  ('L2-M4', 4, 'Assemblies: contact and interference fits'),
-  ('L2-M5', 5, 'Bolted joints and connectors'),
-  ('L2-M6', 6, 'Complex structures, mixed mesh and design scenarios'),
-  ('L2-M7', 7, 'Thermal stress, indeterminate structures, strain energy'),
-  ('L2-M8', 8, 'Linear buckling'),
-  ('L2-M9', 9, 'Design studies and optimization'),
-  ('L2-CP', 10, 'Capstone: industrial assembly validation report')
-) as m(code, ord, title)
+  ('L2-M1', 1, 'Shells and sheet-metal parts', 3.5),
+  ('L2-M2', 2, 'Thick-walled and axisymmetric parts', 3.5),
+  ('L2-M3', 3, 'Beams, trusses and weldment frames', 3.5),
+  ('L2-M4', 4, 'Assemblies: contact and interference fits', 4.5),
+  ('L2-M5', 5, 'Bolted joints and connectors', 3.5),
+  ('L2-M6', 6, 'Complex structures, mixed mesh and design scenarios', 3.5),
+  ('L2-M7', 7, 'Thermal stress, indeterminate structures, strain energy', 2.5),
+  ('L2-M8', 8, 'Linear buckling', 3.0),
+  ('L2-M9', 9, 'Design studies and optimization', 3.5),
+  ('L2-CP', 10, 'Industrial assembly validation report', 4.0)
+) as m(code, ord, title, hours)
 where c.slug = 'solidworks-simulation-level-2'
 on conflict (course_id, code) where code is not null do nothing;
 

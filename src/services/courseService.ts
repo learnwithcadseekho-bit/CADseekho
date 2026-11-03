@@ -1,6 +1,11 @@
 import { supabase } from "@/lib/supabaseClient";
 import { cached } from "@/lib/cache";
 import type { CourseDetail, CourseWithCategory } from "@/types/course";
+import { RETIRED_SW_SIM_SLUG } from "@/content/swSimulation";
+
+// The retired live SOLIDWORKS Simulation course 301s to Level 1; keep its
+// (still published, for enrolled students) row out of the listings.
+const listable = (courses: CourseWithCategory[]) => courses.filter((c) => c.slug !== RETIRED_SW_SIM_SLUG);
 
 // Listings only need what a course card / fee summary shows. Keeping the
 // full description and syllabus out keeps these small — they're also
@@ -18,7 +23,7 @@ export async function getFeaturedCourses(): Promise<CourseWithCategory[]> {
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return (data ?? []) as unknown as CourseWithCategory[];
+    return listable((data ?? []) as unknown as CourseWithCategory[]);
   });
 }
 
@@ -31,7 +36,7 @@ export async function getPublishedCourses(): Promise<CourseWithCategory[]> {
       .order("title");
 
     if (error) throw error;
-    return (data ?? []) as unknown as CourseWithCategory[];
+    return listable((data ?? []) as unknown as CourseWithCategory[]);
   });
 }
 
@@ -45,7 +50,7 @@ export async function getCoursesByCategorySlug(categorySlug: string): Promise<Co
       .order("title");
 
     if (error) throw error;
-    return (data ?? []) as unknown as CourseWithCategory[];
+    return listable((data ?? []) as unknown as CourseWithCategory[]);
   });
 }
 

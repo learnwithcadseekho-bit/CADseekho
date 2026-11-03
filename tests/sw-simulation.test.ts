@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
 import { handlePlay, signBunnyEmbedUrl, type PlayDeps } from "../supabase/functions/lesson-play-url/play.ts";
 import { swSimCheckout, swSimPrice, type SwSimConfig } from "../supabase/functions/_shared/swSimulationPricing.ts";
-import { LEVEL1_MODULES, LEVEL2_MODULES, SW_SIM_CONFIG } from "../src/content/swSimulation.ts";
+import { LEVEL1_MODULES, LEVEL2_MODULES, SW_SIM_CONFIG, priceLine } from "../src/content/swSimulation.ts";
 
 // auth / storage / pg_net as Supabase provides them, minimally.
 const STUBS = `
@@ -163,14 +163,17 @@ test("free modules: any signed-in user; signed-out users: nothing", async () => 
 });
 
 test("paid modules: locked for free users, open to enrolled users once released", async () => {
-  // M2 isn't released yet: locked even for the enrolled user.
-  assert.equal(await canAccess(USERS.paid, "L1-M2"), false);
-  await db.query("update public.course_modules set is_released = true where code = 'L1-M2'");
+  // M3 isn't released yet: locked even for the enrolled user.
+  assert.equal(await canAccess(USERS.paid, "L1-M3"), false);
+  await db.query("update public.course_modules set is_released = true where code in ('L1-M2', 'L1-M3')");
   try {
-    assert.equal(await canAccess(USERS.free, "L1-M2"), false);
-    assert.equal(await canAccess(USERS.paid, "L1-M2"), true);
+    assert.equal(await canAccess(USERS.free, "L1-M3"), false);
+    assert.equal(await canAccess(USERS.paid, "L1-M3"), true);
+    // M2 is free: once released, any signed-in user may watch it.
+    assert.equal(await canAccess(USERS.free, "L1-M2"), true);
+    assert.equal(await canAccess(null, "L1-M2"), false);
   } finally {
-    await db.query("update public.course_modules set is_released = false where code = 'L1-M2'");
+    await db.query("update public.course_modules set is_released = false where code in ('L1-M2', 'L1-M3')");
   }
 });
 
@@ -244,7 +247,7 @@ test("users can no longer self-enroll by inserting status 'enrolled'", async () 
       await courseId("solidworks-simulation"),
     ]);
   });
-  assert.equal(await canAccess(USERS.free, "L1-M2"), false); // 'registered' isn't 'enrolled'
+  assert.equal(await canAccess(USERS.free, "L1-M3"), false); // 'registered' isn't 'enrolled'
 });
 
 test("paying for the Combo enrolls into Level 1 and Level 2", async () => {
@@ -337,4 +340,20 @@ test("checkout: closed while salesOpen is false, config prices once open", () =>
   const launch: SwSimConfig = { ...open, activePriceTier: "launch", level2Status: "available" };
   assert.equal(swSimPrice(launch, "level2"), 7999);
   assert.deepEqual(swSimCheckout(launch, "solidworks-simulation-level-2"), { ok: true, product: "level2", amountPaise: 799900 });
+});
+
+test("price lines: founding batch, Level 2 at its launch price, regular price alongside", () => {
+  assert.equal(priceLine("level1"), "₹3,999 founding batch (regular ₹7,999) + GST");
+  assert.equal(priceLine("level2"), "₹7,999 launch price (regular ₹11,999) + GST");
+  assert.equal(priceLine("combo"), "₹8,999 founding batch (regular ₹16,999) + GST");
+  // Level 2 has a price now but is still coming soon, so it can't be bought.
+  assert.equal(swSimPrice(SW_SIM_CONFIG, "level2"), 7999);
+  assert.ok(!swSimCheckout({ ...SW_SIM_CONFIG, salesOpen: true }, "solidworks-simulation-level-2")!.ok);
+});
+
+test("syllabus totals match the course pages: 28 h + 35 h, 17 modules", () => {
+  const hours = (ms: typeof LEVEL1_MODULES) => ms.reduce((a, m) => a + (m.hours ?? 0), 0);
+  assert.equal(hours(LEVEL1_MODULES), 28);
+  assert.equal(hours(LEVEL2_MODULES), 35);
+  assert.equal([...LEVEL1_MODULES, ...LEVEL2_MODULES].filter((m) => !m.code.endsWith("-CP")).length, 17);
 });

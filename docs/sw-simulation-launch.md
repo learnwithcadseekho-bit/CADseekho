@@ -1,7 +1,18 @@
 # SOLIDWORKS Simulation launch — runbook
 
-Landing page `/courses/solidworks-simulation`, free lessons at
+Pages: Level 1 `/courses/solidworks-simulation`, Level 2 `/courses/solidworks-simulation-level-2`
+(both from `src/pages/SwSimulation/SwSimCourse.tsx`), homepage feature
+`src/pages/Home/SwSimPromoSection.tsx`, three cards on `/courses`
+(`src/pages/Courses/SwSimCards.tsx`). Free lessons (Modules 0, 1, 2) at
 `/classroom/solidworks-simulation/<code>` (e.g. `M1.1`).
+
+The old live course `/courses/solidworks-simulation-for-beginners` now 301s to Level 1
+(`src/content/legacyRedirects.ts` + vercel.json / .htaccess / _redirects). Its database
+row is untouched, so anyone enrolled keeps their dashboard and classroom access; it's
+only hidden from listings and the sitemap.
+
+Still to fill in `sw-simulation.config.json`: `accessPeriod` (e.g. "12 months" — the
+"How long do I have access?" FAQ appears once set) and `level2Launch` (e.g. "February 2027").
 
 ## Single source of truth
 

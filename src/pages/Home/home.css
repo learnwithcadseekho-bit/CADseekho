@@ -580,3 +580,38 @@
   border: 0;
   cursor: pointer;
 }
+
+/* ---- SOLIDWORKS Simulation feature (SwSimPromoSection.tsx) -------------- */
+
+.sws-home {
+  border-bottom: 1px solid var(--line);
+  background: var(--white);
+}
+
+.sws-home__inner {
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-16);
+}
+
+.sws-home__title {
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+.sws-home__combo {
+  margin-top: var(--space-5);
+  font-size: 0.9375rem;
+  color: var(--slate);
+}
+
+.sws-home__combo a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* The founding price line is longer than a bare amount. */
+.sws-home__price {
+  font-size: 1.375rem;
+  line-height: 1.3;
+}

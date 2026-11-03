@@ -5,19 +5,15 @@ import { CourseCard } from "@/components/ui/CourseCard";
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 import { getPublishedCourses } from "@/services/courseService";
 import { useCachedData } from "@/hooks/useCachedData";
-import { SW_SIM_LISTING_CARD } from "@/content/swSimulation";
+import { SW_SIM_LISTED_ELSEWHERE } from "@/content/swSimulation";
+import { SwSimCards } from "./SwSimCards";
 import "@/styles/cards.css";
 
 export default function CoursesListingPage() {
   const { data, error: loadError } = useCachedData("courses:published", getPublishedCourses);
-  // The new SOLIDWORKS Simulation course goes first, from the content file
-  // until its row is published (and then the live row, moved to the front).
-  const courses = data
-    ? [
-        data.find((c) => c.slug === SW_SIM_LISTING_CARD.slug) ?? SW_SIM_LISTING_CARD,
-        ...data.filter((c) => c.slug !== SW_SIM_LISTING_CARD.slug),
-      ]
-    : null;
+  // SOLIDWORKS Simulation Level 1 / Level 2 / Combo come first as their own
+  // cards (SwSimCards), so their database rows are left out here.
+  const courses = data ? data.filter((c) => !SW_SIM_LISTED_ELSEWHERE.includes(c.slug)) : null;
   const error = Boolean(loadError);
   const { categories } = useActiveCategories(true);
 
@@ -52,10 +48,9 @@ export default function CoursesListingPage() {
           Loading courses…
         </p>
       )}
-      {!error && courses?.length === 0 && <p className="section__status">No courses are published yet.</p>}
-
-      {!error && courses && courses.length > 0 && (
+      {!error && courses && (
         <div className="course-grid">
+          <SwSimCards />
           {courses.map((course, i) => (
             <CourseCard key={course.id} course={course} index={i} />
           ))}
