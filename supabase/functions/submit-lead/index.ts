@@ -73,6 +73,7 @@ Deno.serve(async (req) => {
       env: {
         sheetWebhookUrl: Deno.env.get("GOOGLE_SHEET_WEBHOOK_URL"),
         sheetSecret: Deno.env.get("SHEET_SECRET"),
+        sheetNotifySync: Deno.env.get("SHEET_NOTIFY_SYNC") === "1",
         resendApiKey: Deno.env.get("RESEND_API_KEY"),
         adminEmail: Deno.env.get("ADMIN_NOTIFICATION_EMAIL") ?? "info@cadseekho.com",
         telegramBotToken: Deno.env.get("TELEGRAM_BOT_TOKEN"),

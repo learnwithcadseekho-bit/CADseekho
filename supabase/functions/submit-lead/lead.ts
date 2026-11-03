@@ -48,6 +48,13 @@ export type SaveResult = { result: "created" | "updated"; id: string } | { resul
 export interface LeadEnv {
   sheetWebhookUrl?: string;
   sheetSecret?: string;
+  /**
+   * Waitlist (sw-sim-notify) leads go to the Sheet only once the Apps Script
+   * matches rows by phone + source (scripts/google-sheet-webhook.gs) — an
+   * older script would overwrite a demo booking with the same phone.
+   * Set SHEET_NOTIFY_SYNC=1 after publishing the new script version.
+   */
+  sheetNotifySync?: boolean;
   resendApiKey?: string;
   adminEmail: string;
   telegramBotToken?: string;
@@ -275,6 +282,7 @@ export function sheetPayload(lead: SavedLead, secret: string) {
 export async function syncToSheet(lead: SavedLead, deps: LeadDeps): Promise<"sent" | "skipped" | "failed"> {
   const { sheetWebhookUrl, sheetSecret } = deps.env;
   if (!sheetWebhookUrl || !sheetSecret) return "skipped";
+  if (lead.source === SW_SIM_NOTIFY && !deps.env.sheetNotifySync) return "skipped";
   const body = JSON.stringify(sheetPayload(lead, sheetSecret));
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {

@@ -181,7 +181,7 @@ export interface SwSimPage {
 
 // Shown only once the config says how long access lasts.
 const accessFaq = SW_SIM_CONFIG.accessPeriod
-  ? [{ question: "How long do I have access?", answer: `${SW_SIM_CONFIG.accessPeriod}.` }]
+  ? [{ question: "How long do I have access?", answer: `You get ${SW_SIM_CONFIG.accessPeriod} of access to every lesson, part file and problem.` }]
   : [];
 const certificateFaq = {
   question: "Will I get a certificate?",

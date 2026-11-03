@@ -12,8 +12,8 @@
   "fallbackPriceTier": "launch",
   "freeModules": ["L1-M0", "L1-M1", "L1-M2"],
   "level2Status": "coming-soon",
-  "level2Launch": null,
-  "accessPeriod": null,
+  "level2Launch": "15 December 2026",
+  "accessPeriod": "2 years",
   "courseSlugs": {
     "level1": "solidworks-simulation",
     "level2": "solidworks-simulation-level-2",

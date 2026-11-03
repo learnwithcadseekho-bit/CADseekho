@@ -283,8 +283,16 @@ const notify = (over: Record<string, unknown> = {}) => ({
   ...over,
 });
 
-test("notify form: saved as its own source with interest, no role, not a demo booking", async () => {
+test("notify form: not sent to the Sheet until SHEET_NOTIFY_SYNC is on (old script would overwrite demo rows)", async () => {
   const res = await handleLead(notify(), meta, deps());
+  assert.equal(res.status, 200);
+  await Promise.all(background);
+  assert.equal(sheetCalls.length, 0);
+  assert.equal(await leadCount(), 1);
+});
+
+test("notify form: saved as its own source with interest, no role, not a demo booking", async () => {
+  const res = await handleLead(notify(), meta, deps({ env: { ...deps().env, sheetNotifySync: true } }));
   assert.equal(res.status, 200);
   const { rows } = await db.query<Record<string, unknown>>("select * from public.leads");
   assert.equal(rows.length, 1);

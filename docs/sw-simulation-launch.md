@@ -11,8 +11,8 @@ The old live course `/courses/solidworks-simulation-for-beginners` now 301s to L
 row is untouched, so anyone enrolled keeps their dashboard and classroom access; it's
 only hidden from listings and the sitemap.
 
-Still to fill in `sw-simulation.config.json`: `accessPeriod` (e.g. "12 months" — the
-"How long do I have access?" FAQ appears once set) and `level2Launch` (e.g. "February 2027").
+Access period (`accessPeriod`, 2 years) and Level 2 date (`level2Launch`, 15 December 2026)
+are in `sw-simulation.config.json`.
 
 ## Single source of truth
 
@@ -40,8 +40,9 @@ Changing a price or opening sales = edit the config JSON, then **redeploy the si
    npx supabase functions deploy create-razorpay-order
    ```
 3. Google Sheet: paste the updated `scripts/google-sheet-webhook.gs` into Apps Script and
-   publish a **new version** (otherwise a waitlist signup can overwrite a demo booking row
-   with the same phone).
+   publish a **new version**, then `npx supabase secrets set SHEET_NOTIFY_SYNC=1`. Until then
+   waitlist leads are saved and emailed but not sent to the Sheet (the old script would
+   overwrite a demo booking row with the same phone).
 4. Per lesson: Admin → Courses → "SOLIDWORKS Simulation — Level 1" → **Lessons & videos** →
    paste the Bunny video ID (or embed URL) → Save → tick Published.
 5. Downloads: same panel → Downloads → upload `L1M1_Start_Files.zip`, `L1_M1_Slides.pdf`,
