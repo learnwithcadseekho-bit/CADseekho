@@ -1,6 +1,10 @@
-// Creates a Razorpay order for a course. The amount is always read from
-// courses.price here on the server — the client sends only the course id,
-// so the price can't be tampered with in the browser.
+// Creates a Razorpay order for a course. The amount is always worked out
+// here on the server — the client sends only the course (id or slug), so the
+// price can't be tampered with in the browser:
+//   * SOLIDWORKS Simulation courses (Level 1 / Level 2 / Combo): price and
+//     salesOpen from _shared/sw-simulation.config.json — while sales are
+//     closed no order can be created, whatever the client sends.
+//   * every other course: courses.price.
 //
 // Deploy: supabase functions deploy create-razorpay-order
 // Secrets:
@@ -8,15 +12,21 @@
 //   supabase secrets set RAZORPAY_KEY_SECRET=<key secret>
 
 import { corsHeaders, getCallerId, json, rest } from "../_shared/razorpay.ts";
+import swSimConfig from "../_shared/sw-simulation.config.json" with { type: "json" };
+import { swSimCheckout, type SwSimConfig } from "../_shared/swSimulationPricing.ts";
 
 interface CourseRow {
   id: string;
+  slug: string;
   title: string;
   price: number | null;
+  is_published: boolean;
   seat_capacity: number | null;
   registration_count: number;
   manual_enrolled_count: number | null;
 }
+
+const COURSE_COLUMNS = "id,slug,title,price,is_published,seat_capacity,registration_count,manual_enrolled_count";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -26,13 +36,16 @@ Deno.serve(async (req) => {
   const userId = await getCallerId(req);
   if (!userId) return json({ error: "Please sign in to enroll." }, 401);
 
-  let courseId: string;
+  let courseId: unknown;
+  let courseSlug: unknown;
   try {
-    ({ courseId } = await req.json());
+    ({ courseId, courseSlug } = await req.json());
   } catch {
     return json({ error: "Invalid request." }, 400);
   }
-  if (typeof courseId !== "string" || !courseId) return json({ error: "Invalid request." }, 400);
+  const byId = typeof courseId === "string" && courseId !== "";
+  const bySlug = typeof courseSlug === "string" && courseSlug !== "";
+  if (!byId && !bySlug) return json({ error: "Invalid request." }, 400);
 
   const keyId = Deno.env.get("RAZORPAY_KEY_ID");
   const keySecret = Deno.env.get("RAZORPAY_KEY_SECRET");
@@ -41,22 +54,20 @@ Deno.serve(async (req) => {
     return json({ error: "Payments are temporarily unavailable." }, 500);
   }
 
-  const [courseRes, regRes] = await Promise.all([
-    rest(
-      `courses?id=eq.${encodeURIComponent(courseId)}&is_published=eq.true` +
-        "&select=id,title,price,seat_capacity,registration_count,manual_enrolled_count"
-    ),
-    rest(
-      `course_registrations?course_id=eq.${encodeURIComponent(courseId)}` +
-        `&user_id=eq.${userId}&select=status`
-    ),
-  ]);
+  const filter = byId ? `id=eq.${encodeURIComponent(courseId as string)}` : `slug=eq.${encodeURIComponent(courseSlug as string)}`;
+  const courseRes = await rest(`courses?${filter}&select=${COURSE_COLUMNS}`);
   const [course] = (await courseRes.json()) as CourseRow[];
-  const [registration] = (await regRes.json()) as { status: string }[];
+  if (!course) return json({ error: "This course isn't available for online payment." }, 400);
 
-  if (!course || course.price == null || course.price <= 0) {
+  // Config-managed courses may be sold while unpublished (Level 2 pre-order, the Combo bundle).
+  const sw = swSimCheckout(swSimConfig as SwSimConfig, course.slug);
+  if (sw && !sw.ok) return json({ error: sw.error }, 400);
+  if (!sw && (!course.is_published || course.price == null || course.price <= 0)) {
     return json({ error: "This course isn't available for online payment." }, 400);
   }
+
+  const regRes = await rest(`course_registrations?course_id=eq.${course.id}&user_id=eq.${userId}&select=status`);
+  const [registration] = (await regRes.json()) as { status: string }[];
   if (registration?.status === "enrolled") {
     return json({ error: "You're already enrolled in this course." }, 409);
   }
@@ -69,7 +80,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  const amount = Math.round(course.price * 100);
+  const amount = sw ? sw.amountPaise : Math.round(course.price! * 100);
   // Razorpay's minimum order is ₹1 (100 paise).
   if (amount < 100) return json({ error: "This course isn't available for online payment." }, 400);
 

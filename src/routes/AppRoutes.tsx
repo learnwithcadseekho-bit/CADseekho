@@ -31,6 +31,8 @@ const ForgotPasswordPage = trackedLazy("src/pages/Login/ForgotPasswordPage.tsx",
 const ResetPasswordPage = trackedLazy("src/pages/Login/ResetPasswordPage.tsx", () => import("@/pages/Login/ResetPasswordPage"));
 const DashboardPage = trackedLazy("src/pages/Dashboard/DashboardPage.tsx", () => import("@/pages/Dashboard/DashboardPage"));
 const LiveClassPage = trackedLazy("src/pages/Classroom/LiveClassPage.tsx", () => import("@/pages/Classroom/LiveClassPage"));
+const SwSimulationPage = trackedLazy("src/pages/SwSimulation/SwSimulationPage.tsx", () => import("@/pages/SwSimulation/SwSimulationPage"));
+const SwSimulationLessonPage = trackedLazy("src/pages/SwSimulation/LessonPage.tsx", () => import("@/pages/SwSimulation/LessonPage"));
 const AnsysFoundationPage = trackedLazy("src/pages/Launch/AnsysFoundationPage.tsx", () => import("@/pages/Launch/AnsysFoundationPage"));
 const ThankYouPage = trackedLazy("src/pages/Launch/ThankYouPage.tsx", () => import("@/pages/Launch/ThankYouPage"));
 const PrivacyPolicyPage = trackedLazy("src/pages/Legal/PrivacyPolicyPage.tsx", () => import("@/pages/Legal/PrivacyPolicyPage"));
@@ -70,6 +72,8 @@ export function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/courses" element={<CoursesListingPage />} />
         <Route path="/courses/category/:categorySlug" element={<CourseCategoryPage />} />
+        {/* Before /courses/:slug — its own landing page (content/swSimulation.ts). */}
+        <Route path="/courses/solidworks-simulation" element={<SwSimulationPage />} />
         <Route path="/courses/:slug" element={<CourseDetailPage />} />
         <Route path="/downloads" element={<Navigate to="/resources" replace />} />
         <Route path="/resources" element={<ResourcesHubPage />} />
@@ -94,6 +98,8 @@ export function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        {/* Recorded lessons: open route — the page itself shows the sign-up prompt to signed-out visitors. */}
+        <Route path="/classroom/solidworks-simulation/:code" element={<SwSimulationLessonPage />} />
         <Route
           path="/classroom/:slug"
           element={

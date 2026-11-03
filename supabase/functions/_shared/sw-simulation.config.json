@@ -1,0 +1,19 @@
+{
+  "slug": "solidworks-simulation",
+  "salesOpen": false,
+  "currency": "INR",
+  "gstNote": "Prices exclude 18% GST",
+  "prices": {
+    "foundingBatch": { "level1": 3999, "combo": 8999, "seats": 50 },
+    "launch": { "level1": 4999, "level2": 7999, "combo": 10999 },
+    "regular": { "level1": 7999, "level2": 11999, "combo": 16999 }
+  },
+  "activePriceTier": "foundingBatch",
+  "freeModules": ["L1-M0", "L1-M1"],
+  "level2Status": "coming-soon",
+  "courseSlugs": {
+    "level1": "solidworks-simulation",
+    "level2": "solidworks-simulation-level-2",
+    "combo": "solidworks-simulation-combo"
+  }
+}

@@ -39,6 +39,7 @@ var HEADERS = [
   'Source', 'UTM campaign', 'UTM content', 'Demo booked', 'Attended', 'Paid', 'Notes', 'Lead ID',
 ];
 var PHONE_COL = 3; // 1-based column of Phone
+var SOURCE_COL = 9; // 1-based column of Source
 
 function doPost(e) {
   try {
@@ -64,13 +65,15 @@ function doPost(e) {
         lead.createdAt ? new Date(lead.createdAt) : new Date(), 'Asia/Kolkata', 'dd MMM yyyy, HH:mm'
       );
       var row = [
-        timestamp, lead.name, lead.phone, lead.email, lead.role, lead.org, lead.city, lead.cad,
+        // Demo bookings have a role; SOLIDWORKS Simulation waitlist leads an interest instead.
+        timestamp, lead.name, lead.phone, lead.email, lead.role || lead.interest || '', lead.org, lead.city, lead.cad,
         lead.source, lead.utmCampaign, lead.utmContent,
         lead.demoBooked ? 'Yes' : 'No', lead.attended ? 'Yes' : 'No', lead.paid ? 'Yes' : 'No', lead.notes || '',
         lead.id,
       ];
 
-      var existing = findRowByPhone(sheet, lead.phone);
+      // Same phone + same form → update; a waitlist signup never overwrites a demo booking.
+      var existing = findRowByPhone(sheet, lead.phone, lead.source);
       if (existing) {
         // Update the details, keep the Attended / Paid / Notes columns as they are.
         sheet.getRange(existing, 1, 1, 12).setValues([row.slice(0, 12)]);
@@ -87,12 +90,13 @@ function doPost(e) {
   }
 }
 
-function findRowByPhone(sheet, phone) {
+function findRowByPhone(sheet, phone, source) {
   var last = sheet.getLastRow();
   if (last < 2) return 0;
-  var phones = sheet.getRange(2, PHONE_COL, last - 1, 1).getValues();
-  for (var i = phones.length - 1; i >= 0; i--) {
-    if (String(phones[i][0]) === phone) return i + 2;
+  var rows = sheet.getRange(2, PHONE_COL, last - 1, SOURCE_COL - PHONE_COL + 1).getValues();
+  for (var i = rows.length - 1; i >= 0; i--) {
+    var rowSource = String(rows[i][SOURCE_COL - PHONE_COL] || 'website');
+    if (String(rows[i][0]) === phone && rowSource === (source || 'website')) return i + 2;
   }
   return 0;
 }

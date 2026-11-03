@@ -516,3 +516,67 @@
   border-color: var(--accent);
   color: var(--accent);
 }
+
+/* ---- Announcement bar (AnnouncementBar.tsx) ------------------------------ */
+
+.announcement {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.announcement__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 48px;
+}
+
+.announcement__link {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  color: var(--paper);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.announcement__link:hover span:last-child,
+.announcement__link:focus-visible span:last-child {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.announcement__link:focus-visible,
+.announcement__close:focus-visible {
+  outline: 2px solid var(--accent-on-ink);
+  outline-offset: 2px;
+}
+
+.announcement__tag {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 0.2rem 0.5rem;
+}
+
+.announcement__close {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--paper);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}

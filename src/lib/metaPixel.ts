@@ -91,3 +91,10 @@ export function setPixelUserData(data: { em?: string; ph?: string }) {
   loadPixel();
   window.fbq!("init", META_PIXEL_ID, clean);
 }
+
+/** fbq('trackCustom', …) — for events that aren't one of Meta's standard ones. */
+export function trackPixelCustom(event: string, params?: Record<string, unknown>) {
+  if (!enabled()) return;
+  loadPixel();
+  window.fbq!("trackCustom", event, params ?? {});
+}

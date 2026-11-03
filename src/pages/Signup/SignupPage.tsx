@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { SelectField } from "@/components/ui/SelectField";
@@ -8,7 +8,8 @@ import { FormMessage } from "@/components/ui/FormMessage";
 import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
 import { signUp } from "@/services/authService";
-import { trackLead } from "@/lib/track";
+import { trackCustom, trackLead } from "@/lib/track";
+import { SIGNUP_INTENT, SIGNUP_INTENT_KEY } from "@/content/swSimulation";
 import {
   EXPERIENCE_OPTIONS,
   INTERESTED_COURSE_OPTIONS,
@@ -44,6 +45,10 @@ const initialState: FormState = {
 
 export default function SignupPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  // Where to go after signing up, e.g. the free lesson that sent them here (same shape LoginPage reads).
+  const fromLocation = (location.state as { from?: { pathname?: string; search?: string } } | null)?.from;
+  const next = fromLocation?.pathname ? fromLocation.pathname + (fromLocation.search ?? "") : "/dashboard";
   const [form, setForm] = useState<FormState>(initialState);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -94,9 +99,10 @@ export default function SignupPage() {
         turnstileToken
       );
       trackLead({ name: "Signup", method: "signup" });
+      trackSwSimSignup();
 
       if (result.session) {
-        navigate("/dashboard", { replace: true });
+        navigate(next, { replace: true });
       } else {
         // Email confirmation is required before a session is issued.
         setCheckEmail(true);
@@ -230,9 +236,20 @@ export default function SignupPage() {
         </form>
 
         <p className="auth-card__footer">
-          Already have an account? <Link to="/login">Sign in</Link>
+          Already have an account? <Link to="/login" state={location.state}>Sign in</Link>
         </p>
       </div>
     </div>
   );
+}
+
+/** Free signup that started on the SOLIDWORKS Simulation page or a free lesson. */
+function trackSwSimSignup() {
+  try {
+    if (sessionStorage.getItem(SIGNUP_INTENT_KEY) !== SIGNUP_INTENT) return;
+    sessionStorage.removeItem(SIGNUP_INTENT_KEY);
+  } catch {
+    return;
+  }
+  trackCustom("sw_sim_free_signup");
 }

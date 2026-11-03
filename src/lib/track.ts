@@ -7,7 +7,7 @@
 // shell (login, dashboard, admin, classroom) has neither, and a visitor who
 // starts there gets them loaded here when they reach a public page.
 
-import { isPixelPath, pixelLoaded, setPixelUserData, trackPixel } from "@/lib/metaPixel";
+import { isPixelPath, pixelLoaded, setPixelUserData, trackPixel, trackPixelCustom } from "@/lib/metaPixel";
 
 // Shape-checked so a placeholder value never loads anything. Same checks as scripts/prerender.mjs.
 const env = (v: string | undefined, re: RegExp) => ((v ?? "").trim().match(re) ? (v ?? "").trim() : "");
@@ -196,4 +196,15 @@ export function trackPurchase(p: { transactionId: string; value: number; name: s
       items: [{ item_id: p.id, item_name: p.name, price: p.value, quantity: 1 }],
     });
   adsConversion(ADS_PURCHASE_LABEL, { value: p.value, currency, transaction_id: p.transactionId });
+}
+
+/**
+ * A named custom event (e.g. "sw_sim_notify_submit") to GA4 and, as a
+ * custom event, to Meta. Like every event here it's skipped on the
+ * tracking-free paths (login, dashboard, admin, classroom).
+ */
+export function trackCustom(name: string, params: Record<string, string | number | boolean> = {}) {
+  if (!active()) return;
+  trackPixelCustom(name, params);
+  if (GA4_ID) gtag("event", name, { send_to: GA4_ID, ...params });
 }

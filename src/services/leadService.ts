@@ -53,3 +53,27 @@ export function takePendingLead(): PendingLead | null {
     return null;
   }
 }
+
+// SOLIDWORKS Simulation "Notify me" → the same submit-lead Edge Function, as form "sw-sim-notify".
+
+export interface NotifyLeadInput {
+  name: string;
+  email: string;
+  phone: string;
+  org: string;
+  interest: "level1" | "level2" | "combo" | "team" | "";
+  consent: boolean;
+  /** Honeypot — always "" from a real person. */
+  website: string;
+  turnstileToken: string;
+}
+
+export async function submitNotifyLead(input: NotifyLeadInput): Promise<{ leadId: string; duplicate: boolean }> {
+  const { landing_page, ...utm } = getAttribution();
+  return invokeFunction<{ leadId: string; duplicate: boolean }>("submit-lead", {
+    ...input,
+    form: "sw-sim-notify",
+    utm,
+    page: landing_page ? `${window.location.pathname} (landed on ${landing_page})` : window.location.pathname,
+  });
+}

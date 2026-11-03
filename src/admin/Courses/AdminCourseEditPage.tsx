@@ -8,6 +8,7 @@ import { FormMessage } from "@/components/ui/FormMessage";
 import { FileUploadField } from "@/admin/components/FileUploadField";
 import { RichTextEditor } from "@/admin/components/RichTextEditor";
 import { CourseModulesManager } from "./CourseModulesManager";
+import { CourseLessonsManager } from "./CourseLessonsManager";
 import { CourseSkillsManager } from "./CourseSkillsManager";
 import { CourseFaqsManager } from "./CourseFaqsManager";
 import { CourseTestimonialsManager } from "./CourseTestimonialsManager";
@@ -317,6 +318,7 @@ export default function AdminCourseEditPage() {
         <>
           <CourseLiveClassManager courseId={id} isLive={form.format === "live"} />
           <CourseModulesManager courseId={id} />
+          <CourseLessonsManager courseId={id} />
           <CourseSkillsManager courseId={id} />
           <CourseFaqsManager courseId={id} />
           <CourseTestimonialsManager courseId={id} />

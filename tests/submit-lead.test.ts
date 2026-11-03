@@ -22,7 +22,10 @@ const STUBS = `
   create function public.is_admin() returns boolean language sql as 'select true';
   create function public.set_updated_at() returns trigger language plpgsql as 'begin new.updated_at = now(); return new; end';
 `;
-const MIGRATION = readFileSync(new URL("../supabase/migrations/20261012090000_leads.sql", import.meta.url), "utf-8");
+// The leads table, then the notify-form changes (role optional, interest, per-source dedupe).
+const MIGRATION = ["20261012090000_leads.sql", "20261103090100_leads_course_notify.sql"]
+  .map((f) => readFileSync(new URL(`../supabase/migrations/${f}`, import.meta.url), "utf-8"))
+  .join("\n");
 
 let db: PGlite;
 let sheetCalls: { url: string; init: RequestInit }[];
@@ -214,7 +217,7 @@ test("Sheet webhook receives the expected payload and secret", async () => {
   const payload = JSON.parse(String(call.init.body));
   assert.equal(payload.secret, "s3cret");
   assert.deepEqual(Object.keys(payload.lead).sort(), [
-    "attended", "cad", "city", "createdAt", "demoBooked", "duplicate", "email", "id", "name", "notes",
+    "attended", "cad", "city", "createdAt", "demoBooked", "duplicate", "email", "id", "interest", "name", "notes",
     "org", "paid", "phone", "role", "source", "utmCampaign", "utmContent", "utmSource",
   ]);
   assert.equal(payload.lead.phone, "+919876543210");
@@ -260,5 +263,71 @@ test("a paid Razorpay order marks the buyer's lead paid (by phone or email)", as
   assert.deepEqual(rows, [
     { phone: "+919123456780", paid: false, status: "new" },
     { phone: "+919876543210", paid: true, status: "paid" },
+  ]);
+});
+
+// ---------------------------------------------------------------------------
+// SOLIDWORKS Simulation "Notify me" form (form: "sw-sim-notify")
+
+const notify = (over: Record<string, unknown> = {}) => ({
+  form: "sw-sim-notify",
+  name: "Ravi Iyer",
+  email: "Ravi@Fixtures.co.in",
+  phone: "98765 43210",
+  org: "Precision Fixtures Pvt Ltd",
+  interest: "combo",
+  consent: true,
+  website: "",
+  turnstileToken: "ok-token",
+  page: "/courses/solidworks-simulation",
+  ...over,
+});
+
+test("notify form: saved as its own source with interest, no role, not a demo booking", async () => {
+  const res = await handleLead(notify(), meta, deps());
+  assert.equal(res.status, 200);
+  const { rows } = await db.query<Record<string, unknown>>("select * from public.leads");
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].source, "sw-sim-notify");
+  assert.equal(rows[0].interest, "combo");
+  assert.equal(rows[0].role, null);
+  assert.equal(rows[0].demo_booked, false);
+  assert.equal(rows[0].email, "ravi@fixtures.co.in");
+  assert.equal(rows[0].org, "Precision Fixtures Pvt Ltd");
+  await Promise.all(background);
+  const sheet = JSON.parse(String(sheetCalls[0].init.body)).lead;
+  assert.equal(sheet.interest, "Combo (Level 1 + 2)");
+  assert.equal(sheet.demoBooked, false);
+});
+
+test("notify form: email, WhatsApp, interest and consent are required; Turnstile still checked", async () => {
+  for (const [over, field] of [
+    [{ email: "" }, "email"],
+    [{ phone: "123" }, "phone"],
+    [{ interest: "" }, "interest"],
+    [{ interest: "level3" }, "interest"],
+    [{ consent: false }, "consent"],
+    [{ turnstileToken: "bad" }, "turnstile"],
+  ] as const) {
+    const res = await handleLead(notify(over), meta, deps());
+    assert.equal(res.status, 400, field);
+    assert.equal("field" in res.body && res.body.field, field);
+  }
+  assert.equal(await leadCount(), 0);
+});
+
+test("notify form and demo booking from the same phone are two leads; a repeat notify updates", async () => {
+  await handleLead(valid(), meta, deps());
+  await handleLead(notify(), meta, deps());
+  assert.equal(await leadCount(), 2);
+  const again = await handleLead(notify({ interest: "team" }), meta, deps());
+  assert.ok("ok" in again.body && again.body.duplicate);
+  assert.equal(await leadCount(), 2);
+  const { rows } = await db.query<{ source: string; interest: string | null; demo_booked: boolean }>(
+    "select source, interest, demo_booked from public.leads order by source"
+  );
+  assert.deepEqual(rows, [
+    { source: "sw-sim-notify", interest: "team", demo_booked: false },
+    { source: "website", interest: null, demo_booked: true },
   ]);
 });

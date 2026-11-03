@@ -8,7 +8,15 @@ import {
   type LeadPatch,
 } from "@/services/admin/adminLeadService";
 
-const ROLE_LABEL: Record<Lead["role"], string> = { student: "Student", working_engineer: "Working engineer", other: "Other" };
+const ROLE_LABEL: Record<NonNullable<Lead["role"]>, string> = { student: "Student", working_engineer: "Working engineer", other: "Other" };
+const INTEREST_LABEL: Record<NonNullable<Lead["interest"]>, string> = {
+  level1: "SW Sim Level 1",
+  level2: "SW Sim Level 2",
+  combo: "SW Sim Combo",
+  team: "SW Sim Team",
+};
+/** Role for demo bookings, interest for the SOLIDWORKS Simulation waitlist. */
+const leadKind = (l: Lead) => (l.role ? ROLE_LABEL[l.role] : l.interest ? INTEREST_LABEL[l.interest] : "—");
 const STATUS_LABEL: Record<Lead["status"], string> = {
   new: "New",
   contacted: "Contacted",
@@ -36,7 +44,8 @@ function toCsv(leads: Lead[]): string {
     ["Name", (l) => l.name],
     ["Phone", (l) => l.phone],
     ["Email", (l) => l.email],
-    ["Role", (l) => ROLE_LABEL[l.role]],
+    ["Role", (l) => (l.role ? ROLE_LABEL[l.role] : "")],
+    ["Interest", (l) => (l.interest ? INTEREST_LABEL[l.interest] : "")],
     ["Org", (l) => l.org],
     ["City", (l) => l.city],
     ["CAD", (l) => l.cad.join(", ")],
@@ -215,7 +224,7 @@ export default function AdminLeadsPage() {
                       )}
                     </td>
                     <td>
-                      {ROLE_LABEL[l.role]}
+                      {leadKind(l)}
                       {where && (
                         <>
                           <br />

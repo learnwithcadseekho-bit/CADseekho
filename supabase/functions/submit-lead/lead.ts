@@ -1,4 +1,7 @@
-// Demo-booking lead handling, kept free of Deno APIs so the same code runs in
+// Lead handling for the site's lead forms — the ANSYS demo booking
+// (/ansys-foundation, source "website") and the SOLIDWORKS Simulation
+// "Notify me" form (/courses/solidworks-simulation, form/source "sw-sim-notify").
+// Kept free of Deno APIs so the same code runs in
 // the Edge Function (index.ts) and in the Node tests (tests/submit-lead.test.ts).
 // Everything with a side effect comes in through `LeadDeps`.
 
@@ -7,13 +10,27 @@ export const ROLES = { student: "Student", working_engineer: "Working engineer",
 /** Stored with every lead as the record of what was agreed to. Must match the form's checkbox label. */
 export const CONSENT_TEXT = "I agree to be contacted on WhatsApp/phone about this course";
 
+/** The SOLIDWORKS Simulation notify-me form. */
+export const SW_SIM_NOTIFY = "sw-sim-notify";
+export const INTERESTS = {
+  level1: "Level 1: Foundation",
+  level2: "Level 2: Professional",
+  combo: "Combo (Level 1 + 2)",
+  team: "Team (5+)",
+} as const;
+export const NOTIFY_CONSENT_TEXT = "I agree to be contacted on WhatsApp/email about this course";
+
 const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
 
 export interface LeadInput {
   name: string;
   phone: string;
   email: string | null;
-  role: keyof typeof ROLES;
+  /** Asked on the demo form only. */
+  role: keyof typeof ROLES | null;
+  /** Asked on the notify form only. */
+  interest: keyof typeof INTERESTS | null;
+  demo_booked: boolean;
   org: string | null;
   city: string | null;
   cad: string[];
@@ -80,6 +97,55 @@ function optionalText(v: unknown, max: number): string | null {
 
 type Invalid = { error: string; field: string };
 
+function readUtm(body: Record<string, unknown>) {
+  const utmIn = (body.utm && typeof body.utm === "object" ? body.utm : {}) as Record<string, unknown>;
+  const utm: LeadInput["utm"] = {};
+  for (const k of UTM_KEYS) {
+    const v = optionalText(utmIn[k], 200);
+    if (v) utm[k] = v;
+  }
+  return {
+    utm,
+    gclid: optionalText(utmIn.gclid ?? body.gclid, 200),
+    fbclid: optionalText(utmIn.fbclid ?? body.fbclid, 300),
+  };
+}
+
+/** The SOLIDWORKS Simulation notify-me form: name, email and WhatsApp required, company optional, which offer. */
+export function validateNotify(body: Record<string, unknown>, userAgent: string | null): LeadInput | Invalid {
+  const name = typeof body.name === "string" ? body.name.replace(/\s+/g, " ").trim() : "";
+  if (name.length < 2 || name.length > 60) return { field: "name", error: "Please enter your name (2–60 characters)." };
+
+  const rawEmail = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+  if (!rawEmail || rawEmail.length > 254 || !EMAIL_RE.test(rawEmail))
+    return { field: "email", error: "Please enter a valid email address." };
+
+  const phone = normaliseIndianMobile(body.phone);
+  if (!phone) return { field: "phone", error: "Please enter a valid 10-digit Indian WhatsApp number." };
+
+  if (typeof body.interest !== "string" || !Object.hasOwn(INTERESTS, body.interest))
+    return { field: "interest", error: "Please choose which level interests you." };
+
+  if (body.consent !== true) return { field: "consent", error: "Please tick the box so we can tell you when it opens." };
+
+  return {
+    name,
+    phone,
+    email: rawEmail,
+    role: null,
+    interest: body.interest as keyof typeof INTERESTS,
+    demo_booked: false,
+    org: optionalText(body.org, 100),
+    city: null,
+    cad: [],
+    consent_text: NOTIFY_CONSENT_TEXT,
+    source: SW_SIM_NOTIFY,
+    ...readUtm(body),
+    page: optionalText(body.page, 200),
+    user_agent: userAgent ? userAgent.slice(0, 300) : null,
+  };
+}
+
 export function validateLead(body: Record<string, unknown>, userAgent: string | null): LeadInput | Invalid {
   const name = typeof body.name === "string" ? body.name.replace(/\s+/g, " ").trim() : "";
   if (name.length < 2 || name.length > 60) return { field: "name", error: "Please enter your name (2–60 characters)." };
@@ -102,26 +168,19 @@ export function validateLead(body: Record<string, unknown>, userAgent: string | 
   if (body.consent !== true)
     return { field: "consent", error: "Please tick the box so we can contact you about the demo." };
 
-  const utmIn = (body.utm && typeof body.utm === "object" ? body.utm : {}) as Record<string, unknown>;
-  const utm: LeadInput["utm"] = {};
-  for (const k of UTM_KEYS) {
-    const v = optionalText(utmIn[k], 200);
-    if (v) utm[k] = v;
-  }
-
   return {
     name,
     phone,
     email: rawEmail || null,
-    role: body.role as LeadInput["role"],
+    role: body.role as keyof typeof ROLES,
+    interest: null,
+    demo_booked: true,
     org: optionalText(body.org, 100),
     city: optionalText(body.city, 60),
     cad,
     consent_text: CONSENT_TEXT,
     source: "website",
-    utm,
-    gclid: optionalText(utmIn.gclid ?? body.gclid, 200),
-    fbclid: optionalText(utmIn.fbclid ?? body.fbclid, 300),
+    ...readUtm(body),
     page: optionalText(body.page, 200),
     user_agent: userAgent ? userAgent.slice(0, 300) : null,
   };
@@ -144,7 +203,7 @@ export async function handleLead(
     return { status: 400, body: { error: "Invalid request." } };
   }
 
-  const lead = validateLead(b, meta.userAgent);
+  const lead = b.form === SW_SIM_NOTIFY ? validateNotify(b, meta.userAgent) : validateLead(b, meta.userAgent);
   if ("error" in lead) return { status: 400, body: lead };
 
   if (typeof b.turnstileToken !== "string" || !b.turnstileToken)
@@ -195,7 +254,8 @@ export function sheetPayload(lead: SavedLead, secret: string) {
       name: lead.name,
       phone: lead.phone,
       email: lead.email ?? "",
-      role: ROLES[lead.role],
+      role: lead.role ? ROLES[lead.role] : "",
+      interest: lead.interest ? INTERESTS[lead.interest] : "",
       org: lead.org ?? "",
       city: lead.city ?? "",
       cad: lead.cad.join(", "),
@@ -203,7 +263,7 @@ export function sheetPayload(lead: SavedLead, secret: string) {
       utmSource: lead.utm.utm_source ?? "",
       utmCampaign: lead.utm.utm_campaign ?? "",
       utmContent: lead.utm.utm_content ?? "",
-      demoBooked: true,
+      demoBooked: lead.demo_booked,
       attended: false,
       paid: false,
       notes: "",
@@ -243,15 +303,19 @@ const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt
 
 export async function alertAdmin(lead: SavedLead, deps: LeadDeps): Promise<void> {
   const wa = `https://wa.me/${lead.phone.replace(/\D/g, "")}`;
-  const role = ROLES[lead.role];
-  const tag = lead.duplicate ? "Repeat demo booking" : "New demo booking";
+  const notify = lead.source === SW_SIM_NOTIFY;
+  const role = notify ? (lead.interest ? INTERESTS[lead.interest] : "—") : lead.role ? ROLES[lead.role] : "—";
+  const tag = notify
+    ? lead.duplicate ? "Repeat SOLIDWORKS Simulation waitlist signup" : "New SOLIDWORKS Simulation waitlist signup"
+    : lead.duplicate ? "Repeat demo booking" : "New demo booking";
+  const action = notify ? "asked to be notified about SOLIDWORKS Simulation" : "booked the free ANSYS demo";
   const campaign = lead.utm.utm_campaign ? ` · ${lead.utm.utm_campaign}` : "";
   const jobs: Promise<unknown>[] = [];
 
   if (deps.env.resendApiKey) {
     const rows: [string, string][] = [
       ["Phone", lead.phone],
-      ["Role", role],
+      [notify ? "Interest" : "Role", role],
       ["Email", lead.email ?? "—"],
       ["College / company", lead.org ?? "—"],
       ["City", lead.city ?? "—"],
@@ -268,7 +332,7 @@ export async function alertAdmin(lead: SavedLead, deps: LeadDeps): Promise<void>
             to: deps.env.adminEmail,
             subject: `${tag}: ${lead.name} (${role})`,
             html:
-              `<p><strong>${escapeHtml(lead.name)}</strong> booked the free ANSYS demo.</p><ul>` +
+              `<p><strong>${escapeHtml(lead.name)}</strong> ${action}.</p><ul>` +
               rows.map(([k, v]) => `<li>${k}: ${escapeHtml(v)}</li>`).join("") +
               `</ul><p><a href="${wa}">WhatsApp ${escapeHtml(lead.name)} →</a></p>`,
           }),

@@ -5,11 +5,19 @@ import { CourseCard } from "@/components/ui/CourseCard";
 import { useActiveCategories } from "@/hooks/useActiveCategories";
 import { getPublishedCourses } from "@/services/courseService";
 import { useCachedData } from "@/hooks/useCachedData";
+import { SW_SIM_LISTING_CARD } from "@/content/swSimulation";
 import "@/styles/cards.css";
 
 export default function CoursesListingPage() {
   const { data, error: loadError } = useCachedData("courses:published", getPublishedCourses);
-  const courses = data ?? null;
+  // The new SOLIDWORKS Simulation course goes first, from the content file
+  // until its row is published (and then the live row, moved to the front).
+  const courses = data
+    ? [
+        data.find((c) => c.slug === SW_SIM_LISTING_CARD.slug) ?? SW_SIM_LISTING_CARD,
+        ...data.filter((c) => c.slug !== SW_SIM_LISTING_CARD.slug),
+      ]
+    : null;
   const error = Boolean(loadError);
   const { categories } = useActiveCategories(true);
 

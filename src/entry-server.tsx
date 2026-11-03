@@ -119,6 +119,8 @@ export async function getPrerenderRoutes(): Promise<{ routes: PrerenderRoute[]; 
     { path: "/about", source: "src/pages/About/AboutPage.tsx" },
     { path: "/contact", source: "src/pages/Contact/ContactPage.tsx" },
     { path: "/ansys-foundation", source: "src/pages/Launch/AnsysFoundationPage.tsx" },
+    // Also listed by the courses query once Level 1 is published; add() skips the repeat.
+    { path: "/courses/solidworks-simulation", source: "src/pages/SwSimulation/SwSimulationPage.tsx" },
     // noindex pages: prerendered so they load fast; the sitemap leaves them out automatically.
     { path: "/thank-you", source: "src/pages/Launch/ThankYouPage.tsx" },
     { path: "/privacy-policy", source: "src/pages/Legal/PrivacyPolicyPage.tsx" },
@@ -161,6 +163,7 @@ export async function getPrerenderRoutes(): Promise<{ routes: PrerenderRoute[]; 
         continue;
       }
       const path = `${prefix}${row.slug}`;
+      if (routes.some((r) => r.path === path)) continue;
       const listing = /^\/resources\/(software|topic)\//.test(path);
       routes.push({ path, lastmod: row.updated_at, thin: listing && thin(path) });
     }

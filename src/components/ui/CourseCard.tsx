@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { responsiveImage } from "@/utils/imageUrl";
 import { PlaceholderArt } from "./PlaceholderArt";
 import { COURSE_LEVEL_LABEL, type CourseWithCategory } from "@/types/course";
+import { NEW_COURSE_SLUGS } from "@/content/swSimulation";
 import "@/styles/drafting.css";
 
 export function CourseCard({ course, index }: { course: CourseWithCategory; index: number }) {
@@ -10,6 +11,7 @@ export function CourseCard({ course, index }: { course: CourseWithCategory; inde
       to={`/courses/${course.slug}`}
       className="course-card drafting-frame drafting-frame--interactive"
     >
+      {NEW_COURSE_SLUGS.includes(course.slug) && <span className="course-card__new">New</span>}
       {course.image ? (
         <img
           {...responsiveImage(course.image, 400)}

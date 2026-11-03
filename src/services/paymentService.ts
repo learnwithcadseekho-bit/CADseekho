@@ -73,12 +73,24 @@ export async function invokeFunction<T>(name: string, body: Record<string, unkno
 
 export type CheckoutResult = "enrolled" | "dismissed";
 
-export async function startCourseCheckout(
-  courseId: string,
-  prefill: { name?: string; email?: string; contact?: string }
+type Prefill = { name?: string; email?: string; contact?: string };
+
+export function startCourseCheckout(courseId: string, prefill: Prefill): Promise<CheckoutResult> {
+  return startCheckout({ courseId }, courseId, prefill);
+}
+
+/** By slug — for courses the page knows only by slug (the SOLIDWORKS Simulation levels and Combo). */
+export function startCourseCheckoutBySlug(courseSlug: string, prefill: Prefill): Promise<CheckoutResult> {
+  return startCheckout({ courseSlug }, courseSlug, prefill);
+}
+
+async function startCheckout(
+  course: { courseId: string } | { courseSlug: string },
+  trackId: string,
+  prefill: Prefill
 ): Promise<CheckoutResult> {
   const [order] = await Promise.all([
-    invokeFunction<OrderResponse>("create-razorpay-order", { courseId }),
+    invokeFunction<OrderResponse>("create-razorpay-order", course),
     loadCheckoutScript(),
   ]);
 
@@ -104,7 +116,7 @@ export async function startCourseCheckout(
               value: order.amount / 100,
               currency: order.currency,
               name: order.courseTitle,
-              id: courseId,
+              id: trackId,
             });
             resolve("enrolled");
           })

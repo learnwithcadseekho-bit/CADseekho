@@ -8,7 +8,10 @@ export interface Lead {
   name: string;
   phone: string;
   email: string | null;
-  role: "student" | "working_engineer" | "other";
+  /** Demo-booking leads only; null for the SOLIDWORKS Simulation notify form. */
+  role: "student" | "working_engineer" | "other" | null;
+  /** SOLIDWORKS Simulation notify form only: which offer they want. */
+  interest: "level1" | "level2" | "combo" | "team" | null;
   org: string | null;
   city: string | null;
   cad: string[];

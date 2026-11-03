@@ -121,6 +121,23 @@
 }
 
 .category-card__image,
+/* "NEW" tag, top-left over the image. */
+.course-card__new {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.55rem;
+}
+
 .course-card__image {
   /* width/height attributes are only for layout hints; aspect-ratio sets the height. */
   height: auto;

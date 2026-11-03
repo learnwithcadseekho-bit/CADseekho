@@ -1,0 +1,60 @@
+<!doctype html>
+<!-- Source of public/og/solidworks-simulation.png (1200×630). Re-render:
+     "C:/Program Files/Google/Chrome/Application/chrome.exe" --headless=new --disable-gpu --hide-scrollbars \
+       --window-size=1200,630 --screenshot=public/og/solidworks-simulation.png scripts/og/solidworks-simulation.html -->
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,600;87.5,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=block">
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    background: #F5F3ED;
+    background-image: linear-gradient(rgba(174,185,201,.45) 1px, transparent 1px), linear-gradient(90deg, rgba(174,185,201,.45) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: #1B2A4A; font-family: "IBM Plex Sans", sans-serif; position: relative;
+  }
+  .frame { position: absolute; inset: 36px; border: 2px solid #1B2A4A; }
+  .frame::before, .frame::after { content: ""; position: absolute; width: 34px; height: 34px; border: 6px solid #E8622C; }
+  .frame::before { top: -6px; left: -6px; border-right: 0; border-bottom: 0; }
+  .frame::after { bottom: -6px; right: -6px; border-left: 0; border-top: 0; }
+  .copy { position: absolute; left: 84px; top: 80px; width: 600px; }
+  .tag { display: inline-block; font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 22px; letter-spacing: .12em;
+         text-transform: uppercase; color: #fff; background: #B8461A; padding: 8px 16px; }
+  h1 { font-family: "Archivo", sans-serif; font-stretch: 87.5%; font-weight: 700; font-size: 66px; line-height: 1.02; margin: 24px 0 20px; }
+  p { font-size: 27px; line-height: 1.35; color: #46566B; margin: 0; }
+  .logo { position: absolute; right: 84px; bottom: 76px; width: 240px; }
+  .art { position: absolute; right: 84px; top: 130px; width: 360px; background: #fff; border: 1px solid #AEB9C9; padding: 18px; }
+  .check { font-family: "IBM Plex Mono", monospace; font-size: 18px; color: #46566B; display: flex; justify-content: space-between; margin-top: 14px; }
+  .check b { font-family: "Archivo", sans-serif; font-stretch: 87.5%; color: #1B2A4A; font-size: 26px; display: block; }
+  .ok b { color: #1f7a4a; }
+</style>
+</head>
+<body>
+  <div class="frame"></div>
+  <div class="copy">
+    <span class="tag">Module 1 free</span>
+    <h1>SOLIDWORKS Simulation for Industry Professionals</h1>
+    <p>Hand calculation first, then FEA. Report a number you can defend.</p>
+  </div>
+  <div class="art">
+    <svg viewBox="0 0 360 170" width="360" height="170" aria-hidden="true">
+      <rect x="0" y="20" width="22" height="130" fill="#F5F3ED" stroke="#1B2A4A" stroke-width="2"/>
+      <g stroke="#75849C" stroke-width="1.3">
+        <line x1="0" y1="34" x2="12" y2="22"/><line x1="0" y1="54" x2="12" y2="42"/><line x1="0" y1="74" x2="12" y2="62"/>
+        <line x1="0" y1="94" x2="12" y2="82"/><line x1="0" y1="114" x2="12" y2="102"/><line x1="0" y1="134" x2="12" y2="122"/>
+      </g>
+      <rect x="22" y="70" width="38" height="32" fill="#E8622C"/><rect x="60" y="70" width="38" height="32" fill="#EE8A3C"/>
+      <rect x="98" y="70" width="38" height="32" fill="#F2B04F"/><rect x="136" y="70" width="38" height="32" fill="#C9C27A"/>
+      <rect x="174" y="70" width="38" height="32" fill="#8FB3B0"/><rect x="212" y="70" width="38" height="32" fill="#6F93B8"/>
+      <rect x="250" y="70" width="38" height="32" fill="#4F73A6"/><rect x="288" y="70" width="38" height="32" fill="#3A5A8F"/>
+      <rect x="22" y="70" width="304" height="32" fill="none" stroke="#1B2A4A" stroke-width="2"/>
+      <line x1="326" y1="8" x2="326" y2="62" stroke="#B8461A" stroke-width="3"/>
+      <path d="M318 52 L326 68 L334 52 Z" fill="#B8461A"/>
+      <path d="M22 86 Q 200 88 326 112" fill="none" stroke="#1B2A4A" stroke-width="1.5" stroke-dasharray="6 5"/>
+    </svg>
+    <div class="check"><span>HAND CALC<b>120 MPa</b></span><span>FEA<b>123 MPa</b></span><span class="ok">Δ<b>2.5% ✓</b></span></div>
+  </div>
+  <img class="logo" src="../../public/logo.svg" alt="">
+</body>
+</html>
