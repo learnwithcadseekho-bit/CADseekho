@@ -38,7 +38,7 @@ export function SwSimPromoSection() {
     <section className="sws-home" aria-labelledby="sws-home-title">
       <div className="hero__inner sws-home__inner">
         <div className="hero__copy">
-          <span className="mono-label section-eyebrow">New · Self-paced · Modules 1–2 free</span>
+          <span className="mono-label section-eyebrow">New · Self-paced · Modules 0–1 free</span>
           <h2 className="hero__headline sws-home__title" id="sws-home-title">
             SOLIDWORKS Simulation for Industry Professionals
           </h2>

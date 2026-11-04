@@ -1,5 +1,5 @@
 -- Seed: "SOLIDWORKS Simulation for Industry Professionals".
---   Level 1: Foundation   (published; M0–M2 free, M0 + M1 released, M2–M7 + capstone "Coming soon")
+--   Level 1: Foundation   (published; M0 + M1 free and released, M2–M7 + capstone "Coming soon")
 --   Level 2: Professional (unpublished, coming soon)
 --   Combo                 (unpublished bundle: buying it enrolls into Level 1 and Level 2)
 --
@@ -28,7 +28,7 @@ values
     (select id from public.categories where slug = 'solidworks'),
     'SOLIDWORKS Simulation Level 1 — Foundation',
     'solidworks-simulation',
-    'Linear static analysis of parts, every result checked by hand. Self-paced, ~28 h. Modules 1–2 free.',
+    'Linear static analysis of parts, every result checked by hand. Self-paced, ~28 h. Modules 0–1 free.',
     '<p>For working design engineers who already model in SOLIDWORKS. Every problem is solved by hand, then in SOLIDWORKS Simulation, and compared — then reported on a one-page validation sheet.</p>',
     'intermediate',
     'SOLIDWORKS Simulation',
@@ -74,7 +74,7 @@ from public.courses c
 cross join (values
   ('L1-M0', 1, 'Mechanics refresher: stress, strain, Mohr''s circle, von Mises', 1.0, true, true),
   ('L1-M1', 2, 'How FEA works and your first static study', 3.5, true, true),
-  ('L1-M2', 3, 'Reading results: stress, displacement, strain', 3.5, true, false),
+  ('L1-M2', 3, 'Reading results: stress, displacement, strain', 3.5, false, false),
   ('L1-M3', 4, 'Materials, failure criteria and factor of safety', 3.5, false, false),
   ('L1-M4', 5, 'Axial, torsion, bending and beam shear', 3.5, false, false),
   ('L1-M5', 6, 'Mesh, convergence, stress concentration and singularities', 4.0, false, false),

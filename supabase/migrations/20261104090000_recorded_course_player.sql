@@ -18,6 +18,16 @@ update public.courses
 set access_days = 730
 where slug in ('solidworks-simulation', 'solidworks-simulation-level-2', 'solidworks-simulation-combo');
 
+-- Level 1 free preview is Modules 0 and 1 only (Module 2 was seeded free).
+update public.course_modules m
+set is_free = false
+from public.courses c
+where c.id = m.course_id and c.slug = 'solidworks-simulation' and m.code = 'L1-M2';
+
+update public.courses
+set short_description = replace(short_description, 'Modules 1–2 free.', 'Modules 0–1 free.')
+where slug = 'solidworks-simulation';
+
 -- ---------------------------------------------------------------------------
 -- 2. Enrollment expiry and where it came from.
 --    A revoked enrollment is status 'cancelled' (already in the check).

@@ -167,9 +167,9 @@ test("paid modules: locked for free users, open to enrolled users once released"
   try {
     assert.equal(await canAccess(USERS.free, "L1-M3"), false);
     assert.equal(await canAccess(USERS.paid, "L1-M3"), true);
-    // M2 is free: once released, any signed-in user may watch it.
-    assert.equal(await canAccess(USERS.free, "L1-M2"), true);
-    assert.equal(await canAccess(null, "L1-M2"), false);
+    // M2 is paid (only Modules 0 and 1 are free).
+    assert.equal(await canAccess(USERS.free, "L1-M2"), false);
+    assert.equal(await canAccess(USERS.paid, "L1-M2"), true);
   } finally {
     await db.query("update public.course_modules set is_released = false where code in ('L1-M2', 'L1-M3')");
   }

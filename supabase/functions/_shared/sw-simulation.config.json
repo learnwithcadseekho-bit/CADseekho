@@ -10,7 +10,7 @@
   },
   "activePriceTier": "foundingBatch",
   "fallbackPriceTier": "launch",
-  "freeModules": ["L1-M0", "L1-M1", "L1-M2"],
+  "freeModules": ["L1-M0", "L1-M1"],
   "level2Status": "coming-soon",
   "level2Launch": "15 December 2026",
   "accessPeriod": "2 years",

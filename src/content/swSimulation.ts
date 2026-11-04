@@ -26,7 +26,7 @@ export const SW_SIM = {
   /** Lesson player for Level 1: /learn/solidworks-simulation/<lesson code>. */
   classroomPath: `/learn/${SW_SIM_CONFIG.courseSlugs.level1}`,
   name: "SOLIDWORKS Simulation for Industry Professionals",
-  announcement: "New: SOLIDWORKS Simulation Level 1 — Modules 1–2 are free",
+  announcement: "New: SOLIDWORKS Simulation Level 1 — Modules 0 and 1 are free",
 } as const;
 
 export interface SwSimLesson {
@@ -91,7 +91,7 @@ export const LEVEL1_MODULES: SwSimModule[] = [
       { code: "M1-TEST", title: "M1 Test", minutes: null, kind: "test" },
     ],
   },
-  later("L1-M2", "Reading results: stress, displacement, strain", 3.5, true),
+  later("L1-M2", "Reading results: stress, displacement, strain", 3.5),
   later("L1-M3", "Materials, failure criteria and factor of safety", 3.5),
   later("L1-M4", "Axial, torsion, bending and beam shear", 3.5),
   later("L1-M5", "Mesh, convergence, stress concentration and singularities", 4),
@@ -204,11 +204,11 @@ export const LEVEL1_PAGE: SwSimPage = {
   path: SW_SIM.path,
   seoTitle: "SOLIDWORKS Simulation Course Online for Engineers | CADseekho",
   seoDescription:
-    "Learn SOLIDWORKS Simulation the industry way: hand calculation first, then FEA. Modules 1–2 free. Built for working design engineers in India.",
+    "Learn SOLIDWORKS Simulation the industry way: hand calculation first, then FEA. Modules 0–1 free. Built for working design engineers in India.",
   ogImage: "/og/solidworks-simulation.png",
   label: "SOLIDWORKS Simulation · Level 1",
   title: "SOLIDWORKS Simulation Level 1 — Foundation: Linear Static Analysis",
-  tags: ["Beginner–Intermediate", "Self-paced", "Modules 1–2 free"],
+  tags: ["Beginner–Intermediate", "Self-paced", "Modules 0–1 free"],
   info: [
     { label: "Level", value: "Beginner–Intermediate" },
     { label: "Software", value: "SOLIDWORKS Simulation (Standard is enough)" },
@@ -216,7 +216,7 @@ export const LEVEL1_PAGE: SwSimPage = {
     { label: "Format", value: "Self-paced, pre-recorded" },
     { label: "Duration", value: `~${totalHours(LEVEL1_MODULES)} hours (14 h video + 14 h hands-on)` },
     { label: "Modules", value: `${moduleCount(LEVEL1_MODULES)} + capstone` },
-    { label: "Free access", value: "Modules 0, 1 and 2 with free sign-up" },
+    { label: "Free access", value: "Modules 0 and 1 with free sign-up" },
     { label: "Certificate", value: "Yes, on passing the capstone" },
   ],
   overview:
@@ -360,7 +360,7 @@ export const LEVEL1_PAGE: SwSimPage = {
     },
     {
       question: "Are Modules 1 and 2 really free?",
-      answer: "Yes. Create a free account and watch Modules 0, 1 and 2 completely, with their part files and problems.",
+      answer: "Yes. Create a free account and watch Modules 0 and 1 completely, with their part files and problems.",
     },
     {
       question: "Which SOLIDWORKS licence do I need?",
@@ -527,7 +527,7 @@ const level2Soon = SW_SIM_CONFIG.level2Status === "coming-soon";
 export const LISTING_CARDS: SwSimListingCard[] = [
   {
     key: "level1",
-    tag: "New · Modules 1–2 free",
+    tag: "New · Modules 0–1 free",
     title: "SOLIDWORKS Simulation Level 1 — Foundation",
     description: `Linear static analysis of parts, every result checked by hand. Self-paced, ~${totalHours(LEVEL1_MODULES)} h.`,
     button: "Start free",

@@ -204,7 +204,7 @@ export function SwSimCourse({ page }: { page: SwSimPage }) {
               </>
             ) : (
               <>
-                Start with <Link to={SW_SIM.path}>Level 1 — Foundation (Modules 1–2 free) →</Link>
+                Start with <Link to={SW_SIM.path}>Level 1 — Foundation (Modules 0–1 free) →</Link>
               </>
             )}
           </p>
@@ -398,7 +398,7 @@ export function SwSimCourse({ page }: { page: SwSimPage }) {
             </h2>
             <p className="sws-para">
               {isLevel1
-                ? "Modules 0, 1 and 2 are free with sign-up. Join the waitlist and we'll tell you first when paid enrollment opens."
+                ? "Modules 0 and 1 are free with sign-up. Join the waitlist and we'll tell you first when paid enrollment opens."
                 : "Get the launch price and be told first when Level 2 opens."}{" "}
               Companies enrolling a team of 5 or more: choose “Team”.
             </p>
