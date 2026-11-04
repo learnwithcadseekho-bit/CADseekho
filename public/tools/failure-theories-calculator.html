@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,600;87.5,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<style>[hidden]{display:none!important}
+:root{--paper:#F5F3ED;--ink:#1B2A4A;--slate:#46566B;--accent:#E8622C;--line:#AEB9C9;--line2:#75849C;--card:#FFFFFF;--ok:#2E7D4F;--okbg:#E3F1E8;--warn:#9A6A00;--warnbg:#FBF0D3;--bad:#B23A2B;--badbg:#F8E1DD;--soft:#EEF1F5}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{background:var(--ink);color:#fff;border-bottom:4px solid var(--accent)}
+header.hero .wrap{padding-top:22px;padding-bottom:18px}
+.kicker{font:600 12px/1 "IBM Plex Sans",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#F6B79C}
+h1{font:700 clamp(30px,5vw,44px)/1.05 "Archivo","Arial Narrow","Segoe UI",sans-serif;font-stretch:87.5%;letter-spacing:.02em;margin:8px 0 6px}
+.sub{color:#D5DCE6;margin:0;max-width:760px}
+h2{font:700 18px/1.3 "Archivo","Arial Narrow","Segoe UI",sans-serif;font-stretch:87.5%;margin:0 0 12px;color:var(--ink)}
+h3{font:700 14px/1.3 "Archivo","Arial Narrow","Segoe UI",sans-serif;font-stretch:87.5%;margin:16px 0 8px;color:var(--slate);text-transform:uppercase;letter-spacing:.06em}
+main .wrap{padding-top:22px;padding-bottom:40px}
+.grid>*{min-width:0}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px}
+.card+.card{margin-top:20px}
+label{display:block;font-size:13px;color:var(--slate);margin:10px 0 4px}
+input,select{width:100%;padding:9px 10px;border:1px solid var(--line2);border-radius:4px;font:inherit;color:var(--ink);background:#FFFBEF}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.unit{color:var(--slate);font-size:12px}
+.hint{font-size:12px;color:var(--slate);margin-top:4px}
+.err{color:var(--bad);font-size:13px;margin-top:8px;min-height:1em}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--paper)}
+.stat .k{font-size:12px;color:var(--slate)}
+.stat .v{font:600 22px/1.2 "IBM Plex Sans",sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat .v small{font-size:12px;color:var(--slate);font-weight:400;margin-left:3px}
+.stat.hl{border-color:var(--accent);background:#FFF4EE}
+.stat.hl .v{color:var(--accent)}
+.verdict{display:inline-block;padding:6px 12px;border-radius:4px;font-weight:600;margin-top:12px}
+.v-ok{background:var(--okbg);color:var(--ok)}.v-warn{background:var(--warnbg);color:var(--warn)}.v-bad{background:var(--badbg);color:var(--bad)}
+.pro{position:relative}
+.pro-badge{display:inline-block;font:700 10px/1 "IBM Plex Sans",sans-serif;letter-spacing:.1em;background:var(--accent);color:#fff;padding:4px 7px;border-radius:3px;vertical-align:middle;margin-left:8px}
+.steps .step{border-left:3px solid var(--accent);padding:6px 0 6px 12px;margin:10px 0}
+.steps .t{font-weight:600;font-size:13px;color:var(--accent)}
+.steps .m{overflow-x:auto;padding:4px 0}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:"IBM Plex Sans",Arial,sans-serif;fill:var(--slate)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font:600 12px/1.3 "IBM Plex Sans",sans-serif;text-transform:uppercase;letter-spacing:.06em;color:var(--slate);background:var(--soft)}
+.tablewrap{overflow-x:auto}
+.src{font-size:12px;color:var(--slate);margin-top:14px}
+footer{border-top:1px solid var(--line);color:var(--slate);font-size:13px}
+footer .wrap{padding-top:14px;padding-bottom:24px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tabs button{border:1px solid var(--line2);background:#fff;color:var(--ink);padding:7px 12px;border-radius:4px;font:inherit;font-size:14px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--slate);margin-top:8px}
+.legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:6px}
+</style>
+<script>
+function tex(el, s){ if(!el) return; if(window.katex){ try{ katex.render(s.replace(/\\frac/g,'\\dfrac'), el, {throwOnError:false, displayMode:false}); return; }catch(e){} } el.textContent = s; }
+function fmt(v, d){ if(!isFinite(v)) return "—"; const a=Math.abs(v); if(a!==0 && (a>=1e9 || a<1e-3)) return v.toExponential(3).replace("e","×10^").replace("+",""); return v.toLocaleString("en-IN",{maximumFractionDigits:d, minimumFractionDigits:d}); }
+function texnum(v, d){ if(!isFinite(v)) return "\\text{—}"; const a=Math.abs(v); if(a!==0 && (a>=1e9 || a<1e-3)){ const e=Math.floor(Math.log10(a)); const m=v/Math.pow(10,e); return m.toFixed(3)+"\\times10^{"+e+"}"; } return v.toLocaleString("en-IN",{maximumFractionDigits:d, minimumFractionDigits:d}).replace(/,/g,"{,}"); }
+</script>
+<title>Failure Theories Chart — von Mises, Tresca, Rankine, Mohr–Coulomb | CADSeekho</title>
+<meta name="description" content="Interactive failure envelope chart for plane stress: von Mises, Tresca, maximum normal stress and Coulomb–Mohr. Enter σx, σy, τxy and see principal stresses, factor of safety and your stress point on the envelope.">
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">CADSeekho · Reference chart</div>
+  <h1>Failure Theories — Which One, and How Safe?</h1>
+  <p class="sub">Enter a plane-stress state. See the principal stresses, the factor of safety under each theory, and where your point sits inside the failure envelopes.</p>
+</div></header>
+
+<main><div class="wrap grid">
+  <section class="card" aria-label="Inputs">
+    <h2>Stress state (plane stress)</h2>
+    <div class="row2">
+      <div><label for="sx">σx <span class="unit">(MPa)</span></label><input id="sx" type="number" value="120" step="any"></div>
+      <div><label for="sy">σy <span class="unit">(MPa)</span></label><input id="sy" type="number" value="-40" step="any"></div>
+    </div>
+    <label for="txy">τxy <span class="unit">(MPa)</span></label><input id="txy" type="number" value="60" step="any">
+    <div class="hint">Tension positive, compression negative. σz = τxz = τyz = 0.</div>
+    <h2 style="margin-top:18px">Material</h2>
+    <label for="beh">Behaviour</label>
+    <select id="beh"><option value="ductile">Ductile (steel, aluminium)</option><option value="brittle">Brittle (cast iron, ceramics)</option></select>
+    <div id="g-duc"><label for="Sy">Yield strength, Sy <span class="unit">(MPa)</span></label><input id="Sy" type="number" value="250" step="any"></div>
+    <div id="g-bri" class="row2">
+      <div><label for="Sut">Ultimate tensile, Sut <span class="unit">(MPa)</span></label><input id="Sut" type="number" value="214" step="any"></div>
+      <div><label for="Suc">Ultimate compressive, Suc <span class="unit">(MPa)</span></label><input id="Suc" type="number" value="752" step="any"></div>
+    </div>
+    <div class="hint" id="mhint"></div>
+    <div class="err" id="err" role="alert"></div>
+  </section>
+
+  <div>
+    <section class="card" aria-label="Results">
+      <h2>Results</h2>
+      <div class="stats" id="stats"></div>
+      <div id="verdict"></div>
+      <h3>Failure envelopes in the σ₁–σ₂ plane</h3>
+      <svg id="env" viewBox="0 0 560 560" role="img" aria-label="Failure envelope chart" style="max-width:560px;margin:0 auto"></svg>
+      <div class="legend" id="legend"></div>
+      <p class="hint">The dashed load line runs from the origin through your point. Where it crosses an envelope is where that theory predicts failure; FoS = (distance to envelope) ÷ (distance to your point).</p>
+    </section>
+
+    <section class="card pro" aria-label="Mohr's circle">
+      <h2>Mohr's circle <span class="pro-badge">PRO</span></h2>
+      <svg id="mohr" viewBox="0 0 720 340" role="img" aria-label="Mohr's circle"></svg>
+      <p class="hint">Convention used: point X = (σx, τxy), point Y = (σy, −τxy); τ plotted positive upward.</p>
+    </section>
+
+    <section class="card pro steps" aria-label="Hand calculation">
+      <h2>Hand calculation — step by step <span class="pro-badge">PRO</span></h2>
+      <div id="steps"></div>
+    </section>
+
+    <section class="card" aria-label="Which theory">
+      <h2>Which theory should I use?</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Theory</th><th>Material</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><b>Distortion energy (von Mises)</b></td><td>Ductile</td><td>Best match to test data for ductile metals. This is the "equivalent stress" FEA tools show by default.</td></tr>
+          <tr><td><b>Max shear stress (Tresca)</b></td><td>Ductile</td><td>Slightly conservative (up to ~15% vs von Mises). Simple to calculate by hand.</td></tr>
+          <tr><td><b>Max normal stress (Rankine)</b></td><td>Brittle</td><td>Only safe for brittle materials when stresses have the same sign; unconservative in the mixed quadrant.</td></tr>
+          <tr><td><b>Coulomb–Mohr (brittle)</b></td><td>Brittle</td><td>Uses different tensile and compressive strengths. Recommended for cast iron in the mixed quadrant.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="src">References: Shigley's Mechanical Engineering Design, Ch. 5; Budynas &amp; Nisbett. Plane stress assumed (third principal stress = 0).</p>
+    </section>
+  </div>
+</div></main>
+<footer><div class="wrap">Free reference by <a href="https://cadseekho.com">CADSeekho</a> · Solve by hand first, validate in software. For learning purposes — verify critical designs against applicable codes and standards.</div></footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const COL = {vm:"#E8622C", tr:"#1B2A4A", mn:"#2E7D4F", mc:"#7A4FB5"};
+
+function principal(sx, sy, t){
+  const c=(sx+sy)/2, R=Math.hypot((sx-sy)/2, t);
+  return {c, R, s1:c+R, s2:c-R, th:0.5*Math.atan2(2*t, sx-sy)*180/Math.PI};
+}
+function fos(sA, sB, Sy, Sut, Suc){
+  const vm=Math.sqrt(sA*sA - sA*sB + sB*sB);
+  const tr=Math.max(Math.abs(sA-sB), Math.abs(sA), Math.abs(sB));
+  const nVM = Sy/vm, nTR = Sy/tr;
+  const nMN = Math.min(sA>0? Sut/sA : Infinity, sB>0? Sut/sB : Infinity, sA<0? Suc/-sA : Infinity, sB<0? Suc/-sB : Infinity);
+  let nMC; // sA >= sB
+  if (sB>=0) nMC = Sut/sA; else if (sA<=0) nMC = Suc/-sB; else nMC = 1/(sA/Sut - sB/Suc);
+  return {vm, tr, nVM, nTR, nMN, nMC};
+}
+
+const NS="http://www.w3.org/2000/svg";
+function mk(svg,t,a,txt){ const e=document.createElementNS(NS,t); for(const k in a) e.setAttribute(k,a[k]); if(txt!==undefined) e.textContent=txt; svg.appendChild(e); return e; }
+
+function drawEnv(sA, sB, P){
+  const svg=$("env"); svg.innerHTML=""; const S=560, m=40, duct=P.beh==="ductile";
+  const lim = Math.max(duct? P.Sy : Math.max(P.Sut,P.Suc), Math.abs(sA), Math.abs(sB))*1.2;
+  const X=v=>S/2 + (S/2-m)*v/lim, Y=v=>S/2 - (S/2-m)*v/lim;
+  for (let g=-4; g<=4; g++){ const v=lim*g/4.0*0.833; }
+  mk(svg,"line",{x1:m/2,x2:S-m/2,y1:Y(0),y2:Y(0),stroke:"#75849C"}); mk(svg,"line",{y1:m/2,y2:S-m/2,x1:X(0),x2:X(0),stroke:"#75849C"});
+  mk(svg,"text",{x:S-m/2,y:Y(0)-6,"text-anchor":"end","font-size":13,"font-weight":700},"σ₁");
+  mk(svg,"text",{x:X(0)+8,y:m/2+10,"font-size":13,"font-weight":700},"σ₂");
+  const poly=(pts,col,dash)=>mk(svg,"polygon",{points:pts.map(p=>`${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(" "),fill:col,"fill-opacity":.05,stroke:col,"stroke-width":2.2,"stroke-dasharray":dash||""});
+  const legend=[];
+  if (duct){
+    const s=P.Sy;
+    poly([[s,0],[s,s],[0,s],[-s,0],[-s,-s],[0,-s]],COL.tr); legend.push(["tr","Tresca (max shear)"]);
+    const pts=[]; for(let i=0;i<=180;i++){ const a=2*Math.PI*i/180; // ellipse s1^2 - s1 s2 + s2^2 = Sy^2, axes at 45°
+      const u=Math.sqrt(2)*s*Math.cos(a), w=Math.sqrt(2/3)*s*Math.sin(a); pts.push([(u-w)/Math.SQRT2,(u+w)/Math.SQRT2]); }
+    poly(pts,COL.vm); legend.push(["vm","von Mises (distortion energy)"]);
+    [[s,0,"Sy"],[0,s,"Sy"],[-s,0,"−Sy"],[0,-s,"−Sy"]].forEach(p=>mk(svg,"text",{x:X(p[0])+(p[0]?4:6),y:Y(p[1])+(p[1]?-4:14),"font-size":11},p[2]));
+  } else {
+    const t=P.Sut, c=P.Suc;
+    poly([[t,t],[-c,t],[-c,-c],[t,-c]],COL.mn,"6 4"); legend.push(["mn","Max normal stress (Rankine)"]);
+    poly([[t,0],[t,t],[0,t],[-c,0],[-c,-c],[0,-c]],COL.mc); legend.push(["mc","Coulomb–Mohr (brittle)"]);
+    [[t,0,"Sut"],[-c,0,"−Suc"]].forEach(p=>mk(svg,"text",{x:X(p[0])+4,y:Y(0)+14,"font-size":11},p[2]));
+  }
+  const k=lim*1.4/Math.max(1e-9,Math.hypot(sA,sB));
+  mk(svg,"line",{x1:X(0),y1:Y(0),x2:X(sA*k),y2:Y(sB*k),stroke:"#46566B","stroke-dasharray":"4 4"});
+  mk(svg,"circle",{cx:X(sA),cy:Y(sB),r:7,fill:"#E8622C",stroke:"#fff","stroke-width":2});
+  mk(svg,"text",{x:X(sA)+10,y:Y(sB)-10,"font-size":12,"font-weight":700,style:"fill:#1B2A4A"},`(${sA.toFixed(1)}, ${sB.toFixed(1)})`);
+  $("legend").innerHTML=legend.map(l=>`<span><i style="background:${COL[l[0]]}"></i>${l[1]}</span>`).join("")+`<span><i style="background:#E8622C;height:8px;width:8px;border-radius:50%"></i>Your stress point</span>`;
+}
+
+function drawMohr(sx, sy, t, p){
+  const svg=$("mohr"); const W=Math.round(Math.max(300, svg.getBoundingClientRect().width||720)), H=340; svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.innerHTML="";
+  const lo=Math.min(0,p.s2)-p.R*0.25, hi=Math.max(0,p.s1)+p.R*0.25, span=Math.max(hi-lo,1);
+  const sc=Math.min((W-60)/span,(H-60)/(2*p.R*1.25||1)), cx0=30-lo*sc, cy=H/2;
+  const X=v=>cx0+v*sc, Y=v=>cy-v*sc;
+  mk(svg,"line",{x1:10,x2:W-10,y1:cy,y2:cy,stroke:"#75849C"}); mk(svg,"line",{x1:X(0),x2:X(0),y1:10,y2:H-10,stroke:"#75849C"});
+  mk(svg,"text",{x:W-12,y:cy-6,"text-anchor":"end","font-size":12,"font-weight":700},"σ"); mk(svg,"text",{x:X(0)+6,y:20,"font-size":12,"font-weight":700},"τ");
+  mk(svg,"circle",{cx:X(p.c),cy,r:p.R*sc,fill:"#E8622C","fill-opacity":.08,stroke:"#E8622C","stroke-width":2.2});
+  mk(svg,"line",{x1:X(sx),y1:Y(t),x2:X(sy),y2:Y(-t),stroke:"#1B2A4A","stroke-width":1.5});
+  [[sx,t,"X"],[sy,-t,"Y"]].forEach(q=>{ mk(svg,"circle",{cx:X(q[0]),cy:Y(q[1]),r:5,fill:"#1B2A4A"}); mk(svg,"text",{x:X(q[0])+8,y:Y(q[1])-6,"font-size":12,"font-weight":700,style:"fill:#1B2A4A"},q[2]); });
+  [[p.s1,"σ₁ = "+p.s1.toFixed(1)],[p.s2,"σ₂ = "+p.s2.toFixed(1)]].forEach(q=>{ mk(svg,"circle",{cx:X(q[0]),cy,r:4,fill:"#E8622C"}); mk(svg,"text",{x:X(q[0]),y:cy+18,"text-anchor":"middle","font-size":11},q[1]); });
+  mk(svg,"line",{x1:X(p.c),x2:X(p.c),y1:cy,y2:Y(p.R),stroke:"#2E7D4F","stroke-dasharray":"4 3"});
+  mk(svg,"text",{x:X(p.c)+6,y:Y(p.R)+14,"font-size":11,style:"fill:#2E7D4F"},"τmax = R = "+p.R.toFixed(1));
+}
+
+function stat(k, v, unit, hl){ return `<div class="stat${hl?" hl":""}"><div class="k">${k}</div><div class="v">${v}<small>${unit}</small></div></div>`; }
+function verdict(n){ const c=n>=1.5?"v-ok":n>=1?"v-warn":"v-bad", t=n>=1.5?"SAFE":n>=1?"MARGINAL":"FAILS"; return [c,t]; }
+
+function update(){
+  const sx=+$("sx").value, sy=+$("sy").value, t=+$("txy").value;
+  const beh=$("beh").value, Sy=+$("Sy").value, Sut=+$("Sut").value, Suc=+$("Suc").value;
+  $("g-duc").hidden = beh!=="ductile"; $("g-bri").hidden = beh!=="brittle";
+  $("mhint").textContent = beh==="ductile" ? "Mild steel E250 ≈ 250 · Al 6061-T6 ≈ 276 · AISI 4140 Q&T ≈ 655 MPa" : "Grey cast iron ASTM 30: Sut ≈ 214, Suc ≈ 752 MPa";
+  let err=""; if ([sx,sy,t].some(v=>!isFinite(v))) err="Enter all three stresses.";
+  else if (beh==="ductile" && !(Sy>0)) err="Sy must be positive."; else if (beh==="brittle" && !(Sut>0 && Suc>0)) err="Sut and Suc must be positive.";
+  $("err").textContent=err; if (err) return;
+  const p=principal(sx,sy,t), sA=p.s1, sB=p.s2, f=fos(sA,sB,Sy,Sut,Suc);
+  const z=Math.abs(sA)<1e-9 && Math.abs(sB)<1e-9;
+  let h=stat("Principal σ₁",fmt(sA,1),"MPa")+stat("Principal σ₂",fmt(sB,1),"MPa")+stat("Max shear τmax (3-D)",fmt(Math.max(Math.abs(sA-sB),Math.abs(sA),Math.abs(sB))/2,1),"MPa")+stat("Principal angle θp",fmt(p.th,1),"°");
+  let main;
+  if (beh==="ductile"){ h+=stat("von Mises stress σ′",fmt(f.vm,1),"MPa",true)+stat("FoS — von Mises",z?"∞":fmt(f.nVM,2),"",true)+stat("FoS — Tresca",z?"∞":fmt(f.nTR,2),""); main=f.nVM; }
+  else { h+=stat("FoS — Coulomb–Mohr",z?"∞":fmt(f.nMC,2),"",true)+stat("FoS — Max normal",z?"∞":fmt(f.nMN,2),""); main=f.nMC; }
+  $("stats").innerHTML=h;
+  const v=verdict(z?Infinity:main); $("verdict").innerHTML=`<span class="verdict ${v[0]}">${beh==="ductile"?"von Mises":"Coulomb–Mohr"}: ${v[1]}</span>`;
+  drawEnv(sA,sB,{beh,Sy,Sut,Suc}); drawMohr(sx,sy,t,p);
+
+  const T=(x,d=1)=>texnum(x,d);
+  const steps=[
+    ["Centre and radius of Mohr's circle", `C=\\frac{\\sigma_x+\\sigma_y}{2}=\\frac{${T(sx)}+(${T(sy)})}{2}=${T(p.c)},\\qquad R=\\sqrt{\\left(\\frac{\\sigma_x-\\sigma_y}{2}\\right)^2+\\tau_{xy}^2}=${T(p.R)}\\ \\text{MPa}`],
+    ["Principal stresses", `\\sigma_{1,2}=C\\pm R\\ \\Rightarrow\\ \\sigma_1=${T(sA)},\\ \\sigma_2=${T(sB)}\\ \\text{MPa}`],
+    ["Principal angle", `\\theta_p=\\frac{1}{2}\\tan^{-1}\\!\\left(\\frac{2\\tau_{xy}}{\\sigma_x-\\sigma_y}\\right)=${T(p.th)}^\\circ`],
+  ];
+  if (beh==="ductile"){
+    steps.push(["von Mises equivalent stress", `\\sigma'=\\sqrt{\\sigma_1^2-\\sigma_1\\sigma_2+\\sigma_2^2}=\\sqrt{${T(sA)}^2-(${T(sA)})(${T(sB)})+(${T(sB)})^2}=${T(f.vm)}\\ \\text{MPa}`]);
+    steps.push(["Factor of safety — von Mises", `n=\\frac{S_y}{\\sigma'}=\\frac{${T(Sy,0)}}{${T(f.vm)}}=${z?"\\infty":T(f.nVM,2)}`]);
+    steps.push(["Factor of safety — Tresca", `n=\\frac{S_y}{\\max(|\\sigma_1-\\sigma_2|,|\\sigma_1|,|\\sigma_2|)}=\\frac{${T(Sy,0)}}{${T(f.tr)}}=${z?"\\infty":T(f.nTR,2)}`]);
+  } else {
+    let mc;
+    if (sB>=0) mc=`\\sigma_1\\ge\\sigma_2\\ge0:\\quad n=\\frac{S_{ut}}{\\sigma_1}=\\frac{${T(Sut,0)}}{${T(sA)}}`;
+    else if (sA<=0) mc=`0\\ge\\sigma_1\\ge\\sigma_2:\\quad n=\\frac{S_{uc}}{-\\sigma_2}=\\frac{${T(Suc,0)}}{${T(-sB)}}`;
+    else mc=`\\sigma_1\\ge0\\ge\\sigma_2:\\quad \\frac{1}{n}=\\frac{\\sigma_1}{S_{ut}}-\\frac{\\sigma_2}{S_{uc}}=\\frac{${T(sA)}}{${T(Sut,0)}}-\\frac{${T(sB)}}{${T(Suc,0)}}`;
+    steps.push(["Coulomb–Mohr", mc+`\\ \\Rightarrow\\ n=${z?"\\infty":T(f.nMC,2)}`]);
+    steps.push(["Max normal stress (for comparison)", `n=\\min\\left(\\frac{S_{ut}}{\\sigma_{tension}},\\frac{S_{uc}}{|\\sigma_{compression}|}\\right)=${z?"\\infty":T(f.nMN,2)}`]);
+  }
+  $("steps").innerHTML=steps.map((s,i)=>`<div class="step"><div class="t">Step ${i+1} · ${s[0]}</div><div class="m" id="st${i}"></div></div>`).join("");
+  steps.forEach((s,i)=>tex($("st"+i),s[1]));
+}
+document.querySelectorAll("input,select").forEach(e=>e.addEventListener("input",update));
+window.addEventListener("resize",()=>{clearTimeout(window._rt);window._rt=setTimeout(update,150);});
+window.addEventListener("load",update); update();
+</script>
+<script>
+/* Embed mode: /tools/failure-theories-calculator.html?embed=1 hides the page header/footer
+   and reports its content height to the parent page. */
+(function(){
+  var embed=/[?&]embed=1\b/.test(location.search);
+  if(!embed) return;
+  var css=document.createElement('style');
+  css.textContent='header.hero,footer{display:none!important}main .wrap{padding-top:0!important}';
+  document.head.appendChild(css);
+  function post(){ try{ parent.postMessage({type:'cadseekho-tool-height',height:Math.ceil(document.documentElement.getBoundingClientRect().height)},'*'); }catch(e){} }
+  new ResizeObserver(post).observe(document.body); window.addEventListener('load',post);
+})();
+</script>
+</body>
+</html>

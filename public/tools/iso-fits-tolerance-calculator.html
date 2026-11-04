@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,600;87.5,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<style>[hidden]{display:none!important}
+:root{--paper:#F5F3ED;--ink:#1B2A4A;--slate:#46566B;--accent:#E8622C;--line:#AEB9C9;--line2:#75849C;--card:#FFFFFF;--ok:#2E7D4F;--okbg:#E3F1E8;--warn:#9A6A00;--warnbg:#FBF0D3;--bad:#B23A2B;--badbg:#F8E1DD;--soft:#EEF1F5}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header.hero{background:var(--ink);color:#fff;border-bottom:4px solid var(--accent)}
+header.hero .wrap{padding-top:22px;padding-bottom:18px}
+.kicker{font:600 12px/1 "IBM Plex Sans",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#F6B79C}
+h1{font:700 clamp(30px,5vw,44px)/1.05 "Archivo","Arial Narrow","Segoe UI",sans-serif;font-stretch:87.5%;letter-spacing:.02em;margin:8px 0 6px}
+.sub{color:#D5DCE6;margin:0;max-width:760px}
+h2{font:700 18px/1.3 "Archivo","Arial Narrow","Segoe UI",sans-serif;font-stretch:87.5%;margin:0 0 12px;color:var(--ink)}
+h3{font:700 14px/1.3 "Archivo","Arial Narrow","Segoe UI",sans-serif;font-stretch:87.5%;margin:16px 0 8px;color:var(--slate);text-transform:uppercase;letter-spacing:.06em}
+main .wrap{padding-top:22px;padding-bottom:40px}
+.grid>*{min-width:0}
+.grid{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px}
+.card+.card{margin-top:20px}
+label{display:block;font-size:13px;color:var(--slate);margin:10px 0 4px}
+input,select{width:100%;padding:9px 10px;border:1px solid var(--line2);border-radius:4px;font:inherit;color:var(--ink);background:#FFFBEF}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.unit{color:var(--slate);font-size:12px}
+.hint{font-size:12px;color:var(--slate);margin-top:4px}
+.err{color:var(--bad);font-size:13px;margin-top:8px;min-height:1em}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--paper)}
+.stat .k{font-size:12px;color:var(--slate)}
+.stat .v{font:600 22px/1.2 "IBM Plex Sans",sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat .v small{font-size:12px;color:var(--slate);font-weight:400;margin-left:3px}
+.stat.hl{border-color:var(--accent);background:#FFF4EE}
+.stat.hl .v{color:var(--accent)}
+.verdict{display:inline-block;padding:6px 12px;border-radius:4px;font-weight:600;margin-top:12px}
+.v-ok{background:var(--okbg);color:var(--ok)}.v-warn{background:var(--warnbg);color:var(--warn)}.v-bad{background:var(--badbg);color:var(--bad)}
+.pro{position:relative}
+.pro-badge{display:inline-block;font:700 10px/1 "IBM Plex Sans",sans-serif;letter-spacing:.1em;background:var(--accent);color:#fff;padding:4px 7px;border-radius:3px;vertical-align:middle;margin-left:8px}
+.steps .step{border-left:3px solid var(--accent);padding:6px 0 6px 12px;margin:10px 0}
+.steps .t{font-weight:600;font-size:13px;color:var(--accent)}
+.steps .m{overflow-x:auto;padding:4px 0}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:"IBM Plex Sans",Arial,sans-serif;fill:var(--slate)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font:600 12px/1.3 "IBM Plex Sans",sans-serif;text-transform:uppercase;letter-spacing:.06em;color:var(--slate);background:var(--soft)}
+.tablewrap{overflow-x:auto}
+.src{font-size:12px;color:var(--slate);margin-top:14px}
+footer{border-top:1px solid var(--line);color:var(--slate);font-size:13px}
+footer .wrap{padding-top:14px;padding-bottom:24px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tabs button{border:1px solid var(--line2);background:#fff;color:var(--ink);padding:7px 12px;border-radius:4px;font:inherit;font-size:14px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--slate);margin-top:8px}
+.legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:6px}
+</style>
+<script>
+function tex(el, s){ if(!el) return; if(window.katex){ try{ katex.render(s.replace(/\\frac/g,'\\dfrac'), el, {throwOnError:false, displayMode:false}); return; }catch(e){} } el.textContent = s; }
+function fmt(v, d){ if(!isFinite(v)) return "—"; const a=Math.abs(v); if(a!==0 && (a>=1e9 || a<1e-3)) return v.toExponential(3).replace("e","×10^").replace("+",""); return v.toLocaleString("en-IN",{maximumFractionDigits:d, minimumFractionDigits:d}); }
+function texnum(v, d){ if(!isFinite(v)) return "\\text{—}"; const a=Math.abs(v); if(a!==0 && (a>=1e9 || a<1e-3)){ const e=Math.floor(Math.log10(a)); const m=v/Math.pow(10,e); return m.toFixed(3)+"\\times10^{"+e+"}"; } return v.toLocaleString("en-IN",{maximumFractionDigits:d, minimumFractionDigits:d}).replace(/,/g,"{,}"); }
+</script>
+<title>ISO Fits &amp; Tolerances Calculator (ISO 286) | CADSeekho</title>
+<meta name="description" content="Interactive ISO 286 fits chart: enter a nominal size and a hole/shaft fit like H7/g6 to get limits, clearance or interference and a tolerance zone diagram.">
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">CADSeekho · Reference chart</div>
+  <h1>ISO Fits &amp; Tolerances — Hole-Basis System</h1>
+  <p class="sub">Choose a preferred fit or build your own (e.g. H7/g6). Get the hole and shaft limits, maximum and minimum clearance, and see the tolerance zones to scale.</p>
+</div></header>
+
+<main><div class="wrap grid">
+  <section class="card" aria-label="Inputs">
+    <h2>Inputs</h2>
+    <label for="D">Nominal size, D <span class="unit">(mm, 1 – 120)</span></label>
+    <input id="D" type="number" value="25" min="1" max="120" step="any">
+    <h3>Preferred fits</h3>
+    <div class="tabs" id="presets" role="group" aria-label="Preferred fits"></div>
+    <h3>Or build your own</h3>
+    <div class="row2">
+      <div><label for="hl">Hole letter</label><select id="hl"></select></div>
+      <div><label for="hg">Hole grade (IT)</label><select id="hg"></select></div>
+    </div>
+    <div class="row2">
+      <div><label for="sl">Shaft letter</label><select id="sl"></select></div>
+      <div><label for="sg">Shaft grade (IT)</label><select id="sg"></select></div>
+    </div>
+    <div class="hint">Capital letters = hole, small letters = shaft. In the hole-basis system the hole is usually H (lower deviation = 0).</div>
+    <div class="err" id="err" role="alert"></div>
+  </section>
+
+  <div>
+    <section class="card" aria-label="Results">
+      <h2 id="fitTitle">Results</h2>
+      <div class="stats" id="stats"></div>
+      <div id="verdict"></div>
+      <h3>Tolerance zone diagram (µm, to scale)</h3>
+      <svg id="zones" viewBox="0 0 720 300" role="img" aria-label="Tolerance zone diagram"></svg>
+      <div class="legend"><span><i style="background:#1B2A4A"></i>Hole zone</span><span><i style="background:#E8622C"></i>Shaft zone</span><span><i style="background:#75849C"></i>Zero line = nominal size</span></div>
+      <p class="hint" id="use"></p>
+    </section>
+
+    <section class="card pro steps" aria-label="How the limits are found">
+      <h2>How the limits are found — step by step <span class="pro-badge">PRO</span></h2>
+      <div id="steps"></div>
+    </section>
+
+    <section class="card" aria-label="Preferred fits guide">
+      <h2>Preferred hole-basis fits — where to use them</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Fit</th><th>Type</th><th>Typical use</th></tr></thead>
+        <tbody id="guide"></tbody>
+      </table></div>
+      <p class="src">Data: ISO 286-1 / ISO 286-2 standard tolerance grades and fundamental deviations, nominal sizes up to 120 mm. Always confirm critical tolerances against the current standard (IS 919 is the Indian equivalent).</p>
+    </section>
+  </div>
+</div></main>
+<footer><div class="wrap">Free reference by <a href="https://cadseekho.com">CADSeekho</a> · Solve by hand first, validate in software. For learning purposes — verify critical designs against applicable codes and standards.</div></footer>
+
+<script>
+const $ = id => document.getElementById(id);
+/* Size steps "over lo up to and including hi". Index into SUB (13 steps); MAIN gives the 8 main steps. */
+const SUB = [[0,3],[3,6],[6,10],[10,14],[14,18],[18,24],[24,30],[30,40],[40,50],[50,65],[65,80],[80,100],[100,120]];
+const SUB2MAIN = [0,1,2,3,3,4,4,5,5,6,6,7,7];
+const MAINLBL = ["≤ 3","3–6","6–10","10–18","18–30","30–50","50–80","80–120"];
+/* Standard tolerance grades, µm, per main step */
+const IT = {
+  5:[4,5,6,8,9,11,13,15], 6:[6,8,9,11,13,16,19,22], 7:[10,12,15,18,21,25,30,35], 8:[14,18,22,27,33,39,46,54],
+  9:[25,30,36,43,52,62,74,87], 10:[40,48,58,70,84,100,120,140], 11:[60,75,90,110,130,160,190,220] };
+/* Shaft fundamental deviations, µm. Upper deviation es for c–h (per SUB step), lower deviation ei for k–s. */
+const ES = {
+  c:[-60,-70,-80,-95,-95,-110,-110,-120,-130,-140,-150,-170,-180],
+  d:[-20,-30,-40,-50,-50,-65,-65,-80,-80,-100,-100,-120,-120],
+  e:[-14,-20,-25,-32,-32,-40,-40,-50,-50,-60,-60,-72,-72],
+  f:[-6,-10,-13,-16,-16,-20,-20,-25,-25,-30,-30,-36,-36],
+  g:[-2,-4,-5,-6,-6,-7,-7,-9,-9,-10,-10,-12,-12],
+  h:[0,0,0,0,0,0,0,0,0,0,0,0,0] };
+const EI = {
+  k:[0,1,1,1,1,2,2,2,2,2,2,3,3],
+  m:[2,4,6,7,7,8,8,9,9,11,11,13,13],
+  n:[4,8,10,12,12,15,15,17,17,20,20,23,23],
+  p:[6,12,15,18,18,22,22,26,26,32,32,37,37],
+  r:[10,15,19,23,23,28,28,34,34,41,43,51,54],
+  s:[14,19,23,28,28,35,35,43,43,53,59,71,79] };
+const SHAFTS = ["c","d","e","f","g","h","js","k","m","n","p","r","s"];
+const HOLES = ["D","E","F","G","H"];
+const GRADES = [5,6,7,8,9,10,11];
+const PRESETS = [
+  ["H11","c11","Loose running","Wide commercial tolerances; pivots, agricultural and construction machinery."],
+  ["H9","d9","Free running","Large temperature variation, high speeds or heavy journal pressure."],
+  ["H8","f7","Close running","Accurate running on accurate machines; spindles, gearbox shafts."],
+  ["H7","g6","Sliding","Not intended to run freely but to move and turn freely and locate accurately; guides, pistons."],
+  ["H7","h6","Locational clearance","Snug fit for locating stationary parts that can be freely assembled and disassembled."],
+  ["H7","k6","Locational transition","Accurate location — compromise between clearance and interference; gears, pulleys with keys."],
+  ["H7","n6","Locational transition","More accurate location where greater interference is permissible."],
+  ["H7","p6","Locational interference","Rigid, accurate location without special bore pressure; bushes pressed in."],
+  ["H7","s6","Medium drive","Ordinary steel parts or shrink fits on light sections; the tightest usable with cast iron."],
+];
+
+function step(D){ for(let i=0;i<SUB.length;i++) if(D>SUB[i][0] && D<=SUB[i][1]) return i; if(D===0) return -1; return -1; }
+function it(grade, si){ return IT[grade][SUB2MAIN[si]]; }
+function shaftDev(l, g, si){
+  const T = it(g, si);
+  if (l==="js") return {es:T/2, ei:-T/2, T, rule:`js: \\pm\\frac{IT${g}}{2}=\\pm\\frac{${T}}{2}`};
+  if (ES[l]){ const es=ES[l][si]; return {es, ei:es-T, T, rule:`es_{${l}}=${es}\\,\\mu m\\ (\\text{table}),\\quad ei=es-IT${g}=${es}-${T}=${es-T}\\,\\mu m`}; }
+  let ei = EI[l][si];
+  if (l==="k" && (g>7 || si===0)) ei = 0;
+  return {es:ei+T, ei, T, rule:`ei_{${l}}=${ei}\\,\\mu m\\ (\\text{table}),\\quad es=ei+IT${g}=${ei}+${T}=${ei+T}\\,\\mu m`};
+}
+function holeDev(L, g, si){
+  const T = it(g, si);
+  const l = L.toLowerCase();
+  const EIh = L==="H" ? 0 : -ES[l][si];
+  return {EI:EIh, ES:EIh+T, T, rule: L==="H" ? `EI_H=0,\\quad ES=EI+IT${g}=0+${T}=${T}\\,\\mu m` : `EI_{${L}}=-es_{${l}}=${EIh}\\,\\mu m,\\quad ES=EI+IT${g}=${EIh}+${T}=${EIh+T}\\,\\mu m`};
+}
+
+/* UI setup */
+HOLES.forEach(h=>$("hl").add(new Option(h,h))); SHAFTS.forEach(s=>$("sl").add(new Option(s,s)));
+GRADES.forEach(g=>{ $("hg").add(new Option("IT"+g,g)); $("sg").add(new Option("IT"+g,g)); });
+$("hl").value="H"; $("hg").value="7"; $("sl").value="g"; $("sg").value="6";
+PRESETS.forEach(p=>{ const b=document.createElement("button"); b.type="button"; b.textContent=p[0]+"/"+p[1]; b.setAttribute("aria-pressed","false");
+  b.onclick=()=>{ $("hl").value=p[0][0]; $("hg").value=p[0].slice(1); const m=p[1].match(/^([a-z]+)(\d+)$/); $("sl").value=m[1]; $("sg").value=m[2]; update(); };
+  $("presets").appendChild(b); });
+$("guide").innerHTML = PRESETS.map(p=>`<tr><td><b>${p[0]}/${p[1]}</b></td><td>${p[2]}</td><td>${p[3]}</td></tr>`).join("");
+
+function stat(k, v, unit, hl){ return `<div class="stat${hl?" hl":""}"><div class="k">${k}</div><div class="v">${v}<small>${unit}</small></div></div>`; }
+const mm = (D, um) => (D + um/1000).toFixed(Number.isInteger(um) ? 3 : 4);
+const sgn = v => (v>0?"+":"") + v;
+
+function drawZones(H, S, label){
+  const svg=$("zones"); const W=Math.round(Math.max(300, svg.getBoundingClientRect().width||720)), Ht=300;
+  svg.setAttribute("viewBox",`0 0 ${W} ${Ht}`); svg.innerHTML="";
+  const NS="http://www.w3.org/2000/svg", el=(t,a,txt)=>{const e=document.createElementNS(NS,t); for(const k in a) e.setAttribute(k,a[k]); if(txt!==undefined) e.textContent=txt; svg.appendChild(e); return e;};
+  let hi=Math.max(H.ES,S.es,0), lo=Math.min(H.EI,S.ei,0); const pad=Math.max(5,(hi-lo)*0.15); hi+=pad; lo-=pad;
+  const mt=20, mb=30, Y=v=>mt+(Ht-mt-mb)*(hi-v)/(hi-lo), ml=W<500?44:60;
+  el("line",{x1:ml-6,x2:W-10,y1:Y(0),y2:Y(0),stroke:"#75849C","stroke-width":2,"stroke-dasharray":"6 4"});
+  el("text",{x:W-12,y:Y(0)-6,"text-anchor":"end","font-size":12},`zero line  D = ${label}`);
+  const bw=Math.min(150,(W-ml-60)/3);
+  const hx=ml+ (W-ml)*0.22, sx=ml+(W-ml)*0.58;
+  const box=(x,top,bot,col,txt,lim)=>{ el("rect",{x,y:Y(top),width:bw,height:Math.max(2,Y(bot)-Y(top)),fill:col,"fill-opacity":.18,stroke:col,"stroke-width":2});
+    el("text",{x:x+bw/2,y:Y(top)-6,"text-anchor":"middle","font-size":12,"font-weight":700,style:`fill:${col}`},txt);
+    el("text",{x:x+bw+6,y:Y(top)+4,"font-size":11},sgn(lim[0])); el("text",{x:x+bw+6,y:Y(bot)+4,"font-size":11},sgn(lim[1])); };
+  box(hx,H.ES,H.EI,"#1B2A4A","Hole",[H.ES,H.EI]);
+  box(sx,S.es,S.ei,"#E8622C","Shaft",[S.es,S.ei]);
+  [hi-pad, 0, lo+pad].forEach(v=>el("text",{x:ml-10,y:Y(v)+4,"text-anchor":"end","font-size":11},sgn(Math.round(v))));
+  el("text",{x:12,y:14,"font-size":11},"µm");
+}
+
+function update(){
+  const D=+$("D").value, si=step(D);
+  const L=$("hl").value, hg=+$("hg").value, l=$("sl").value, sg=+$("sg").value;
+  document.querySelectorAll("#presets button").forEach(b=>b.setAttribute("aria-pressed", b.textContent===`${L}${hg}/${l}${sg}` ? "true":"false"));
+  if (!(D>0) || D>120 || si<0){ $("err").textContent="Enter a nominal size between 1 and 120 mm."; $("stats").innerHTML=""; return; }
+  $("err").textContent="";
+  const H=holeDev(L,hg,si), S=shaftDev(l,sg,si);
+  const cmax=H.ES-S.ei, cmin=H.EI-S.es;
+  const type = cmin>=0 ? ["Clearance fit","v-ok"] : cmax<=0 ? ["Interference fit","v-bad"] : ["Transition fit","v-warn"];
+  const fit=`${L}${hg}/${l}${sg}`;
+  $("fitTitle").textContent=`Ø${D} ${fit}`;
+  $("stats").innerHTML =
+    stat("Hole max", mm(D,H.ES),"mm")+stat("Hole min", mm(D,H.EI),"mm")+
+    stat("Shaft max", mm(D,S.es),"mm")+stat("Shaft min", mm(D,S.ei),"mm")+
+    stat(cmax>=0?"Max clearance":"Min interference", Math.abs(cmax),"µm",true)+
+    stat(cmin>=0?"Min clearance":"Max interference", Math.abs(cmin),"µm",true)+
+    stat("Hole tolerance", H.T,"µm")+stat("Shaft tolerance", S.T,"µm");
+  $("verdict").innerHTML=`<span class="verdict ${type[1]}">${type[0]} · drawing callout: Ø${D} ${fit}</span>`;
+  const pre=PRESETS.find(p=>p[0]+"/"+p[1]===fit); $("use").textContent = pre ? `${pre[2]} — ${pre[3]}` : "";
+  drawZones(H,S,`${D} mm`);
+  const rng=`${SUB[si][0]}<D\\le${SUB[si][1]}\\ \\text{mm}`;
+  const steps=[
+    ["Find the size step", `D=${D}\\ \\text{mm}\\ \\Rightarrow\\ ${rng}`],
+    [`Standard tolerances from the IT table`, `IT${hg}=${H.T}\\,\\mu m,\\qquad IT${sg}=${S.T}\\,\\mu m`],
+    [`Hole ${L}${hg}`, H.rule],
+    [`Shaft ${l}${sg}`, S.rule],
+    ["Maximum clearance", `C_{max}=ES-ei=${H.ES}-(${S.ei})=${cmax}\\,\\mu m`],
+    ["Minimum clearance (negative = interference)", `C_{min}=EI-es=${H.EI}-(${S.es})=${cmin}\\,\\mu m`],
+    ["Convert to mm limits", `\\text{Hole}: ${mm(D,H.EI)}\\ \\text{to}\\ ${mm(D,H.ES)},\\quad \\text{Shaft}: ${mm(D,S.ei)}\\ \\text{to}\\ ${mm(D,S.es)}`],
+  ];
+  $("steps").innerHTML=steps.map((s,i)=>`<div class="step"><div class="t">Step ${i+1} · ${s[0]}</div><div class="m" id="st${i}"></div></div>`).join("");
+  steps.forEach((s,i)=>tex($("st"+i),s[1]));
+}
+document.querySelectorAll("input,select").forEach(e=>e.addEventListener("input",update));
+window.addEventListener("resize",()=>{clearTimeout(window._rt);window._rt=setTimeout(update,150);});
+window.addEventListener("load",update); update();
+</script>
+<script>
+/* Embed mode: /tools/iso-fits-tolerance-calculator.html?embed=1 hides the page header/footer
+   and reports its content height to the parent page. */
+(function(){
+  var embed=/[?&]embed=1\b/.test(location.search);
+  if(!embed) return;
+  var css=document.createElement('style');
+  css.textContent='header.hero,footer{display:none!important}main .wrap{padding-top:0!important}';
+  document.head.appendChild(css);
+  function post(){ try{ parent.postMessage({type:'cadseekho-tool-height',height:Math.ceil(document.documentElement.getBoundingClientRect().height)},'*'); }catch(e){} }
+  new ResizeObserver(post).observe(document.body); window.addEventListener('load',post);
+})();
+</script>
+</body>
+</html>

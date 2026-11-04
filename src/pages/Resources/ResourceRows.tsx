@@ -3,6 +3,7 @@ import { AccessBadge, ResourceCard } from "@/components/ui/ResourceCard";
 import { getLearningPaths, getMostUsedResources } from "@/services/resourceService";
 import { useCachedData } from "@/hooks/useCachedData";
 import { RESOURCE_TYPES, RESOURCE_TYPE_PLURALS, type Software, type Topic } from "@/types/resource";
+import { EMBEDDED_TOOLS } from "@/pages/tools/embeddedTools";
 
 // Standalone tools served from public/tools/ — not resource rows in the database.
 const FREE_TOOLS = [
@@ -13,6 +14,13 @@ const FREE_TOOLS = [
     summary: "Reactions, SFD, BMD, deflection and stress for any supports, loads and cross-section.",
     tags: ["2D", "3D"],
   },
+  ...EMBEDDED_TOOLS.map((t) => ({
+    to: `/tools/${t.slug}`,
+    label: t.label,
+    title: t.title,
+    summary: t.summary,
+    tags: t.tags,
+  })),
 ];
 
 export function FreeToolsRow() {
@@ -35,7 +43,7 @@ export function FreeToolsRow() {
             </h3>
             <p className="resource-card__summary">{tool.summary}</p>
             <div className="resource-card__footer">
-              <ul className="resource-card__software" aria-label="Modes">
+              <ul className="resource-card__software" aria-label="Tags">
                 {tool.tags.map((tag) => (
                   <li key={tag} className="software-tag">
                     {tag}
