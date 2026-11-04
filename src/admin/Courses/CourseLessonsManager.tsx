@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/Button";
 import { FormMessage } from "@/components/ui/FormMessage";
 import {
   addCourseFile,
+  addLesson,
   courseFileExists,
   deleteCourseFile,
+  deleteLesson,
   fetchFromBunny,
   isAnswerFile,
   listLessonModules,
@@ -118,6 +120,7 @@ export function CourseLessonsManager({ courseId }: { courseId: string }) {
             </table>
           )}
 
+          <AddLesson module={m} run={run} />
           <ModuleFiles module={m} run={run} />
         </fieldset>
       ))}
@@ -247,8 +250,67 @@ function LessonRow({ lesson, run }: { lesson: AdminLesson; run: Run }) {
           />{" "}
           {lesson.is_published ? "Yes" : "No"}
         </label>
+        {!lesson.is_published && (
+          <button
+            type="button"
+            className="admin-link admin-link--danger"
+            style={{ display: "block", marginTop: "var(--space-2)" }}
+            onClick={() => {
+              if (!window.confirm(`Delete ${lesson.code} ${lesson.title}? Its video ID and learners' progress on it are deleted too.`)) return;
+              run(() => deleteLesson(lesson.id), `${lesson.code} deleted.`);
+            }}
+          >
+            Delete
+          </button>
+        )}
       </td>
     </tr>
+  );
+}
+
+function AddLesson({ module, run }: { module: AdminLessonModule; run: Run }) {
+  const [code, setCode] = useState("");
+  const [title, setTitle] = useState("");
+  const [kind, setKind] = useState<"video" | "quiz" | "problems" | "test">("video");
+  const [minutes, setMinutes] = useState("");
+  return (
+    <details style={{ marginTop: "var(--space-4)" }}>
+      <summary className="admin-section-title" style={{ cursor: "pointer" }}>
+        Add a lesson
+      </summary>
+      <div className="admin-form-row" style={{ alignItems: "end" }}>
+        <TextField label="Code" placeholder="e.g. M2.1" value={code} onChange={(e) => setCode(e.target.value)} maxLength={20} />
+        <TextField label="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <div className="field">
+          <label className="field__label" htmlFor={`newkind-${module.id}`}>
+            Type
+          </label>
+          <select id={`newkind-${module.id}`} className="field__input" value={kind} onChange={(e) => setKind(e.target.value as typeof kind)}>
+            <option value="video">Video</option>
+            <option value="quiz">Quiz</option>
+            <option value="problems">Problems</option>
+            <option value="test">Test</option>
+          </select>
+        </div>
+        <TextField label="Minutes (optional)" inputMode="numeric" value={minutes} onChange={(e) => setMinutes(e.target.value.replace(/\D/g, ""))} />
+        <Button
+          type="button"
+          variant="outline"
+          disabled={!code.trim() || !title.trim()}
+          onClick={() =>
+            run(async () => {
+              await addLesson(module, { code, title, kind, duration_minutes: minutes ? Number(minutes) : null });
+              setCode("");
+              setTitle("");
+              setMinutes("");
+            }, `${code.trim()} added (unpublished).`)
+          }
+        >
+          Add
+        </Button>
+      </div>
+      <p className="admin-hint">Lessons are added at the end of the module, unpublished. Paste the video ID, then publish.</p>
+    </details>
   );
 }
 

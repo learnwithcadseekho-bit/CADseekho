@@ -136,6 +136,34 @@ export async function setLessonDescription(lessonId: string, description: string
   if (error) throw error;
 }
 
+export interface NewLesson {
+  code: string;
+  title: string;
+  kind: "video" | "quiz" | "problems" | "test";
+  duration_minutes: number | null;
+}
+
+/** New lesson at the end of the module, unpublished. */
+export async function addLesson(module: AdminLessonModule, input: NewLesson): Promise<void> {
+  const order = Math.max(0, ...module.lessons.map((l) => l.order_number)) + 1;
+  const { error } = await supabase.from("course_lessons").insert({
+    module_id: module.id,
+    code: input.code.trim(),
+    title: input.title.trim(),
+    kind: input.kind,
+    duration_minutes: input.duration_minutes,
+    order_number: order,
+    is_published: false,
+  });
+  if (error) throw new Error(error.code === "23505" ? `${input.code} already exists in this module.` : error.message);
+}
+
+/** Deletes the lesson, its video id and everyone's progress on it. */
+export async function deleteLesson(lessonId: string): Promise<void> {
+  const { error } = await supabase.from("course_lessons").delete().eq("id", lessonId);
+  if (error) throw error;
+}
+
 export async function setLessonPublished(lessonId: string, isPublished: boolean): Promise<void> {
   const { error } = await supabase.from("course_lessons").update({ is_published: isPublished }).eq("id", lessonId);
   if (error) throw error;
