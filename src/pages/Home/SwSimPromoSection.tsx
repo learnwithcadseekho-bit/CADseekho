@@ -2,7 +2,7 @@ import type { MouseEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { trackCustom } from "@/lib/track";
-import { COMBO, LEVEL1_MODULES, SIGNUP_INTENT, SIGNUP_INTENT_KEY, SW_SIM, priceLine, totalHours } from "@/content/swSimulation";
+import { COMBO, LEVEL1_MODULES, SIGNUP_INTENT, SIGNUP_INTENT_KEY, SW_SIM, offerNote, priceLine, totalHours } from "@/content/swSimulation";
 import "./home.css";
 
 const FIRST_LESSON = "M1.1";
@@ -20,6 +20,7 @@ export function SwSimPromoSection() {
   const lessonPath = `${SW_SIM.classroomPath}/${FIRST_LESSON}`;
   const price = priceLine("level1");
   const comboPrice = priceLine("combo");
+  const offer = offerNote("level1");
 
   function startFree(e: MouseEvent<HTMLAnchorElement>) {
     trackCustom("sw_sim_lesson_start", { lesson_code: FIRST_LESSON, signed_in: Boolean(session), from: "home" });
@@ -100,6 +101,7 @@ export function SwSimPromoSection() {
                   <span className="course-promo__price sws-home__price">{price}</span>
                 </div>
               )}
+              {offer && <p className="sws-home__offer">{offer}</p>}
 
               <div className="course-promo__cta-row">
                 <Link to={lessonPath} className="course-promo__cta" onClick={startFree}>

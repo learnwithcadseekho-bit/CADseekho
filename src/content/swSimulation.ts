@@ -148,6 +148,13 @@ export function priceLine(product: SwSimProduct, config: SwSimConfig = SW_SIM_CO
   return `${formatInr(now.price)} ${TIER_LABEL[now.tier] ?? now.tier}${regular ? ` (regular ${formatInr(regular)})` : ""} + GST`;
 }
 
+/** "Offer price for the first 50 users" while the product is on the founding-batch tier with a seat count. */
+export function offerNote(product: SwSimProduct, config: SwSimConfig = SW_SIM_CONFIG): string | null {
+  const now = swSimPriceTier(config, product);
+  const seats = now ? config.prices[now.tier]?.seats : undefined;
+  return now?.tier === "foundingBatch" && seats ? `Offer price for the first ${seats} users` : null;
+}
+
 /** Is it on sale now (salesOpen + price + not coming soon)? */
 export const purchasable = (product: SwSimProduct) => swSimPurchasable(SW_SIM_CONFIG, product);
 export const currentPrice = (product: SwSimProduct) => swSimPrice(SW_SIM_CONFIG, product);

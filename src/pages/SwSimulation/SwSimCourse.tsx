@@ -17,6 +17,7 @@ import {
   currentPrice,
   formatInr,
   moduleLabel,
+  offerNote,
   priceLine,
   purchasable,
   totalHours,
@@ -325,6 +326,7 @@ export function SwSimCourse({ page }: { page: SwSimPage }) {
         <div className="sws-side">
           <aside className="course-detail__sidebar drafting-frame" aria-label="Course information">
             {price && <p className="sws-side__price">{price}</p>}
+            {offerNote(page.level) && <p className="sws-offer">{offerNote(page.level)}</p>}
             {primary}
             {isLevel1 &&
               (purchasable("level1") ? (
@@ -371,6 +373,7 @@ export function SwSimCourse({ page }: { page: SwSimPage }) {
             </h2>
             <p className="sws-combo__line">{COMBO.line}</p>
             {comboPrice && <p className="sws-combo__price">{comboPrice}</p>}
+            {offerNote("combo") && <p className="sws-offer sws-offer--combo">{offerNote("combo")}</p>}
             {purchasable("combo") ? (
               <button type="button" className="btn btn--primary btn--block" disabled={checkoutBusy !== null} onClick={() => enrol("combo")}>
                 {checkoutBusy === "combo" ? "Opening checkout…" : COMBO.button}

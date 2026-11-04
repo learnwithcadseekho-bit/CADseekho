@@ -15,8 +15,9 @@ export default function HomePage() {
         canonical="/"
       />
       <AnnouncementBar />
-      <HeroSection />
+      {/* SOLIDWORKS Simulation first, then the ANSYS hero. */}
       <SwSimPromoSection />
+      <HeroSection />
       <FeaturedCoursesSection />
       <MethodSection />
       <WhySection />

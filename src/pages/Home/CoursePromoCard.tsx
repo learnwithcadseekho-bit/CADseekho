@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { getCourseDetailBySlug } from "@/services/courseService";
 import { useCachedData } from "@/hooks/useCachedData";
 import { useAuth } from "@/hooks/useAuth";
-import { FEATURED_ANSYS_SLUG } from "@/content/batches";
+import { ANSYS_BATCH_FULL, FEATURED_ANSYS_SLUG } from "@/content/batches";
 import { HeroImageSlider } from "./HeroImageSlider";
 import "./home.css";
 
@@ -45,7 +45,9 @@ export function CoursePromoCard() {
 
   const hasNextBatch = course.format === "live" && Boolean(course.next_batch_date);
 
-  const statusLabel = hasNextBatch ? "New batch enrolling" : "Enrolling now";
+  const statusLabel = ANSYS_BATCH_FULL ? "Batch full" : hasNextBatch ? "New batch enrolling" : "Enrolling now";
+  // Anchored to local midnight like formatBatchDate; past = the batch has already started.
+  const batchStarted = hasNextBatch && new Date(`${course.next_batch_date}T00:00:00`).getTime() < Date.now();
 
   return (
     <div className="course-promo">
@@ -60,10 +62,16 @@ export function CoursePromoCard() {
         <span className="course-promo__kicker">Featured course</span>
         <h3 className="course-promo__title">{course.title}</h3>
 
-        {hasNextBatch && (
+        {ANSYS_BATCH_FULL ? (
           <p className="course-promo__schedule">
-            Live classes start {formatBatchDate(course.next_batch_date!)}
+            Batch full
+            {hasNextBatch &&
+              ` · live classes ${batchStarted ? "started" : "start"} ${formatBatchDate(course.next_batch_date!)}`}
           </p>
+        ) : (
+          hasNextBatch && (
+            <p className="course-promo__schedule">Live classes start {formatBatchDate(course.next_batch_date!)}</p>
+          )
         )}
 
         {course.course_skills.length > 0 && (

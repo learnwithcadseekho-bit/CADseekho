@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
 import { handlePlay, signBunnyEmbedUrl, type PlayDeps } from "../supabase/functions/lesson-play-url/play.ts";
 import { swSimCheckout, swSimPrice, type SwSimConfig } from "../supabase/functions/_shared/swSimulationPricing.ts";
-import { LEVEL1_MODULES, LEVEL2_MODULES, SW_SIM_CONFIG, priceLine } from "../src/content/swSimulation.ts";
+import { LEVEL1_MODULES, LEVEL2_MODULES, SW_SIM_CONFIG, offerNote, priceLine } from "../src/content/swSimulation.ts";
 
 // auth / storage / pg_net as Supabase provides them, minimally.
 const STUBS = `
@@ -356,4 +356,11 @@ test("syllabus totals match the course pages: 28 h + 35 h, 17 modules", () => {
   assert.equal(hours(LEVEL1_MODULES), 28);
   assert.equal(hours(LEVEL2_MODULES), 35);
   assert.equal([...LEVEL1_MODULES, ...LEVEL2_MODULES].filter((m) => !m.code.endsWith("-CP")).length, 17);
+});
+
+test("first-50 offer line: only while a product is on the founding-batch tier", () => {
+  assert.equal(offerNote("level1"), "Offer price for the first 50 users");
+  assert.equal(offerNote("combo"), "Offer price for the first 50 users");
+  assert.equal(offerNote("level2"), null, "Level 2 is at its launch price, not the founding offer");
+  assert.equal(offerNote("level1", { ...SW_SIM_CONFIG, activePriceTier: "launch" }), null);
 });

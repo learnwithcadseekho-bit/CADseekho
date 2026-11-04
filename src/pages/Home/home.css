@@ -216,6 +216,8 @@
 
 .course-promo__kicker {
   display: block;
+  /* Clear the absolutely positioned badge above it (it used to sit under the badge). */
+  margin-top: var(--space-4);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
@@ -614,4 +616,19 @@
 .sws-home__price {
   font-size: 1.375rem;
   line-height: 1.3;
+}
+
+/* "Offer price for the first 50 users" under the founding price. */
+.sws-home__offer {
+  display: inline-block;
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.6rem;
 }

@@ -474,3 +474,23 @@
 .sws-player__nav span {
   color: var(--slate);
 }
+
+/* "Offer price for the first 50 users" (founding-batch tier). */
+.sws-offer {
+  justify-self: start;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.6rem;
+}
+
+.sws-offer--combo {
+  display: inline-block;
+  margin: 0 0 var(--space-4);
+}
