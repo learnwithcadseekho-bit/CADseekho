@@ -1,6 +1,8 @@
 // Returns a short-lived signed Bunny Stream embed URL for one lesson, after
-// checking the caller may watch it (public.module_access: free module →
-// any signed-in user; paid module → enrolled; admin → everything). The Bunny
+// checking the caller may watch it (public.lesson_access: free module →
+// any signed-in user; paid module → active, unexpired enrollment; admin →
+// everything) and that Bunny has finished encoding it. Also returns the saved
+// position so the player can resume. The Bunny
 // token key never leaves the server; video ids are only read here, with the
 // service role (course_lesson_videos is admin-only under RLS). Logic: ./play.ts.
 //
@@ -8,10 +10,10 @@
 //   (verify_jwt stays on: the site calls it with the user's session or the anon key.)
 // Secrets (Bunny → Stream → your library):
 //   supabase secrets set BUNNY_STREAM_LIBRARY_ID=<library id, e.g. 123456>
-//   supabase secrets set BUNNY_STREAM_TOKEN_KEY=<API → "Token authentication key">
+//   supabase secrets set BUNNY_STREAM_TOKEN_KEY=<library → Security → "Token authentication key">
 
 import { corsHeaders, getCallerId, json, rest } from "../_shared/razorpay.ts";
-import { handlePlay, type LessonRow } from "./play.ts";
+import { handlePlay, type LessonRow, type VideoRow } from "./play.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -27,17 +29,17 @@ Deno.serve(async (req) => {
   const userId = await getCallerId(req);
   const { status, body: out } = await handlePlay(body, userId, {
     getLesson: async (id) => {
-      const res = await rest(`course_lessons?id=eq.${encodeURIComponent(id)}&select=id,code,title,is_published,module_id`);
+      const res = await rest(`course_lessons?id=eq.${encodeURIComponent(id)}&select=id,code,title,kind,is_published,module_id`);
       if (!res.ok) throw new Error(`course_lessons ${res.status}: ${await res.text()}`);
       const [row] = (await res.json()) as LessonRow[];
       return row ?? null;
     },
-    hasAccess: async (moduleId, uid) => {
-      const res = await rest("rpc/module_access", {
+    hasAccess: async (lessonId, uid) => {
+      const res = await rest("rpc/lesson_access", {
         method: "POST",
-        body: JSON.stringify({ p_module_id: moduleId, p_user_id: uid }),
+        body: JSON.stringify({ p_lesson_id: lessonId, p_user_id: uid }),
       });
-      if (!res.ok) throw new Error(`module_access ${res.status}: ${await res.text()}`);
+      if (!res.ok) throw new Error(`lesson_access ${res.status}: ${await res.text()}`);
       return (await res.json()) === true;
     },
     isAdmin: async (uid) => {
@@ -45,10 +47,17 @@ Deno.serve(async (req) => {
       const [row] = (await res.json()) as { role: string }[];
       return row?.role === "admin";
     },
-    getVideoId: async (lessonId) => {
-      const res = await rest(`course_lesson_videos?lesson_id=eq.${lessonId}&select=bunny_video_id`);
-      const [row] = (await res.json()) as { bunny_video_id: string }[];
-      return row?.bunny_video_id ?? null;
+    getVideo: async (lessonId) => {
+      const res = await rest(`course_lesson_videos?lesson_id=eq.${lessonId}&select=bunny_video_id,encode_status,library_id`);
+      if (!res.ok) throw new Error(`course_lesson_videos ${res.status}: ${await res.text()}`);
+      const [row] = (await res.json()) as VideoRow[];
+      return row ?? null;
+    },
+    getResumeAt: async (lessonId, uid) => {
+      const res = await rest(`lesson_progress?lesson_id=eq.${lessonId}&user_id=eq.${uid}&select=position_sec,completed`);
+      if (!res.ok) return 0;
+      const [row] = (await res.json()) as { position_sec: number; completed: boolean }[];
+      return row && !row.completed ? row.position_sec : 0;
     },
     env: {
       libraryId: Deno.env.get("BUNNY_STREAM_LIBRARY_ID"),

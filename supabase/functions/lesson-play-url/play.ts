@@ -1,10 +1,10 @@
 // Lesson playback: who may watch, and the signed Bunny Stream embed URL.
 // Free of Deno APIs so the same code runs in the Edge Function (index.ts) and
-// in the Node tests (tests/sw-simulation.test.ts). Side effects come in via PlayDeps.
+// in the Node tests (tests/recorded-course.test.ts). Side effects come in via PlayDeps.
 //
-// Bunny "embed view token authentication":
-//   token = SHA256_HEX(token_security_key + video_id + expires)
-//   https://iframe.mediadelivery.net/embed/{library_id}/{video_id}?token={token}&expires={expires}
+// Bunny "embed view token authentication" (bunny.net/docs/stream-embed-token-authentication):
+//   token = SHA256_HEX(token_security_key + video_id + expires)   (expires: UNIX seconds)
+//   https://player.mediadelivery.net/embed/{library_id}/{video_id}?token={token}&expires={expires}
 // Turn on Token Authentication for the library in Bunny (Stream → library →
 // Security), or Bunny will also accept the URL without the token.
 
@@ -12,28 +12,47 @@ export interface LessonRow {
   id: string;
   code: string;
   title: string;
+  kind: string;
   is_published: boolean;
   module_id: string;
 }
 
+export interface VideoRow {
+  bunny_video_id: string;
+  encode_status: "none" | "processing" | "ready" | "failed";
+  library_id: string | null;
+}
+
 export interface PlayDeps {
   getLesson: (lessonId: string) => Promise<LessonRow | null>;
-  /** public.module_access(module, user) in Postgres — the one access rule. */
-  hasAccess: (moduleId: string, userId: string) => Promise<boolean>;
+  /** public.lesson_access(lesson, user) in Postgres — the one access rule (expiry, free modules, admin…). */
+  hasAccess: (lessonId: string, userId: string) => Promise<boolean>;
   isAdmin: (userId: string) => Promise<boolean>;
-  getVideoId: (lessonId: string) => Promise<string | null>;
+  getVideo: (lessonId: string) => Promise<VideoRow | null>;
+  /** Saved position in seconds; 0 when finished or never started. */
+  getResumeAt: (lessonId: string, userId: string) => Promise<number>;
   env: { libraryId?: string; tokenKey?: string };
   now: () => number;
   /** How long a signed URL stays valid, in seconds. */
   ttlSeconds?: number;
 }
 
+export interface PlayOk {
+  url: string;
+  expires: number;
+  lessonCode: string;
+  resumeAt: number;
+}
+
+export type PlayRefusalCode = "invalid" | "signed_out" | "not_found" | "coming_soon" | "locked" | "no_video" | "processing" | "not_configured";
+
 export interface PlayResponse {
   status: number;
-  body: { url: string; expires: number; lessonCode: string } | { error: string; code: string };
+  body: PlayOk | { error: string; code: PlayRefusalCode };
 }
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+export const DEFAULT_TTL_SECONDS = 3 * 60 * 60;
 
 async function sha256Hex(text: string): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
@@ -43,35 +62,40 @@ async function sha256Hex(text: string): Promise<string> {
 export async function signBunnyEmbedUrl(libraryId: string, tokenKey: string, videoId: string, expires: number): Promise<string> {
   const token = await sha256Hex(`${tokenKey}${videoId}${expires}`);
   const params = new URLSearchParams({ token, expires: String(expires), autoplay: "false", preload: "true", responsive: "true" });
-  return `https://iframe.mediadelivery.net/embed/${encodeURIComponent(libraryId)}/${encodeURIComponent(videoId)}?${params}`;
+  return `https://player.mediadelivery.net/embed/${encodeURIComponent(libraryId)}/${encodeURIComponent(videoId)}?${params}`;
 }
+
+const refuse = (status: number, code: PlayRefusalCode, error: string): PlayResponse => ({ status, body: { error, code } });
 
 export async function handlePlay(body: unknown, userId: string | null, deps: PlayDeps): Promise<PlayResponse> {
   const lessonId = body && typeof body === "object" ? (body as { lessonId?: unknown }).lessonId : undefined;
-  if (typeof lessonId !== "string" || !UUID_RE.test(lessonId))
-    return { status: 400, body: { error: "Invalid request.", code: "invalid" } };
+  if (typeof lessonId !== "string" || !UUID_RE.test(lessonId)) return refuse(400, "invalid", "Invalid request.");
 
-  if (!userId) return { status: 401, body: { error: "Sign up free to watch this lesson.", code: "signed_out" } };
+  if (!userId) return refuse(401, "signed_out", "Sign up free to watch this lesson.");
 
   const lesson = await deps.getLesson(lessonId);
-  if (!lesson) return { status: 404, body: { error: "Lesson not found.", code: "not_found" } };
+  if (!lesson) return refuse(404, "not_found", "Lesson not found.");
 
-  const admin = await deps.isAdmin(userId);
-  if (!admin && !lesson.is_published)
-    return { status: 404, body: { error: "This lesson isn't released yet.", code: "coming_soon" } };
+  if (!lesson.is_published && !(await deps.isAdmin(userId))) return refuse(404, "coming_soon", "This lesson isn't released yet.");
 
-  if (!(await deps.hasAccess(lesson.module_id, userId)))
-    return { status: 403, body: { error: "This lesson is part of the paid course.", code: "locked" } };
+  if (!(await deps.hasAccess(lesson.id, userId))) return refuse(403, "locked", "This lesson is part of the paid course.");
 
-  const videoId = await deps.getVideoId(lesson.id);
-  if (!videoId) return { status: 404, body: { error: "The video for this lesson is coming soon.", code: "no_video" } };
+  const video = await deps.getVideo(lesson.id);
+  if (!video) return refuse(404, "no_video", "The video for this lesson is coming soon.");
+  if (video.encode_status !== "ready") return refuse(409, "processing", "This video is still processing. Please check back shortly.");
 
-  const { libraryId, tokenKey } = deps.env;
-  if (!libraryId || !tokenKey) return { status: 500, body: { error: "Video playback is temporarily unavailable.", code: "not_configured" } };
+  const libraryId = video.library_id ?? deps.env.libraryId;
+  const { tokenKey } = deps.env;
+  if (!libraryId || !tokenKey) return refuse(500, "not_configured", "Video playback is temporarily unavailable.");
 
-  const expires = Math.floor(deps.now() / 1000) + (deps.ttlSeconds ?? 3 * 60 * 60);
+  const expires = Math.floor(deps.now() / 1000) + (deps.ttlSeconds ?? DEFAULT_TTL_SECONDS);
   return {
     status: 200,
-    body: { url: await signBunnyEmbedUrl(libraryId, tokenKey, videoId, expires), expires, lessonCode: lesson.code },
+    body: {
+      url: await signBunnyEmbedUrl(libraryId, tokenKey, video.bunny_video_id, expires),
+      expires,
+      lessonCode: lesson.code,
+      resumeAt: await deps.getResumeAt(lesson.id, userId),
+    },
   };
 }

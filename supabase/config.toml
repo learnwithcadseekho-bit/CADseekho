@@ -34,3 +34,7 @@ enabled = true
 # authenticates the request by verifying X-Razorpay-Signature instead.
 [functions.razorpay-webhook]
 verify_jwt = false
+
+# Bunny Stream calls this directly — authenticated by X-BunnyStream-Signature instead.
+[functions.bunny-webhook]
+verify_jwt = false

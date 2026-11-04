@@ -1,13 +1,11 @@
 // SOLIDWORKS Simulation launch: seed idempotency, the free/paid lesson access
 // rule, the registration-insert fix, bundle enrollment, signed Bunny URLs and
-// config-driven checkout. Runs the real migrations in an in-process Postgres
+// config-driven checkout. (Playback and progress: recorded-course.test.ts.) Runs the real migrations in an in-process Postgres
 // (PGlite) with just enough Supabase stubbed in. Run: npm test
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
-import { handlePlay, signBunnyEmbedUrl, type PlayDeps } from "../supabase/functions/lesson-play-url/play.ts";
 import { swSimCheckout, swSimPrice, type SwSimConfig } from "../supabase/functions/_shared/swSimulationPricing.ts";
 import { LEVEL1_MODULES, LEVEL2_MODULES, SW_SIM_CONFIG, offerNote, priceLine } from "../src/content/swSimulation.ts";
 
@@ -270,55 +268,6 @@ test("paying for the Combo enrolls into Level 1 and Level 2", async () => {
     { slug: "solidworks-simulation-combo", status: "enrolled" },
     { slug: "solidworks-simulation-level-2", status: "enrolled" },
   ]);
-});
-
-// ---------------------------------------------------------------------------
-// lesson-play-url
-
-const LESSON = { id: "11111111-2222-4333-8444-555566667777", code: "M1.1", title: "Why", is_published: true, module_id: "m1" };
-const VIDEO = "3f2a9c1e-1111-4222-8333-444455556666";
-
-function playDeps(over: Partial<PlayDeps> = {}): PlayDeps {
-  return {
-    getLesson: async (id) => (id === LESSON.id ? LESSON : null),
-    hasAccess: async (_m, uid) => uid === "free-user",
-    isAdmin: async () => false,
-    getVideoId: async () => VIDEO,
-    env: { libraryId: "12345", tokenKey: "tok-secret" },
-    now: () => 1_800_000_000_000,
-    ...over,
-  };
-}
-
-test("signed Bunny embed URL uses SHA256(key + video id + expires)", async () => {
-  const url = new URL(await signBunnyEmbedUrl("12345", "tok-secret", VIDEO, 1_800_010_800));
-  assert.equal(url.origin + url.pathname, `https://iframe.mediadelivery.net/embed/12345/${VIDEO}`);
-  assert.equal(url.searchParams.get("expires"), "1800010800");
-  assert.equal(url.searchParams.get("token"), createHash("sha256").update(`tok-secret${VIDEO}1800010800`).digest("hex"));
-});
-
-test("play: signed out → sign up prompt; locked → 403; allowed → signed URL", async () => {
-  const body = { lessonId: LESSON.id };
-  assert.equal((await handlePlay(body, null, playDeps())).body.code === "signed_out", true);
-  const locked = await handlePlay(body, "someone", playDeps());
-  assert.equal(locked.status, 403);
-  assert.ok(!JSON.stringify(locked.body).includes(VIDEO), "a locked response never contains the video id");
-
-  const ok = await handlePlay(body, "free-user", playDeps());
-  assert.equal(ok.status, 200);
-  assert.ok("url" in ok.body && ok.body.url.includes("token=") && ok.body.url.includes("expires="));
-  assert.equal("url" in ok.body && ok.body.expires, 1_800_000_000 + 3 * 60 * 60);
-});
-
-test("play: unpublished lesson, missing video, bad input, missing secrets", async () => {
-  const body = { lessonId: LESSON.id };
-  const unpublished = playDeps({ getLesson: async () => ({ ...LESSON, is_published: false }) });
-  assert.equal((await handlePlay(body, "free-user", unpublished)).body.code === "coming_soon", true);
-  // Admins can preview an unpublished lesson.
-  assert.equal((await handlePlay(body, "free-user", { ...unpublished, isAdmin: async () => true })).status, 200);
-  assert.equal((await handlePlay(body, "free-user", playDeps({ getVideoId: async () => null }))).body.code === "no_video", true);
-  assert.equal((await handlePlay({ lessonId: "x" }, "free-user", playDeps())).status, 400);
-  assert.equal((await handlePlay(body, "free-user", playDeps({ env: {} }))).status, 500);
 });
 
 // ---------------------------------------------------------------------------
