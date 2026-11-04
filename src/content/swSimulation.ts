@@ -23,8 +23,8 @@ export const SW_SIM = {
   /** Level 1 page (also the course's landing page). */
   path: `/courses/${SW_SIM_CONFIG.courseSlugs.level1}`,
   level2Path: `/courses/${SW_SIM_CONFIG.courseSlugs.level2}`,
-  /** Lesson player: /classroom/solidworks-simulation/<lesson code>. */
-  classroomPath: `/classroom/${SW_SIM_CONFIG.courseSlugs.level1}`,
+  /** Lesson player for Level 1: /learn/solidworks-simulation/<lesson code>. */
+  classroomPath: `/learn/${SW_SIM_CONFIG.courseSlugs.level1}`,
   name: "SOLIDWORKS Simulation for Industry Professionals",
   announcement: "New: SOLIDWORKS Simulation Level 1 — Modules 1–2 are free",
 } as const;

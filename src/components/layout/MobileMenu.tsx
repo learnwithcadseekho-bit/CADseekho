@@ -93,7 +93,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
               </Link>
             )}
             <Link to="/dashboard" className="btn btn--outline btn--block" onClick={onClose}>
-              Dashboard
+              My Learning
             </Link>
             <button type="button" className="btn btn--primary btn--block" onClick={handleSignOut}>
               Sign Out

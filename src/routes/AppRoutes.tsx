@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { trackedLazy } from "@/lib/trackedLazy";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import { MainLayout } from "@/layouts/MainLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 // The landing page ships with the app shell (not code-split) so the most common
@@ -35,7 +35,7 @@ const DashboardPage = trackedLazy("src/pages/Dashboard/DashboardPage.tsx", () =>
 const LiveClassPage = trackedLazy("src/pages/Classroom/LiveClassPage.tsx", () => import("@/pages/Classroom/LiveClassPage"));
 const SwSimulationPage = trackedLazy("src/pages/SwSimulation/SwSimulationPage.tsx", () => import("@/pages/SwSimulation/SwSimulationPage"));
 const SwSimulationLevel2Page = trackedLazy("src/pages/SwSimulation/SwSimulationLevel2Page.tsx", () => import("@/pages/SwSimulation/SwSimulationLevel2Page"));
-const SwSimulationLessonPage = trackedLazy("src/pages/SwSimulation/LessonPage.tsx", () => import("@/pages/SwSimulation/LessonPage"));
+const LearnPage = trackedLazy("src/pages/Learn/LearnPage.tsx", () => import("@/pages/Learn/LearnPage"));
 const AnsysFoundationPage = trackedLazy("src/pages/Launch/AnsysFoundationPage.tsx", () => import("@/pages/Launch/AnsysFoundationPage"));
 const ThankYouPage = trackedLazy("src/pages/Launch/ThankYouPage.tsx", () => import("@/pages/Launch/ThankYouPage"));
 const PrivacyPolicyPage = trackedLazy("src/pages/Legal/PrivacyPolicyPage.tsx", () => import("@/pages/Legal/PrivacyPolicyPage"));
@@ -59,6 +59,11 @@ const AdminBlogPage = lazy(() => import("@/admin/Blog/AdminBlogPage"));
 const AdminUsersPage = lazy(() => import("@/admin/Users/AdminUsersPage"));
 const AdminMessagesPage = lazy(() => import("@/admin/Messages/AdminMessagesPage"));
 const AdminLeadsPage = lazy(() => import("@/admin/Leads/AdminLeadsPage"));
+
+function LegacyLessonRedirect() {
+  const { code = "" } = useParams();
+  return <Navigate to={`/learn/solidworks-simulation/${encodeURIComponent(code)}`} replace />;
+}
 
 function AdminLoading() {
   return <div style={{ padding: "var(--space-16)", textAlign: "center", color: "var(--slate)" }}>Loading admin…</div>;
@@ -106,7 +111,10 @@ export function AppRoutes() {
           }
         />
         {/* Recorded lessons: open route — the page itself shows the sign-up prompt to signed-out visitors. */}
-        <Route path="/classroom/solidworks-simulation/:code" element={<SwSimulationLessonPage />} />
+        <Route path="/learn/:courseSlug" element={<LearnPage />} />
+        <Route path="/learn/:courseSlug/:lessonCode" element={<LearnPage />} />
+        {/* Old lesson URLs (shared before the player moved to /learn). */}
+        <Route path="/classroom/solidworks-simulation/:code" element={<LegacyLessonRedirect />} />
         <Route
           path="/classroom/:slug"
           element={

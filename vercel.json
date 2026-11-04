@@ -34,8 +34,8 @@
   ],
   "rewrites": [
     { "source": "/(login|signup|forgot-password|reset-password|dashboard)", "destination": "/app.html" },
-    { "source": "/(admin|classroom)", "destination": "/app.html" },
-    { "source": "/(admin|classroom)/:path*", "destination": "/app.html" }
+    { "source": "/(admin|classroom|learn)", "destination": "/app.html" },
+    { "source": "/(admin|classroom|learn)/:path*", "destination": "/app.html" }
   ],
   "headers": [
     {

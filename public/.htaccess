@@ -41,7 +41,7 @@ ErrorDocument 404 /404.html
 
   # 4. Client-only routes (not prerendered, noindex) → the app shell.
   RewriteRule ^(login|signup|forgot-password|reset-password|dashboard)$ /app.html [L]
-  RewriteRule ^(admin|classroom)(/.*)?$ /app.html [L]
+  RewriteRule ^(admin|classroom|learn)(/.*)?$ /app.html [L]
 
   # 5. Prerendered pages: /path → /path/index.html
   RewriteCond %{REQUEST_FILENAME} !-f

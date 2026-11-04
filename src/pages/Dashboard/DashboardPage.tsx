@@ -1,16 +1,19 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 import { ProfileTab } from "./ProfileTab";
 import { MyCoursesTab } from "./MyCoursesTab";
+import { MyLearningTab } from "./MyLearningTab";
+import { PurchasesTab } from "./PurchasesTab";
 import { AccountSettingsTab } from "./AccountSettingsTab";
 import "@/styles/cards.css";
 import "./dashboard.css";
 
 const TABS = [
+  { key: "learning", label: "My Learning" },
   { key: "profile", label: "My Profile" },
-  { key: "courses", label: "My Courses" },
+  { key: "courses", label: "Registrations" },
+  { key: "purchases", label: "Purchases" },
   { key: "settings", label: "Account Settings" },
 ] as const;
 
@@ -19,7 +22,10 @@ type TabKey = (typeof TABS)[number]["key"];
 export default function DashboardPage() {
   const { profile, user, signOut } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<TabKey>("profile");
+  // ?tab=… so links can open a section directly; My Learning is the default.
+  const [params, setParams] = useSearchParams();
+  const activeTab: TabKey = TABS.find((t) => t.key === params.get("tab"))?.key ?? "learning";
+  const setActiveTab = (key: TabKey) => setParams(key === "learning" ? {} : { tab: key }, { replace: true });
 
   async function handleSignOut() {
     await signOut();
@@ -53,8 +59,10 @@ export default function DashboardPage() {
         </nav>
 
         <div className="dashboard__panel">
+          {activeTab === "learning" && <MyLearningTab />}
           {activeTab === "profile" && <ProfileTab />}
           {activeTab === "courses" && <MyCoursesTab />}
+          {activeTab === "purchases" && <PurchasesTab />}
           {activeTab === "settings" && <AccountSettingsTab />}
         </div>
       </div>

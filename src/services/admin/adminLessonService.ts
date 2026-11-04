@@ -11,14 +11,20 @@ export interface AdminLesson {
   duration_minutes: number | null;
   order_number: number;
   is_published: boolean;
+  description: string | null;
   bunny_video_id: string | null;
+  encode_status: EncodeStatus | null;
+  duration_sec: number | null;
 }
+
+export type EncodeStatus = "none" | "processing" | "ready" | "failed";
 
 export interface AdminCourseFile {
   id: string;
   title: string;
   storage_path: string;
   order_number: number;
+  kind: "resource" | "problems";
 }
 
 export interface AdminLessonModule {
@@ -33,9 +39,10 @@ export interface AdminLessonModule {
   files: AdminCourseFile[];
 }
 
+type VideoRow = { bunny_video_id: string; encode_status: EncodeStatus; duration_sec: number | null };
 type Row = Omit<AdminLessonModule, "lessons" | "files"> & {
-  course_lessons: (Omit<AdminLesson, "bunny_video_id"> & {
-    course_lesson_videos: { bunny_video_id: string } | { bunny_video_id: string }[] | null;
+  course_lessons: (Omit<AdminLesson, "bunny_video_id" | "encode_status" | "duration_sec"> & {
+    course_lesson_videos: VideoRow | VideoRow[] | null;
   })[];
   course_files: AdminCourseFile[];
 };
@@ -45,8 +52,9 @@ export async function listLessonModules(courseId: string): Promise<AdminLessonMo
     .from("course_modules")
     .select(
       "id, code, title, order_number, is_free, is_released, release_label, " +
-        "course_lessons(id, code, title, kind, duration_minutes, order_number, is_published, course_lesson_videos(bunny_video_id)), " +
-        "course_files(id, title, storage_path, order_number)"
+        "course_lessons(id, code, title, kind, duration_minutes, order_number, is_published, description, " +
+        "course_lesson_videos(bunny_video_id, encode_status, duration_sec)), " +
+        "course_files(id, title, storage_path, order_number, kind)"
     )
     .eq("course_id", courseId)
     .order("order_number");
@@ -54,10 +62,15 @@ export async function listLessonModules(courseId: string): Promise<AdminLessonMo
   return ((data ?? []) as unknown as Row[]).map(({ course_lessons, course_files, ...m }) => ({
     ...m,
     lessons: course_lessons
-      .map(({ course_lesson_videos: v, ...l }) => ({
-        ...l,
-        bunny_video_id: (Array.isArray(v) ? v[0] : v)?.bunny_video_id ?? null,
-      }))
+      .map(({ course_lesson_videos: v, ...l }) => {
+        const video = Array.isArray(v) ? v[0] : v;
+        return {
+          ...l,
+          bunny_video_id: video?.bunny_video_id ?? null,
+          encode_status: video?.encode_status ?? null,
+          duration_sec: video?.duration_sec ?? null,
+        };
+      })
       .sort((a, b) => a.order_number - b.order_number),
     files: [...course_files].sort((a, b) => a.order_number - b.order_number),
   }));
@@ -86,6 +99,43 @@ export async function setLessonVideo(lessonId: string, videoId: string | null): 
   if (error) throw error;
 }
 
+export interface BunnyVideoInfo {
+  encode_status: EncodeStatus;
+  duration_sec: number | null;
+  bunny_status: number;
+  title: string | null;
+}
+
+/** "Fetch from Bunny": the bunny-video Edge Function reads status + length from Bunny and saves them. */
+export async function fetchFromBunny(lessonId: string): Promise<BunnyVideoInfo> {
+  const { data, error } = await supabase.functions.invoke<BunnyVideoInfo>("bunny-video", { body: { lessonId } });
+  if (!error && data) return data;
+  let message = "Couldn't reach Bunny.";
+  try {
+    message = ((await (error as { context?: Response } | null)?.context?.json()) as { error?: string })?.error ?? message;
+  } catch {
+    // not JSON
+  }
+  throw new Error(message);
+}
+
+/** Manual override, e.g. before the Bunny API key is set up. */
+export async function setVideoStatus(lessonId: string, status: EncodeStatus): Promise<void> {
+  const { error } = await supabase
+    .from("course_lesson_videos")
+    .update({ encode_status: status, encode_updated_at: new Date().toISOString() })
+    .eq("lesson_id", lessonId);
+  if (error) throw error;
+}
+
+export async function setLessonDescription(lessonId: string, description: string): Promise<void> {
+  const { error } = await supabase
+    .from("course_lessons")
+    .update({ description: description.trim() || null })
+    .eq("id", lessonId);
+  if (error) throw error;
+}
+
 export async function setLessonPublished(lessonId: string, isPublished: boolean): Promise<void> {
   const { error } = await supabase.from("course_lessons").update({ is_published: isPublished }).eq("id", lessonId);
   if (error) throw error;
@@ -102,7 +152,13 @@ export async function updateModuleRelease(
 /** Test and worked-answer files must never be published (the database refuses them too). */
 export const isAnswerFile = (name: string) => /_(test|solved)/i.test(name);
 
-export async function addCourseFile(module: { id: string; code: string | null }, title: string, file: File, order: number) {
+export async function addCourseFile(
+  module: { id: string; code: string | null },
+  title: string,
+  file: File,
+  order: number,
+  kind: AdminCourseFile["kind"] = "resource"
+) {
   if (isAnswerFile(file.name)) throw new Error("Test and answer files (*_Test*, *_Solved*) can't be uploaded.");
   const folder = module.code ?? module.id;
   const path = `${folder}/${file.name.replace(/[^\w.-]+/g, "_")}`;
@@ -110,7 +166,12 @@ export async function addCourseFile(module: { id: string; code: string | null },
   if (uploadError) throw uploadError;
   const { error } = await supabase
     .from("course_files")
-    .upsert({ module_id: module.id, title, storage_path: path, order_number: order }, { onConflict: "storage_path" });
+    .upsert({ module_id: module.id, title, storage_path: path, order_number: order, kind }, { onConflict: "storage_path" });
+  if (error) throw error;
+}
+
+export async function setCourseFileKind(fileId: string, kind: AdminCourseFile["kind"]): Promise<void> {
+  const { error } = await supabase.from("course_files").update({ kind }).eq("id", fileId);
   if (error) throw error;
 }
 

@@ -133,3 +133,80 @@
     box-shadow: inset 0 -3px 0 var(--accent);
   }
 }
+
+/* ---- My Learning cards -------------------------------------------------- */
+
+.learning-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-5);
+}
+
+@media (min-width: 900px) {
+  .learning-cards {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  }
+}
+
+.learning-card {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+  padding: var(--space-5);
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.learning-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.learning-card__badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid var(--line-strong);
+  color: var(--slate);
+}
+
+.learning-card__title {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.learning-card__progress {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.learning-card__bar {
+  height: 8px;
+  background: var(--white);
+  border: 1px solid var(--line);
+}
+
+.learning-card__bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.learning-card__pct,
+.learning-card__meta {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--slate);
+  margin: 0;
+}
+
+.learning-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}

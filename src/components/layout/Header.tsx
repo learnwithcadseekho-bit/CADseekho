@@ -59,7 +59,7 @@ export function Header() {
                 </Link>
               )}
               <Link to="/dashboard" className="site-header__link">
-                Dashboard
+                My Learning
               </Link>
               <button type="button" className="btn btn--outline" onClick={handleSignOut}>
                 Sign Out
